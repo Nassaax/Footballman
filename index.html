@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FM26 — Jupiler Pro League</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #CC0000;
+  --primary-dark: #990000;
+  --primary-light: #ff4444;
+  --on-primary: #ffffff;
+  --black: #0a0a0a;
+  --dark: #111111;
+  --dark2: #1a1a1a;
+  --dark3: #222222;
+  --dark4: #2a2a2a;
+  --gray: #444;
+  --gray2: #666;
+  --gray3: #999;
+  --light: #ccc;
+  --white: #f5f5f5;
+  --green: #27ae60;
+  --yellow: #f39c12;
+  --blue: #2980b9;
+  --gold: #c9a84c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:14px;}
+body{background:var(--black);color:var(--white);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* ===== CLUB SELECTION ===== */
+#club-select-screen{
+  position:fixed;inset:0;background:var(--black);z-index:999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:20px;overflow-y:auto;
+}
+.select-title{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:4px;text-align:center;margin-bottom:4px;}
+.select-sub{font-size:13px;color:var(--gray3);letter-spacing:1px;text-transform:uppercase;margin-bottom:32px;text-align:center;}
+.clubs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;max-width:900px;width:100%;}
+.club-card{
+  background:var(--dark2);border:2px solid var(--dark4);border-radius:12px;
+  padding:20px 14px;text-align:center;cursor:pointer;transition:all 0.2s;
+}
+.club-card:hover{transform:translateY(-4px);border-color:var(--club-color);}
+.club-card .crest{
+  width:60px;height:60px;border-radius:10px;margin:0 auto 12px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;
+}
+.club-card .cname{font-size:13px;font-weight:700;margin-bottom:2px;}
+.club-card .cleague{font-size:11px;color:var(--gray3);}
+.club-card .cbudget{font-size:11px;color:var(--gold);margin-top:4px;}
+.club-card .crating{font-size:11px;color:var(--gray3);margin-top:2px;}
+
+/* ===== HEADER ===== */
+.header{
+  background:var(--dark);border-bottom:2px solid var(--primary);
+  padding:10px 20px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.header-logo{display:flex;align-items:center;gap:12px;}
+.header-crest{
+  width:36px;height:36px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;
+  background:var(--primary);color:var(--on-primary);
+}
+.header-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;}
+.header-subtitle{font-size:11px;color:var(--gray3);letter-spacing:1px;text-transform:uppercase;}
+.header-stats{display:flex;gap:18px;}
+.hstat{text-align:center;}
+.hstat-val{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--primary-light);line-height:1;}
+.hstat-lbl{font-size:10px;color:var(--gray3);text-transform:uppercase;letter-spacing:.5px;}
+.change-club-btn{
+  padding:5px 12px;border-radius:4px;font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.5px;cursor:pointer;
+  background:transparent;border:1px solid var(--gray2);color:var(--gray3);
+  transition:all .2s;
+}
+.change-club-btn:hover{border-color:var(--primary);color:var(--primary);}
+
+/* ===== NAV ===== */
+.nav{background:var(--dark2);display:flex;gap:2px;padding:0 20px;border-bottom:1px solid var(--dark4);overflow-x:auto;}
+.nav-item{padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray3);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+.nav-item:hover{color:var(--white);}
+.nav-item.active{color:var(--primary-light);border-bottom-color:var(--primary);}
+
+/* ===== MAIN ===== */
+.main{padding:20px;max-width:1100px;margin:0 auto;}
+.section{display:none;}
+.section.active{display:block;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;margin-bottom:4px;}
+.section-sub{font-size:12px;color:var(--gray3);margin-bottom:20px;}
+
+/* ===== GRIDS ===== */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+
+/* ===== CARDS ===== */
+.card{background:var(--dark2);border:1px solid var(--dark4);border-radius:8px;padding:16px;}
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;color:var(--gray3);margin-bottom:12px;text-transform:uppercase;}
+.stat-card{background:var(--dark3);border:1px solid var(--dark4);border-radius:8px;padding:14px;text-align:center;}
+.stat-card .val{font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1;margin-bottom:4px;}
+.stat-card .lbl{font-size:10px;color:var(--gray3);text-transform:uppercase;letter-spacing:.5px;}
+
+/* ===== BUTTONS ===== */
+.btn{padding:7px 14px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;border:1px solid var(--dark4);background:var(--dark3);color:var(--white);transition:all .15s;}
+.btn:hover{background:var(--dark4);}
+.btn.primary{background:var(--primary);border-color:var(--primary-dark);color:var(--on-primary);}
+.btn.primary:hover{filter:brightness(1.15);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ===== BADGES ===== */
+.badge{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.badge.GK{background:#4a3000;color:#f39c12;}
+.badge.DEF{background:#003366;color:#5dade2;}
+.badge.MID{background:#003300;color:#2ecc71;}
+.badge.ATT{background:#440000;color:#e74c3c;}
+.badge.W{background:#0d3d1a;color:#27ae60;}
+.badge.D{background:#3d3400;color:#f39c12;}
+.badge.L{background:#3d0000;color:#e74c3c;}
+
+/* ===== RATING ===== */
+.rc{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;}
+.rc.elite{background:#1a4a00;color:#27ae60;border:1px solid #27ae60;}
+.rc.good{background:#1a3300;color:#2ecc71;border:1px solid #2ecc71;}
+.rc.avg{background:#3d3400;color:#f39c12;border:1px solid #f39c12;}
+.rc.low{background:#3d0000;color:#e74c3c;border:1px solid #e74c3c;}
+
+/* ===== TABLE ===== */
+.data-table{width:100%;border-collapse:collapse;font-size:12px;}
+.data-table th{text-align:left;padding:8px 10px;color:var(--gray3);border-bottom:1px solid var(--dark4);font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;}
+.data-table td{padding:8px 10px;border-bottom:1px solid var(--dark3);vertical-align:middle;}
+.data-table tr:hover td{background:var(--dark3);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr.highlight td{background:rgba(255,255,255,.04);}
+
+/* ===== PROGRESS BAR ===== */
+.bar-wrap{background:var(--dark4);border-radius:3px;height:5px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;transition:width .3s;}
+.bar-fill.green{background:var(--green);}
+.bar-fill.primary{background:var(--primary);}
+.bar-fill.gold{background:var(--gold);}
+.bar-fill.blue{background:var(--blue);}
+
+/* ===== FORM DOTS ===== */
+.form-row{display:flex;gap:4px;align-items:center;}
+.fd{width:17px;height:17px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;}
+.fd.W{background:var(--green);color:#fff;}
+.fd.D{background:var(--yellow);color:#1a1a00;}
+.fd.L{background:#cc0000;color:#fff;}
+
+/* ===== PITCH ===== */
+.pitch{background:#1d3d1d;border-radius:8px;border:2px solid #2a5a2a;position:relative;height:360px;overflow:hidden;margin-bottom:16px;}
+.pitch-halfway{position:absolute;top:0;left:50%;width:1.5px;height:100%;background:rgba(255,255,255,.1);}
+.pitch-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:75px;height:75px;border:1.5px solid rgba(255,255,255,.12);border-radius:50%;}
+.pitch-dot{position:absolute;top:50%;left:50%;width:6px;height:6px;background:rgba(255,255,255,.25);border-radius:50%;transform:translate(-50%,-50%);}
+.pitch-box-t{position:absolute;top:0;left:50%;transform:translateX(-50%);width:170px;height:70px;border:1.5px solid rgba(255,255,255,.1);border-top:none;}
+.pitch-box-b{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:170px;height:70px;border:1.5px solid rgba(255,255,255,.1);border-bottom:none;}
+.score-disp{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.88);border:1px solid var(--dark4);border-radius:6px;padding:5px 18px;display:flex;align-items:center;gap:14px;z-index:10;}
+.score-team{font-size:10px;color:var(--gray3);font-weight:700;letter-spacing:.5px;}
+.score-num{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;color:var(--white);}
+.score-sep{color:var(--gray2);font-size:16px;font-family:'Bebas Neue',sans-serif;}
+.match-min{position:absolute;top:10px;right:10px;background:var(--primary);color:var(--on-primary);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;padding:3px 9px;border-radius:4px;display:none;}
+.pt{position:absolute;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;cursor:pointer;transition:transform .2s;border:2px solid rgba(255,255,255,.25);transform:translate(-50%,-50%);}
+.pt:hover{transform:translate(-50%,-50%) scale(1.15);z-index:5;}
+.pt.home{background:var(--primary);color:var(--on-primary);}
+.pt.away{background:var(--dark);color:var(--light);}
+
+/* ===== COMMENTARY ===== */
+.com-box{background:var(--dark3);border:1px solid var(--dark4);border-radius:6px;height:140px;overflow-y:auto;padding:10px 12px;font-size:12px;line-height:1.7;}
+.com-box .ev{padding:2px 0;border-bottom:1px solid var(--dark4);}
+.com-box .ev:last-child{border-bottom:none;}
+.com-box .min{color:var(--primary-light);font-family:'JetBrains Mono',monospace;font-size:11px;margin-right:6px;}
+.com-box .goal-ev{color:var(--green);font-weight:700;}
+.com-box .save-ev{color:#5dade2;}
+.com-box .card-ev{color:var(--yellow);}
+
+/* ===== FORMATION BTNS ===== */
+.form-btn{padding:5px 12px;border-radius:4px;border:1px solid var(--dark4);background:var(--dark3);color:var(--gray3);font-size:11px;font-weight:700;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .2s;}
+.form-btn.active{background:var(--primary);border-color:var(--primary-dark);color:var(--on-primary);}
+
+/* ===== NEWS ===== */
+.news-item{border-left:3px solid var(--primary);padding:8px 12px;margin-bottom:8px;background:var(--dark3);border-radius:0 4px 4px 0;}
+.news-item .ntype{font-size:10px;color:var(--primary-light);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:3px;}
+.news-item .ntext{font-size:12px;color:var(--light);}
+.news-item .ntime{font-size:10px;color:var(--gray3);margin-top:3px;}
+
+/* ===== TRANSFER ===== */
+.tp{background:var(--dark3);border:1px solid var(--dark4);border-radius:6px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--dark4);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--gray3);flex-shrink:0;}
+
+/* ===== TRAINING ===== */
+.tr-day{background:var(--dark3);border-radius:6px;padding:8px;text-align:center;border:1px solid var(--dark4);cursor:pointer;transition:border-color .2s;}
+.tr-day.active{border-color:var(--primary);}
+.tr-day .dname{font-size:10px;color:var(--gray3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.tr-day .dtype{font-size:11px;font-weight:600;}
+
+/* ===== OBJECTIVE ===== */
+.obj-item{display:flex;align-items:center;gap:12px;padding:9px 12px;background:var(--dark3);border-radius:6px;margin-bottom:8px;border:1px solid var(--dark4);}
+.obj-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;}
+.obj-dot.done{background:var(--green);}
+.obj-dot.pending{background:var(--yellow);}
+
+/* ===== POS BADGE ===== */
+.pos-b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-size:11px;font-weight:700;}
+.pos-b.cl{background:#1a3d00;color:#27ae60;border:1px solid #27ae60;}
+.pos-b.eu{background:#001a3d;color:#5dade2;border:1px solid #5dade2;}
+.pos-b.rel{background:#3d0000;color:#e74c3c;border:1px solid #e74c3c;}
+.pos-b.nor{background:var(--dark4);color:var(--gray3);}
+
+/* ===== NOTIF ===== */
+.notif{position:fixed;bottom:20px;right:20px;background:var(--dark2);border:1px solid var(--primary);border-radius:8px;padding:11px 16px;font-size:13px;max-width:300px;z-index:9999;display:none;}
+
+/* ===== GOAL ANIM ===== */
+@keyframes goalPop{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.4);}}
+.goal-anim{animation:goalPop .4s ease 3;}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--dark2);}
+::-webkit-scrollbar-thumb{background:var(--dark4);border-radius:3px;}
+
+@media(max-width:680px){
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr 1fr;}
+  .header-stats{gap:10px;}
+  .main{padding:10px;}
+  .clubs-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== CLUB SELECTION SCREEN ===== -->
+<div id="club-select-screen">
+  <div class="select-title">FM 26</div>
+  <div class="select-sub">Jupiler Pro League · Choisissez votre club</div>
+  <div class="clubs-grid" id="clubs-grid"></div>
+</div>
+
+<!-- ===== HEADER (hidden until club chosen) ===== -->
+<div id="game-ui" style="display:none;">
+<div class="header">
+  <div class="header-logo">
+    <div class="header-crest" id="h-crest">SdL</div>
+    <div>
+      <div class="header-title" id="h-title">Standard de Liège</div>
+      <div class="header-subtitle">FM26 · Jupiler Pro League · Saison 2025/26</div>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="hstat"><div class="hstat-val" id="h-pos">–</div><div class="hstat-lbl">Position</div></div>
+    <div class="hstat"><div class="hstat-val" id="h-pts">–</div><div class="hstat-lbl">Points</div></div>
+    <div class="hstat"><div class="hstat-val" id="h-budget">–</div><div class="hstat-lbl">Budget</div></div>
+    <div class="hstat"><div class="hstat-val" id="h-week">–</div><div class="hstat-lbl">Journée</div></div>
+  </div>
+  <button class="change-club-btn" onclick="changeClub()">⇄ Changer</button>
+</div>
+<div class="nav">
+  <div class="nav-item active" onclick="showSection('dashboard')">🏠 Dashboard</div>
+  <div class="nav-item" onclick="showSection('squad')">👥 Effectif</div>
+  <div class="nav-item" onclick="showSection('tactics')">🗺️ Tactique</div>
+  <div class="nav-item" onclick="showSection('match')">⚽ Match</div>
+  <div class="nav-item" onclick="showSection('classement')">📊 Classement</div>
+  <div class="nav-item" onclick="showSection('mercato')">💶 Mercato</div>
+  <div class="nav-item" onclick="showSection('training')">💪 Entraînement</div>
+  <div class="nav-item" onclick="showSection('finances')">💰 Finances</div>
+</div>
+
+<div class="main">
+<!-- DASHBOARD -->
+<div class="section active" id="sec-dashboard">
+  <div class="section-title">Tableau de Bord</div>
+  <div class="section-sub">Vue d'ensemble — Saison 2025/26</div>
+  <div class="grid-4" style="margin-bottom:16px;">
+    <div class="stat-card"><div class="val" style="color:var(--primary-light)" id="d-pos">–</div><div class="lbl">Position</div></div>
+    <div class="stat-card"><div class="val" id="d-pts">–</div><div class="lbl">Points</div></div>
+    <div class="stat-card"><div class="val" style="color:var(--green)" id="d-buts">–</div><div class="lbl">Buts marqués</div></div>
+    <div class="stat-card"><div class="val" style="color:var(--gold)" id="d-budget">–</div><div class="lbl">Budget mercato</div></div>
+  </div>
+  <div class="grid-2" style="margin-bottom:16px;">
+    <div class="card">
+      <div class="card-title">Prochain match</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="text-align:center;flex:1;"><div style="font-size:11px;color:var(--gray3);margin-bottom:4px;" id="next-home-name">–</div><div style="font-size:22px;" id="next-home-icon">🔴</div></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--gray3);padding:0 10px;">VS</div>
+        <div style="text-align:center;flex:1;"><div style="font-size:11px;color:var(--gray3);margin-bottom:4px;" id="next-away-name">–</div><div style="font-size:22px;" id="next-away-icon">⚽</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--gray3);text-align:center;margin-bottom:10px;" id="next-info">Journée 29</div>
+      <button class="btn primary" style="width:100%" onclick="showSection('match')">Préparer le match →</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Forme récente</div>
+      <div class="form-row" id="d-form" style="margin-bottom:14px;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;">
+        <div style="background:var(--dark3);border-radius:4px;padding:8px;"><div style="font-size:20px;font-weight:700;color:var(--green)" id="d-wins">–</div><div style="font-size:10px;color:var(--gray3);text-transform:uppercase">V</div></div>
+        <div style="background:var(--dark3);border-radius:4px;padding:8px;"><div style="font-size:20px;font-weight:700;color:var(--yellow)" id="d-draws">–</div><div style="font-size:10px;color:var(--gray3);text-transform:uppercase">N</div></div>
+        <div style="background:var(--dark3);border-radius:4px;padding:8px;"><div style="font-size:20px;font-weight:700;color:#cc0000" id="d-losses">–</div><div style="font-size:10px;color:var(--gray3);text-transform:uppercase">D</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">Objectifs de saison</div><div id="objectives-list"></div></div>
+    <div class="card"><div class="card-title">Actualités</div><div id="news-feed"></div></div>
+  </div>
+</div>
+
+<!-- SQUAD -->
+<div class="section" id="sec-squad">
+  <div class="section-title">Effectif</div>
+  <div class="section-sub" id="squad-sub">– joueurs</div>
+  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+    <button class="btn primary" onclick="filterSquad('ALL',this)">Tous</button>
+    <button class="btn" onclick="filterSquad('GK',this)">GK</button>
+    <button class="btn" onclick="filterSquad('DEF',this)">Défenseurs</button>
+    <button class="btn" onclick="filterSquad('MID',this)">Milieux</button>
+    <button class="btn" onclick="filterSquad('ATT',this)">Attaquants</button>
+  </div>
+  <div class="card" style="padding:0;overflow:auto;">
+    <table class="data-table">
+      <thead><tr>
+        <th>#</th><th>Joueur</th><th>Pos</th><th>Âge</th><th>Nat</th><th>Note</th>
+        <th>Stats</th><th>Forme</th><th>Moral</th><th>Fitness</th><th>Bless.</th><th>Contrat</th><th>Valeur</th>
+      </tr></thead>
+      <tbody id="squad-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TACTICS -->
+<div class="section" id="sec-tactics">
+  <div class="section-title">Tactique</div>
+  <div class="section-sub">Système de jeu et instructions</div>
+  <div class="grid-2" style="margin-bottom:16px;">
+    <div class="card">
+      <div class="card-title">Formation</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;" id="formation-list"></div>
+      <div class="card-title">Pressing</div>
+      <input type="range" min="1" max="5" value="3" id="press-slider" style="width:100%;margin:8px 0;accent-color:var(--primary);" oninput="document.getElementById('press-lbl').textContent=['','Bas bloc','Compact','Équilibré','Actif','Gegenpress'][this.value]">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--gray3);margin-bottom:14px;"><span>Bas bloc</span><span id="press-lbl" style="color:var(--white);font-weight:600">Équilibré</span><span>Gegenpress</span></div>
+      <div class="card-title">Tempo</div>
+      <input type="range" min="1" max="5" value="3" id="tempo-slider" style="width:100%;margin:8px 0;accent-color:var(--primary);" oninput="document.getElementById('tempo-lbl').textContent=['','Lent','Calme','Équilibré','Rapide','Très rapide'][this.value]">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--gray3);"><span>Lent</span><span id="tempo-lbl" style="color:var(--white);font-weight:600">Équilibré</span><span>Très rapide</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Style de jeu</div>
+      <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:16px;">
+        <label style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--dark3);border-radius:4px;cursor:pointer;font-size:13px;"><input type="radio" name="gstyle" value="possession" checked style="accent-color:var(--primary)"> Jeu de possession</label>
+        <label style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--dark3);border-radius:4px;cursor:pointer;font-size:13px;"><input type="radio" name="gstyle" value="direct" style="accent-color:var(--primary)"> Jeu direct</label>
+        <label style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--dark3);border-radius:4px;cursor:pointer;font-size:13px;"><input type="radio" name="gstyle" value="counter" style="accent-color:var(--primary)"> Contre-attaque</label>
+        <label style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--dark3);border-radius:4px;cursor:pointer;font-size:13px;"><input type="radio" name="gstyle" value="highline" style="accent-color:var(--primary)"> Ligne haute</label>
+      </div>
+      <div class="card-title">Instructions</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label style="display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px solid var(--dark3);cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary)"> Attaquer dans le dos de la défense</label>
+        <label style="display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px solid var(--dark3);cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary)"> Retraitement bas après perte</label>
+        <label style="display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px solid var(--dark3);cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary)"> Débordements par les ailes</label>
+        <label style="display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 0;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary)"> Tirs de loin autorisés</label>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">11 Titulaires</div>
+    <table class="data-table"><thead><tr><th>Pos</th><th>Joueur</th><th>Note</th><th>Fitness</th><th>Moral</th></tr></thead><tbody id="lineup-body"></tbody></table>
+  </div>
+</div>
+
+<!-- MATCH -->
+<div class="section" id="sec-match">
+  <div class="section-title">Simulation de Match</div>
+  <div class="section-sub">Journée <span id="match-day-lbl">29</span></div>
+  <div class="grid-2" style="margin-bottom:14px;">
+    <div class="card">
+      <div class="card-title">Configuration</div>
+      <div style="margin-bottom:10px;">
+        <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Adversaire</label>
+        <select id="opp-select" style="width:100%;background:var(--dark3);color:var(--white);border:1px solid var(--dark4);border-radius:4px;padding:8px;font-size:13px;" onchange="renderPreMatch()"></select>
+      </div>
+      <div style="margin-bottom:10px;">
+        <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Lieu</label>
+        <div style="display:flex;gap:8px;">
+          <button class="btn primary" id="home-btn" onclick="setVenue('home')">🏠 Domicile</button>
+          <button class="btn" id="away-btn" onclick="setVenue('away')">✈️ Extérieur</button>
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Tactique</label>
+        <select id="match-tactic" style="width:100%;background:var(--dark3);color:var(--white);border:1px solid var(--dark4);border-radius:4px;padding:8px;font-size:13px;">
+          <option value="0">Équilibré (4-4-2)</option>
+          <option value="2">Offensif (4-3-3)</option>
+          <option value="-1">Défensif (5-4-1)</option>
+          <option value="1">Contre-attaque (4-5-1)</option>
+          <option value="1">Haute pression (4-2-4)</option>
+        </select>
+      </div>
+      <button class="btn primary" style="width:100%;padding:10px;" id="play-btn" onclick="startMatch()">▶ JOUER LE MATCH</button>
+    </div>
+    <div class="card" id="pre-match-card"><div class="card-title">Analyse</div><div id="pre-match-info"></div></div>
+  </div>
+  <div class="pitch" id="pitch-view">
+    <div class="pitch-halfway"></div><div class="pitch-center"></div><div class="pitch-dot"></div>
+    <div class="pitch-box-t"></div><div class="pitch-box-b"></div>
+    <div class="score-disp">
+      <div class="score-team" id="m-home-abbr">STD</div>
+      <div class="score-num" id="m-home-score">0</div>
+      <div class="score-sep">:</div>
+      <div class="score-num" id="m-away-score">0</div>
+      <div class="score-team" id="m-away-abbr">OPP</div>
+    </div>
+    <div class="match-min" id="m-min">0'</div>
+    <div id="pitch-tokens"></div>
+  </div>
+  <div class="card"><div class="card-title">Commentaire en direct</div><div class="com-box" id="commentary"></div></div>
+  <div id="match-summary" style="display:none;margin-top:14px;"></div>
+</div>
+
+<!-- CLASSEMENT -->
+<div class="section" id="sec-classement">
+  <div class="section-title">Classement</div>
+  <div class="section-sub">Jupiler Pro League · Saison 2025/26</div>
+  <div class="grid-2">
+    <div class="card" style="padding:0;overflow:auto;">
+      <table class="data-table"><thead><tr><th>#</th><th>Club</th><th>J</th><th>G</th><th>N</th><th>P</th><th>BP</th><th>BC</th><th>+/-</th><th>Pts</th></tr></thead>
+      <tbody id="league-table"></tbody></table>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-title">Buteurs</div>
+        <table class="data-table"><thead><tr><th>#</th><th>Joueur</th><th>Club</th><th>Buts</th></tr></thead><tbody id="scorers-table"></tbody></table>
+      </div>
+      <div class="card">
+        <div class="card-title">Prochains matches</div>
+        <div id="next-fixtures"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MERCATO -->
+<div class="section" id="sec-mercato">
+  <div class="section-title">Mercato</div>
+  <div class="section-sub">Fenêtre de transferts · Budget : <span id="mercato-budget" style="color:var(--gold)">–</span></div>
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+    <button class="btn primary" onclick="filterTransfers('all',this)">Tous</button>
+    <button class="btn" onclick="filterTransfers('GK',this)">GK</button>
+    <button class="btn" onclick="filterTransfers('DEF',this)">Défenseurs</button>
+    <button class="btn" onclick="filterTransfers('MID',this)">Milieux</button>
+    <button class="btn" onclick="filterTransfers('ATT',this)">Attaquants</button>
+    <button class="btn" onclick="filterTransfers('cheap',this)">≤ €5M</button>
+    <button class="btn" onclick="filterTransfers('free',this)">Joueurs libres</button>
+  </div>
+  <div id="transfer-list"></div>
+</div>
+
+<!-- TRAINING -->
+<div class="section" id="sec-training">
+  <div class="section-title">Entraînement</div>
+  <div class="section-sub">Planifiez la semaine pour améliorer l'effectif</div>
+  <div class="grid-2" style="margin-bottom:14px;">
+    <div class="card">
+      <div class="card-title">Programme de la semaine</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:12px;" id="training-week"></div>
+      <button class="btn primary" style="width:100%" onclick="applyTraining()">✅ Appliquer l'entraînement</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Effets estimés</div>
+      <div id="training-effects"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Progression des joueurs</div>
+    <table class="data-table"><thead><tr><th>Joueur</th><th>Pos</th><th>Note</th><th>Note max</th><th>Progression</th><th>Sessions</th></tr></thead>
+    <tbody id="training-body"></tbody></table>
+  </div>
+</div>
+
+<!-- FINANCES -->
+<div class="section" id="sec-finances">
+  <div class="section-title">Finances</div>
+  <div class="section-sub">Bilan financier · Saison 2025/26</div>
+  <div class="grid-4" style="margin-bottom:16px;">
+    <div class="stat-card"><div class="val" style="color:var(--green)" id="f-income">–</div><div class="lbl">Revenus</div></div>
+    <div class="stat-card"><div class="val" style="color:#cc0000" id="f-wages">–</div><div class="lbl">Masse salariale</div></div>
+    <div class="stat-card"><div class="val" style="color:var(--gold)" id="f-budget">–</div><div class="lbl">Budget transferts</div></div>
+    <div class="stat-card"><div class="val" id="f-balance">–</div><div class="lbl">Bilan</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">Revenus détaillés</div><div id="income-breakdown"></div></div>
+    <div class="card"><div class="card-title">Salaires</div>
+      <table class="data-table"><thead><tr><th>Joueur</th><th>Pos</th><th>Salaire/sem</th><th>Contrat</th></tr></thead><tbody id="wages-body"></tbody></table>
+    </div>
+  </div>
+</div>
+</div><!-- /main -->
+</div><!-- /game-ui -->
+<div class="notif" id="notif"></div>
+
+<script>
+// ==================== CLUBS DATABASE ====================
+const CLUBS = {
+  standard: {
+    name:"Standard de Liège", abbr:"STD", short:"SdL",
+    primary:"#CC0000", primaryDark:"#990000", primaryLight:"#ff4444", onPrimary:"#ffffff",
+    icon:"🔴", budget:8.5, income:24.5, wages:18.2,
+    pts:42, wins:13, draws:3, losses:12, gf:44, ga:42, week:28,
+    form:["W","D","W","L","W"],
+    stadium:"Stade Maurice Dufrasne (27 221 places)",
+    squad:[
+      {n:1,name:"Arnaud Bodart",short:"Bodart",pos:"GK",age:29,nat:"🇧🇪",note:76,maxNote:78,val:2.5,wage:15,contract:"2026",fitness:85,morale:3,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","W"]},
+      {n:13,name:"Mathis Epolo",short:"Epolo",pos:"GK",age:21,nat:"🇧🇪",note:72,maxNote:82,val:1.7,wage:8,contract:"2027",fitness:90,morale:4,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","L"]},
+      {n:5,name:"Alexandro Calut",short:"Calut",pos:"DEF",age:24,nat:"🇧🇪",note:74,maxNote:78,val:3,wage:12,contract:"2026",fitness:78,morale:3,goals:2,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["W","D","L","W","W"]},
+      {n:3,name:"Moussa Sissako",short:"Sissako",pos:"DEF",age:25,nat:"🇲🇱",note:73,maxNote:77,val:2,wage:10,contract:"2027",fitness:88,morale:3,goals:1,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
+      {n:15,name:"Dion Cools",short:"Cools",pos:"DEF",age:28,nat:"🇧🇪",note:71,maxNote:74,val:1.5,wage:9,contract:"2026",fitness:82,morale:2,goals:0,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["L","W","D","W","L"]},
+      {n:6,name:"Elias Cobbaut",short:"Cobbaut",pos:"DEF",age:27,nat:"🇧🇪",note:72,maxNote:75,val:1.8,wage:9,contract:"2027",fitness:60,morale:3,goals:1,assists:1,injured:true,injuryWeeks:2,sessions:0,form:["W","D","W","W","D"]},
+      {n:4,name:"Nicolas Raskin",short:"Raskin",pos:"MID",age:23,nat:"🇧🇪",note:78,maxNote:84,val:8,wage:22,contract:"2027",fitness:87,morale:5,goals:6,assists:8,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
+      {n:10,name:"Sébastien Lahaye",short:"Lahaye",pos:"MID",age:24,nat:"🇧🇪",note:73,maxNote:77,val:2.5,wage:10,contract:"2026",fitness:85,morale:3,goals:4,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","W"]},
+      {n:7,name:"Isaac Price",short:"Price",pos:"MID",age:22,nat:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",note:77,maxNote:85,val:6,wage:18,contract:"2027",fitness:93,morale:4,goals:5,assists:9,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
+      {n:23,name:"Ilaimaharitra",short:"Ilaima",pos:"MID",age:29,nat:"🇲🇬",note:71,maxNote:73,val:1,wage:8,contract:"2026",fitness:80,morale:3,goals:2,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","D"]},
+      {n:8,name:"Andi Zeqiri",short:"Zeqiri",pos:"ATT",age:25,nat:"🇨🇭",note:75,maxNote:80,val:5,wage:16,contract:"2026",fitness:86,morale:4,goals:12,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
+      {n:24,name:"Karamoko",short:"Kara",pos:"ATT",age:23,nat:"🇬🇳",note:73,maxNote:78,val:2.5,wage:10,contract:"2027",fitness:88,morale:3,goals:7,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","L"]},
+      {n:11,name:"Doumbia",short:"Doumbia",pos:"ATT",age:26,nat:"🇨🇮",note:74,maxNote:77,val:3.5,wage:11,contract:"2026",fitness:79,morale:3,goals:9,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
+      {n:9,name:"Ibe Hautekiet",short:"Haute",pos:"ATT",age:22,nat:"🇧🇪",note:72,maxNote:82,val:2,wage:9,contract:"2028",fitness:91,morale:4,goals:5,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
+    ],
+    objectives:[
+      {text:"Terminer dans le Top 4",check:g=>g.pts>=48},
+      {text:"Marquer 55+ buts",check:g=>g.gf>=55},
+      {text:"Atteindre les playoffs",check:g=>g.pts>=54},
+    ]
+  },
+  brugge: {
+    name:"Club Brugge KV", abbr:"CLB", short:"Brugge",
+    primary:"#003DA5", primaryDark:"#002a75", primaryLight:"#4d7ddd", onPrimary:"#ffffff",
+    icon:"🔵", budget:18, income:42, wages:30,
+    pts:59, wins:18, draws:5, losses:5, gf:58, ga:28, week:28,
+    form:["W","W","W","D","W"],
+    stadium:"Jan Breydel Stadion (29 062 places)",
+    squad:[
+      {n:1,name:"Simon Mignolet",short:"Mignolet",pos:"GK",age:37,nat:"🇧🇪",note:80,maxNote:81,val:1.5,wage:25,contract:"2026",fitness:88,morale:5,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
+      {n:4,name:"Brandon Mechele",short:"Mechele",pos:"DEF",age:32,nat:"🇧🇪",note:76,maxNote:77,val:2,wage:18,contract:"2026",fitness:82,morale:4,goals:3,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
+      {n:5,name:"Joel Ordoñez",short:"Ordoñez",pos:"DEF",age:22,nat:"🇪🇨",note:77,maxNote:84,val:10,wage:15,contract:"2027",fitness:91,morale:4,goals:2,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
+      {n:3,name:"Bjorn Meijer",short:"Meijer",pos:"DEF",age:23,nat:"🇳🇱",note:74,maxNote:80,val:7,wage:14,contract:"2027",fitness:85,morale:3,goals:1,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","W"]},
+      {n:8,name:"Hans Vanaken",short:"Vanaken",pos:"MID",age:32,nat:"🇧🇪",note:82,maxNote:83,val:5,wage:32,contract:"2026",fitness:84,morale:5,goals:15,assists:9,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
+      {n:10,name:"Casper Nielsen",short:"Nielsen",pos:"MID",age:29,nat:"🇩🇰",note:78,maxNote:80,val:6,wage:20,contract:"2026",fitness:87,morale:4,goals:8,assists:11,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
+      {n:7,name:"Andreas Skov Olsen",short:"Skov",pos:"MID",age:25,nat:"🇩🇰",note:80,maxNote:83,val:14,wage:24,contract:"2027",fitness:90,morale:4,goals:10,assists:8,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","W","D"]},
+      {n:6,name:"Raphael Onyedika",short:"Onyedika",pos:"MID",age:23,nat:"🇳🇬",note:78,maxNote:84,val:12,wage:16,contract:"2027",fitness:92,morale:4,goals:4,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","W"]},
+      {n:19,name:"Ferran Jutglà",short:"Jutglà",pos:"ATT",age:25,nat:"🇪🇸",note:78,maxNote:81,val:11,wage:22,contract:"2027",fitness:88,morale:4,goals:16,assists:7,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
+      {n:20,name:"Christos Tzolis",short:"Tzolis",pos:"ATT",age:24,nat:"🇬🇷",note:77,maxNote:81,val:9,wage:18,contract:"2026",fitness:85,morale:3,goals:9,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
+      {n:9,name:"Kyriani Sabbe",short:"Sabbe",pos:"ATT",age:22,nat:"🇧🇪",note:74,maxNote:80,val:8,wage:12,contract:"2027",fitness:91,morale:4,goals:6,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","W","D"]},
+    ],
+    objectives:[
+      {text:"Remporter le titre",check:g=>g.pts>=72},
+      {text:"Atteindre 20 victoires",check:g=>g.wins>=20},
+      {text:"Garder 15 clean sheets",check:g=>false},
+    ]
+  },
+  anderlecht: {
+    name:"RSC Anderlecht", abbr:"RSC", short:"Anderlecht",
+    primary:"#6B2D8B", primaryDark:"#4a1f62", primaryLight:"#9b5dbf", onPrimary:"#ffffff",
+    icon:"🟣", budget:15, income:38, wages:28,
+    pts:54, wins:16, draws:6, losses:6, gf:52, ga:32, week:28,
+    form:["W","W","D","L","W"],
+    stadium:"Lotto Park (21 500 places)",
+    squad:[
+      {n:1,name:"Hendrik Van Crombrugge",short:"Van Crom",pos:"GK",age:33,nat:"🇧🇪",note:77,maxNote:78,val:1.5,wage:18,contract:"2026",fitness:86,morale:4,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","L","W"]},
+      {n:4,name:"Jan Vertonghen",short:"Vertonghen",pos:"DEF",age:38,nat:"🇧🇪",note:74,maxNote:75,val:0.5,wage:20,contract:"2026",fitness:75,morale:4,goals:1,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","W"]},
+      {n:5,name:"Zeno Debast",short:"Debast",pos:"DEF",age:21,nat:"🇧🇪",note:79,maxNote:86,val:20,wage:22,contract:"2027",fitness:90,morale:4,goals:2,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","L","W"]},
+      {n:13,name:"Killian Sardella",short:"Sardella",pos:"DEF",age:22,nat:"🇧🇪",note:76,maxNote:82,val:12,wage:14,contract:"2027",fitness:88,morale:4,goals:2,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","W"]},
+      {n:8,name:"Leandro Trossard",short:"Trossard",pos:"MID",age:30,nat:"🇧🇪",note:83,maxNote:84,val:8,wage:40,contract:"2026",fitness:85,morale:4,goals:13,assists:9,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
+      {n:10,name:"Francis Amuzu",short:"Amuzu",pos:"MID",age:24,nat:"🇧🇪",note:77,maxNote:81,val:9,wage:18,contract:"2026",fitness:87,morale:3,goals:7,assists:8,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","W"]},
+      {n:6,name:"Amadou Diawara",short:"Diawara",pos:"MID",age:27,nat:"🇬🇳",note:76,maxNote:79,val:7,wage:16,contract:"2027",fitness:89,morale:3,goals:3,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
+      {n:7,name:"Thorgan Hazard",short:"T.Hazard",pos:"MID",age:32,nat:"🇧🇪",note:77,maxNote:78,val:3,wage:25,contract:"2026",fitness:78,morale:3,goals:6,assists:10,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","L"]},
+      {n:9,name:"Luis Vazquez",short:"Vazquez",pos:"ATT",age:24,nat:"🇦🇷",note:77,maxNote:82,val:10,wage:20,contract:"2027",fitness:86,morale:4,goals:14,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","L","W"]},
+      {n:11,name:"Theo Leoni",short:"Leoni",pos:"ATT",age:21,nat:"🇧🇪",note:74,maxNote:82,val:8,wage:12,contract:"2028",fitness:90,morale:4,goals:7,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
+      {n:17,name:"Nilufar Rashidova",short:"Rashidov",pos:"ATT",age:23,nat:"🇺🇿",note:72,maxNote:78,val:5,wage:10,contract:"2027",fitness:88,morale:3,goals:3,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","W"]},
+    ],
+    objectives:[
+      {text:"Terminer 2e ou mieux",check:g=>g.pts>=58},
+      {text:"Dépasser 60 buts marqués",check:g=>g.gf>=60},
+      {text:"Garder la Coupe de Belgique",check:g=>false},
+    ]
+  },
+  gent: {
+    name:"K.A.A. Gent", abbr:"GAA", short:"Gent",
+    primary:"#1B3D6E", primaryDark:"#122a4e", primaryLight:"#4a7abf", onPrimary:"#ffffff",
+    icon:"🔵", budget:10, income:28, wages:20,
+    pts:49, wins:14, draws:7, losses:7, gf:45, ga:35, week:28,
+    form:["W","D","W","W","L"],
+    stadium:"Ghelamco Arena (20 000 places)",
+    squad:[
+      {n:1,name:"Davy Roef",short:"Roef",pos:"GK",age:30,nat:"🇧🇪",note:75,maxNote:77,val:2,wage:12,contract:"2026",fitness:87,morale:3,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","L"]},
+      {n:5,name:"Alessio Castro-Montes",short:"Castro",pos:"DEF",age:27,nat:"🇧🇪",note:75,maxNote:78,val:5,wage:14,contract:"2027",fitness:84,morale:3,goals:2,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","L"]},
+      {n:3,name:"Jens Toornstra",short:"Toornstra",pos:"DEF",age:35,nat:"🇳🇱",note:72,maxNote:73,val:1,wage:12,contract:"2026",fitness:78,morale:3,goals:1,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","W"]},
+      {n:4,name:"Malick Fofana",short:"Fofana",pos:"DEF",age:19,nat:"🇧🇪",note:74,maxNote:85,val:15,wage:10,contract:"2027",fitness:92,morale:5,goals:0,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","L"]},
+      {n:8,name:"Sven Kums",short:"Kums",pos:"MID",age:36,nat:"🇧🇪",note:74,maxNote:75,val:0.5,wage:14,contract:"2026",fitness:75,morale:4,goals:4,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","L"]},
+      {n:10,name:"Matisse Samoise",short:"Samoise",pos:"MID",age:23,nat:"🇧🇪",note:76,maxNote:81,val:8,wage:15,contract:"2027",fitness:88,morale:4,goals:10,assists:8,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","L"]},
+      {n:6,name:"Julien De Sart",short:"De Sart",pos:"MID",age:29,nat:"🇧🇪",note:73,maxNote:75,val:3,wage:11,contract:"2026",fitness:82,morale:3,goals:3,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","L","W"]},
+      {n:7,name:"Tarik Tissoudali",short:"Tissoudali",pos:"ATT",age:30,nat:"🇲🇦",note:77,maxNote:78,val:4,wage:16,contract:"2026",fitness:81,morale:3,goals:11,assists:6,injured:true,injuryWeeks:1,sessions:0,form:["W","D","W","W","L"]},
+      {n:9,name:"Gift Orban",short:"Orban",pos:"ATT",age:22,nat:"🇳🇬",note:78,maxNote:84,val:14,wage:18,contract:"2027",fitness:89,morale:4,goals:14,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","L"]},
+      {n:11,name:"Hyun-seok Hong",short:"Hong",pos:"ATT",age:28,nat:"🇰🇷",note:75,maxNote:77,val:5,wage:12,contract:"2026",fitness:86,morale:3,goals:8,assists:7,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","W"]},
+    ],
+    objectives:[
+      {text:"Terminer dans le Top 4",check:g=>g.pts>=50},
+      {text:"Dépasser Antwerp au classement",check:g=>g.pts>=42},
+      {text:"Qualification européenne",check:g=>g.pts>=54},
+    ]
+  },
+  antwerp: {
+    name:"R. Antwerp FC", abbr:"ANT", short:"Antwerp",
+    primary:"#D32F2F", primaryDark:"#9a1a1a", primaryLight:"#ff6b6b", onPrimary:"#ffffff",
+    icon:"🔴", budget:12, income:30, wages:22,
+    pts:41, wins:12, draws:5, losses:11, gf:41, ga:38, week:28,
+    form:["L","W","W","D","W"],
+    stadium:"Bosuilstadion (16 144 places)",
+    squad:[
+      {n:1,name:"Jean Butez",short:"Butez",pos:"GK",age:30,nat:"🇫🇷",note:78,maxNote:80,val:5,wage:16,contract:"2026",fitness:90,morale:4,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["L","W","W","D","W"]},
+      {n:5,name:"Toby Alderweireld",short:"Alderw.",pos:"DEF",age:36,nat:"🇧🇪",note:75,maxNote:76,val:0.8,wage:22,contract:"2026",fitness:78,morale:4,goals:2,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["L","W","W","D","W"]},
+      {n:4,name:"Jelle Bataille",short:"Bataille",pos:"DEF",age:25,nat:"🇧🇪",note:73,maxNote:77,val:4,wage:11,contract:"2027",fitness:85,morale:3,goals:1,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","L","W"]},
+      {n:3,name:"Aurelio Buta",short:"Buta",pos:"DEF",age:27,nat:"🇵🇹",note:74,maxNote:77,val:5,wage:12,contract:"2027",fitness:87,morale:3,goals:2,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
+      {n:8,name:"Ritchie De Laet",short:"De Laet",pos:"MID",age:36,nat:"🇧🇪",note:70,maxNote:71,val:0.5,wage:10,contract:"2026",fitness:72,morale:3,goals:1,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["L","W","W","D","W"]},
+      {n:6,name:"George Ilenikhena",short:"Ilenikh.",pos:"MID",age:18,nat:"🇳🇬",note:74,maxNote:86,val:8,wage:6,contract:"2028",fitness:93,morale:5,goals:3,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","L","W"]},
+      {n:10,name:"Radja Nainggolan",short:"Naingg.",pos:"MID",age:37,nat:"🇧🇪",note:72,maxNote:73,val:0.3,wage:15,contract:"2026",fitness:70,morale:3,goals:4,assists:5,injured:true,injuryWeeks:3,sessions:0,form:["L","W","W","D","W"]},
+      {n:7,name:"Viktor Gyökeres",short:"Gyökeres",pos:"ATT",age:26,nat:"🇸🇪",note:84,maxNote:87,val:65,wage:55,contract:"2027",fitness:91,morale:5,goals:20,assists:8,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
+      {n:9,name:"Jannes Vansteenkiste",short:"Vanst.",pos:"ATT",age:22,nat:"🇧🇪",note:72,maxNote:80,val:4,wage:8,contract:"2027",fitness:88,morale:3,goals:6,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["L","W","W","D","W"]},
+      {n:11,name:"Michel-Ange Balikwisha",short:"Balikwisha",pos:"ATT",age:23,nat:"🇧🇪",note:73,maxNote:78,val:5,wage:10,contract:"2026",fitness:85,morale:3,goals:5,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
+    ],
+    objectives:[
+      {text:"Rester dans le Top 6",check:g=>g.pts>=40},
+      {text:"Gagner la Coupe de Belgique",check:g=>false},
+      {text:"Dépasser Gent au classement",check:g=>g.pts>=50},
+    ]
+  },
+  union: {
+    name:"Union Saint-Gilloise", abbr:"USG", short:"Union SG",
+    primary:"#F5C518", primaryDark:"#c9a000", primaryLight:"#ffd84d", onPrimary:"#003087",
+    icon:"🟡", budget:9, income:22, wages:16,
+    pts:38, wins:10, draws:8, losses:10, gf:35, ga:36, week:28,
+    form:["D","W","L","W","D"],
+    stadium:"Stade Joseph Marien (8 837 places)",
+    squad:[
+      {n:1,name:"Anthony Moris",short:"Moris",pos:"GK",age:34,nat:"🇱🇺",note:76,maxNote:77,val:1.5,wage:12,contract:"2026",fitness:85,morale:3,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["D","W","L","W","D"]},
+      {n:5,name:"Ross McCrorie",short:"McCrorie",pos:"DEF",age:27,nat:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",note:73,maxNote:76,val:3,wage:10,contract:"2026",fitness:84,morale:3,goals:2,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","D"]},
+      {n:3,name:"Christian Burgess",short:"Burgess",pos:"DEF",age:33,nat:"🇬🇧",note:71,maxNote:72,val:1,wage:9,contract:"2026",fitness:78,morale:3,goals:1,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["D","W","L","W","D"]},
+      {n:4,name:"Koki Machida",short:"Machida",pos:"DEF",age:27,nat:"🇯🇵",note:74,maxNote:78,val:5,wage:12,contract:"2027",fitness:88,morale:4,goals:1,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","W"]},
+      {n:8,name:"Cameron Puertas",short:"Puertas",pos:"MID",age:27,nat:"🇪🇸",note:77,maxNote:80,val:7,wage:14,contract:"2026",fitness:86,morale:4,goals:7,assists:12,injured:false,injuryWeeks:0,sessions:0,form:["D","W","L","W","D"]},
+      {n:6,name:"Bart Nieuwkoop",short:"Nieuwkoop",pos:"MID",age:28,nat:"🇳🇱",note:73,maxNote:75,val:2,wage:10,contract:"2026",fitness:82,morale:3,goals:3,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["W","D","L","W","D"]},
+      {n:10,name:"Franjo Ivanovic",short:"Ivanovic",pos:"MID",age:24,nat:"🇭🇷",note:74,maxNote:79,val:5,wage:10,contract:"2027",fitness:87,morale:3,goals:5,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","D"]},
+      {n:9,name:"Victor Boniface",short:"Boniface",pos:"ATT",age:24,nat:"🇳🇬",note:79,maxNote:84,val:22,wage:22,contract:"2027",fitness:90,morale:5,goals:13,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["W","D","L","W","W"]},
+      {n:11,name:"Loïc Lapoussin",short:"Lapoussin",pos:"ATT",age:27,nat:"🇲🇬",note:75,maxNote:77,val:4,wage:12,contract:"2026",fitness:83,morale:3,goals:8,assists:7,injured:false,injuryWeeks:0,sessions:0,form:["D","W","L","W","D"]},
+      {n:7,name:"Mohamed Amoura",short:"Amoura",pos:"ATT",age:25,nat:"🇩🇿",note:77,maxNote:82,val:12,wage:16,contract:"2027",fitness:89,morale:4,goals:11,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","W"]},
+    ],
+    objectives:[
+      {text:"Accrocher le Top 6",check:g=>g.pts>=40},
+      {text:"Dépasser votre record de pts",check:g=>g.pts>=55},
+      {text:"Rester en JPL",check:g=>g.pts>=30},
+    ]
+  },
+  genk: {
+    name:"Genk", abbr:"GNK", short:"Genk",
+    primary:"#0055A4", primaryDark:"#003d7a", primaryLight:"#4d8dd4", onPrimary:"#ffffff",
+    icon:"🔵", budget:11, income:26, wages:18,
+    pts:39, wins:11, draws:6, losses:11, gf:38, ga:40, week:28,
+    form:["W","L","W","D","W"],
+    stadium:"Cegeka Arena (24 000 places)",
+    squad:[
+      {n:1,name:"Maarten Vandevoordt",short:"Vandevoordt",pos:"GK",age:22,nat:"🇧🇪",note:77,maxNote:84,val:12,wage:14,contract:"2027",fitness:88,morale:4,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
+      {n:5,name:"Mark McKenzie",short:"McKenzie",pos:"DEF",age:25,nat:"🇺🇸",note:74,maxNote:78,val:5,wage:12,contract:"2026",fitness:84,morale:3,goals:2,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
+      {n:3,name:"Patrik Hrosovsky",short:"Hrosovsky",pos:"DEF",age:33,nat:"🇸🇰",note:73,maxNote:74,val:1.5,wage:11,contract:"2026",fitness:80,morale:3,goals:1,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["L","W","D","W","W"]},
+      {n:8,name:"Bryan Heynen",short:"Heynen",pos:"MID",age:29,nat:"🇧🇪",note:75,maxNote:77,val:3,wage:14,contract:"2026",fitness:83,morale:3,goals:5,assists:7,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
+      {n:10,name:"Jarne Steuckers",short:"Steuckers",pos:"MID",age:22,nat:"🇧🇪",note:75,maxNote:83,val:8,wage:12,contract:"2027",fitness:90,morale:4,goals:6,assists:8,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","W"]},
+      {n:6,name:"Carlos Cuesta",short:"Cuesta",pos:"DEF",age:26,nat:"🇨🇴",note:74,maxNote:77,val:4,wage:11,contract:"2026",fitness:85,morale:3,goals:2,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["W","W","L","D","W"]},
+      {n:7,name:"Tolu Arokodare",short:"Arokodare",pos:"ATT",age:24,nat:"🇳🇬",note:76,maxNote:81,val:9,wage:14,contract:"2027",fitness:88,morale:4,goals:12,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
+      {n:9,name:"Luca Oyen",short:"Oyen",pos:"ATT",age:22,nat:"🇧🇪",note:73,maxNote:80,val:7,wage:10,contract:"2027",fitness:87,morale:4,goals:8,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","W"]},
+      {n:11,name:"Bilal El Khannous",short:"El Khannous",pos:"MID",age:20,nat:"🇲🇦",note:76,maxNote:84,val:14,wage:12,contract:"2028",fitness:91,morale:4,goals:5,assists:9,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
+    ],
+    objectives:[
+      {text:"Accrocher les playoffs",check:g=>g.pts>=54},
+      {text:"Top 6 garanti",check:g=>g.pts>=42},
+      {text:"Qualifier pour l'Europe",check:g=>g.pts>=58},
+    ]
+  },
+  cercle: {
+    name:"Cercle Brugge", abbr:"CER", short:"Cercle",
+    primary:"#007A3D", primaryDark:"#005a2c", primaryLight:"#33a866", onPrimary:"#ffffff",
+    icon:"🟢", budget:5, income:14, wages:10,
+    pts:32, wins:9, draws:5, losses:14, gf:30, ga:45, week:28,
+    form:["L","W","L","D","W"],
+    stadium:"Jan Breydel Stadion (29 062 places)",
+    squad:[
+      {n:1,name:"Warleson",short:"Warleson",pos:"GK",age:28,nat:"🇧🇷",note:73,maxNote:76,val:2,wage:8,contract:"2026",fitness:85,morale:3,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["L","W","L","D","W"]},
+      {n:5,name:"Hannes Van der Bruggen",short:"Van der B.",pos:"DEF",age:29,nat:"🇧🇪",note:71,maxNote:73,val:1.5,wage:9,contract:"2026",fitness:81,morale:2,goals:1,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["W","L","D","W","L"]},
+      {n:3,name:"Mathias Fixelles",short:"Fixelles",pos:"DEF",age:24,nat:"🇧🇪",note:70,maxNote:74,val:1.5,wage:8,contract:"2026",fitness:84,morale:3,goals:0,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["L","W","L","D","W"]},
+      {n:8,name:"Kevin Denkey",short:"Denkey",pos:"ATT",age:24,nat:"🇹🇬",note:78,maxNote:82,val:12,wage:14,contract:"2027",fitness:88,morale:4,goals:16,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
+      {n:10,name:"Arne Engels",short:"Engels",pos:"MID",age:21,nat:"🇧🇪",note:76,maxNote:83,val:10,wage:11,contract:"2027",fitness:89,morale:4,goals:7,assists:9,injured:false,injuryWeeks:0,sessions:0,form:["L","W","L","D","W"]},
+      {n:6,name:"Sidy Sarr",short:"Sarr",pos:"MID",age:22,nat:"🇸🇳",note:73,maxNote:79,val:5,wage:9,contract:"2027",fitness:87,morale:3,goals:4,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["L","D","W","L","W"]},
+      {n:7,name:"Christophe Antonucci",short:"Antonucci",pos:"ATT",age:26,nat:"🇧🇪",note:73,maxNote:76,val:3,wage:10,contract:"2026",fitness:83,morale:3,goals:5,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["L","W","L","D","W"]},
+      {n:9,name:"Jérémy Taravel",short:"Taravel",pos:"MID",age:36,nat:"🇫🇷",note:68,maxNote:69,val:0.3,wage:7,contract:"2026",fitness:71,morale:2,goals:2,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","L","D","W","L"]},
+    ],
+    objectives:[
+      {text:"Assurer le maintien",check:g=>g.pts>=35},
+      {text:"Sortir des 3 dernières places",check:g=>g.pts>=30},
+      {text:"Top 8 en fin de saison",check:g=>g.pts>=42},
+    ]
+  },
+};
+
+const TRANSFERS = [
+  {name:"Lois Openda",pos:"ATT",age:24,nat:"🇧🇪",note:84,club:"RB Leipzig",price:28,wage:45},
+  {name:"Yannick Carrasco",pos:"MID",age:31,nat:"🇧🇪",note:78,club:"Al-Shabab",price:4,wage:20},
+  {name:"Arthur Theate",pos:"DEF",age:24,nat:"🇧🇪",note:79,club:"Stade Rennais",price:18,wage:28},
+  {name:"Loïc Lapoussin",pos:"ATT",age:27,nat:"🇧🇪",note:76,club:"Union SG",price:8,wage:15},
+  {name:"Jarne Steuckers",pos:"MID",age:22,nat:"🇧🇪",note:75,club:"Genk",price:6,wage:12},
+  {name:"Sheraldo Becker",pos:"ATT",age:29,nat:"🇳🇱",note:77,club:"Al-Ettifaq",price:5,wage:18},
+  {name:"Zinho Vanheusden",pos:"DEF",age:26,nat:"🇧🇪",note:74,club:"Bologne",price:7,wage:14},
+  {name:"Charles De Ketelaere",pos:"MID",age:24,nat:"🇧🇪",note:81,club:"Atalanta",price:22,wage:38},
+  {name:"Hugo Siquet",pos:"DEF",age:23,nat:"🇧🇪",note:73,club:"Fribourg",price:5,wage:10},
+  {name:"Benito Raman",pos:"ATT",age:31,nat:"🇧🇪",note:72,club:"Sans club",price:0,wage:8},
+  {name:"Jordan Lukaku",pos:"DEF",age:30,nat:"🇧🇪",note:71,club:"Sans club",price:0,wage:7},
+  {name:"Adnan Januzaj",pos:"MID",age:30,nat:"🇧🇪",note:74,club:"Sans club",price:0,wage:10},
+];
+
+const LEAGUE_BASE = [
+  {club:"Club Brugge KV",j:28,g:18,n:5,p:5,bp:58,bc:28,pts:59,clubKey:"brugge"},
+  {club:"RSC Anderlecht",j:28,g:16,n:6,p:6,bp:52,bc:32,pts:54,clubKey:"anderlecht"},
+  {club:"K.A.A. Gent",j:28,g:14,n:7,p:7,bp:45,bc:35,pts:49,clubKey:"gent"},
+  {club:"Standard de Liège",j:28,g:13,n:3,p:12,bp:44,bc:42,pts:42,clubKey:"standard"},
+  {club:"R. Antwerp FC",j:28,g:12,n:5,p:11,bp:41,bc:38,pts:41,clubKey:"antwerp"},
+  {club:"Genk",j:28,g:11,n:6,p:11,bp:38,bc:40,pts:39,clubKey:"genk"},
+  {club:"Union Saint-Gilloise",j:28,g:10,n:8,p:10,bp:35,bc:36,pts:38,clubKey:"union"},
+  {club:"OH Louvain",j:28,g:9,n:6,p:13,bp:32,bc:43,pts:33,clubKey:null},
+  {club:"Cercle Brugge",j:28,g:9,n:5,p:14,bp:30,bc:45,pts:32,clubKey:"cercle"},
+  {club:"RFC Seraing",j:28,g:8,n:5,p:15,bp:27,bc:50,pts:29,clubKey:null},
+  {club:"Westerlo",j:28,g:7,n:6,p:15,bp:26,bc:48,pts:27,clubKey:null},
+  {club:"Eupen",j:28,g:5,n:5,p:18,bp:22,bc:58,pts:20,clubKey:null},
+];
+
+// ==================== GAME STATE ====================
+let G = {}, CL = null, SQUAD = [], leagueTable = [], transfers = [...TRANSFERS];
+let matchRunning = false, matchInterval = null;
+const formations = ["4-4-2","4-3-3","4-2-3-1","5-4-1","3-5-2","4-5-1"];
+const trainingTypes = ["Repos","Physique","Tactique","Tirs","Défense","Physique","Repos"];
+const trainingDays = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
+const trainingOptions = ["Repos","Physique","Tactique","Tirs","Défense","Gardiens","Récupération"];
+const oppStr = {
+  "Club Brugge KV":83,"RSC Anderlecht":80,"K.A.A. Gent":77,"R. Antwerp FC":76,
+  "Genk":75,"Union Saint-Gilloise":76,"OH Louvain":70,"Cercle Brugge":69,
+  "RFC Seraing":65,"Westerlo":67
+};
+
+// ==================== CLUB SELECTION ====================
+function renderClubSelection(){
+  const grid = document.getElementById("clubs-grid");
+  grid.innerHTML = Object.entries(CLUBS).map(([key,c])=>`
+    <div class="club-card" style="--club-color:${c.primary}" onclick="selectClub('${key}')">
+      <div class="crest" style="background:${c.primary};color:${c.onPrimary}">${c.abbr}</div>
+      <div class="cname">${c.name}</div>
+      <div class="cleague">Jupiler Pro League</div>
+      <div class="cbudget">Budget : €${c.budget}M</div>
+      <div class="crating">Note moy. : ${Math.round(c.squad.reduce((a,p)=>a+p.note,0)/c.squad.length)}</div>
+    </div>`).join("");
+}
+
+function selectClub(key){
+  CL = CLUBS[key];
+  G = {
+    pts: CL.pts, wins: CL.wins, draws: CL.draws, losses: CL.losses,
+    gf: CL.gf, ga: CL.ga, week: CL.week, budget: CL.budget,
+    income: CL.income, wages: CL.wages, form: [...CL.form],
+    venue: "home", formation: "4-4-2",
+  };
+  SQUAD = CL.squad.map(p=>({...p, form:[...p.form]}));
+  leagueTable = LEAGUE_BASE.map(t=>({...t}));
+
+  applyTheme();
+  populateOpponents(key);
+  renderAll();
+
+  document.getElementById("club-select-screen").style.display="none";
+  document.getElementById("game-ui").style.display="block";
+  document.getElementById("h-crest").textContent=CL.abbr;
+  document.getElementById("h-title").textContent=CL.name;
+}
+
+function applyTheme(){
+  const r = document.documentElement.style;
+  r.setProperty("--primary", CL.primary);
+  r.setProperty("--primary-dark", CL.primaryDark);
+  r.setProperty("--primary-light", CL.primaryLight);
+  r.setProperty("--on-primary", CL.onPrimary);
+}
+
+function changeClub(){
+  document.getElementById("club-select-screen").style.display="flex";
+  document.getElementById("game-ui").style.display="none";
+}
+
+function populateOpponents(myKey){
+  const sel = document.getElementById("opp-select");
+  sel.innerHTML = LEAGUE_BASE
+    .filter(t=>t.clubKey!==myKey)
+    .map(t=>`<option>${t.club}</option>`).join("");
+}
+
+// ==================== UTILITIES ====================
+function rcClass(n){ return n>=80?"elite":n>=75?"good":n>=70?"avg":"low"; }
+function morale(m){ return ["","😞","😐","😊","😊","🔥"][m]||"😊"; }
+function formDots(arr){ return arr.slice(-5).map(r=>`<span class="fd ${r}">${r}</span>`).join(""); }
+function getPos(){
+  return leagueTable.slice().sort((a,b)=>b.pts-a.pts).findIndex(t=>t.clubKey===Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name))+1||4;
+}
+
+// ==================== RENDER ALL ====================
+function renderAll(){
+  renderHeader(); renderDashboard(); renderSquad(); renderFormations(); renderLineup();
+  renderClassement(); renderTraining(); renderTransfers(); renderFinances(); renderPreMatch();
+}
+
+function renderHeader(){
+  const pos = getPos();
+  ["h-pos","d-pos"].forEach(id=>document.getElementById(id).textContent=pos+"e");
+  ["h-pts","d-pts"].forEach(id=>document.getElementById(id).textContent=G.pts);
+  document.getElementById("h-budget").textContent="€"+G.budget.toFixed(1)+"M";
+  document.getElementById("h-week").textContent="J"+G.week;
+  document.getElementById("d-buts").textContent=G.gf;
+  document.getElementById("d-budget").textContent="€"+G.budget.toFixed(1)+"M";
+  document.getElementById("d-wins").textContent=G.wins;
+  document.getElementById("d-draws").textContent=G.draws;
+  document.getElementById("d-losses").textContent=G.losses;
+  document.getElementById("d-form").innerHTML=formDots(G.form);
+  document.getElementById("mercato-budget").textContent="€"+G.budget.toFixed(1)+"M";
+  document.getElementById("f-budget").textContent="€"+G.budget.toFixed(1)+"M";
+  document.getElementById("f-income").textContent="€"+G.income.toFixed(1)+"M";
+  document.getElementById("f-wages").textContent="€"+G.wages.toFixed(1)+"M";
+  const bal=G.income-G.wages;
+  const fb=document.getElementById("f-balance");
+  fb.textContent=(bal>=0?"+":"")+"€"+Math.abs(bal).toFixed(1)+"M";
+  fb.style.color=bal>=0?"var(--green)":"#cc0000";
+}
+
+function renderDashboard(){
+  const opp=leagueTable.find(t=>t.clubKey!==Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name))||leagueTable[0];
+  document.getElementById("next-home-name").textContent=CL.name;
+  document.getElementById("next-home-icon").textContent=CL.icon;
+  document.getElementById("next-away-name").textContent=opp.club;
+  document.getElementById("next-away-icon").textContent="⚽";
+  document.getElementById("next-info").textContent=`Jupiler Pro League · Journée ${G.week+1} · ${CL.stadium}`;
+
+  document.getElementById("objectives-list").innerHTML=(CL.objectives||[]).map(o=>{
+    const done=o.check(G);
+    return `<div class="obj-item"><div class="obj-dot ${done?'done':'pending'}"></div>
+      <div><div style="font-size:13px;font-weight:600">${o.text}</div>
+      <div style="font-size:11px;color:var(--gray3);margin-top:2px">${done?"✅ Accompli":"⏳ En cours"}</div></div></div>`;
+  }).join("");
+
+  document.getElementById("news-feed").innerHTML=[
+    {type:"Mercato",text:`Un club anglais s'intéresse à votre meilleur joueur cet été.`,time:"Il y a 2 jours"},
+    {type:"Stade",text:`Le prochain match à ${CL.stadium} affiche complet.`,time:"Il y a 3 jours"},
+    {type:"Objectif",text:"La direction attend une qualification en playoffs.",time:"Il y a 5 jours"},
+    {type:"Talent",text:"Un jeune espoir de 17 ans signe son premier contrat pro.",time:"Il y a 1 semaine"},
+  ].map(n=>`<div class="news-item"><div class="ntype">${n.type}</div><div class="ntext">${n.text}</div><div class="ntime">${n.time}</div></div>`).join("");
+}
+
+function renderSquad(filter="ALL"){
+  document.getElementById("squad-sub").textContent=`${CL.name} · ${SQUAD.length} joueurs`;
+  const list=SQUAD.filter(p=>filter==="ALL"||p.pos===filter).sort((a,b)=>b.note-a.note);
+  document.getElementById("squad-body").innerHTML=list.map(p=>`<tr>
+    <td style="color:var(--gray3)">${p.n}</td>
+    <td style="font-weight:600">${p.name}</td>
+    <td><span class="badge ${p.pos}">${p.pos}</span></td>
+    <td>${p.age}</td><td>${p.nat}</td>
+    <td><span class="rc ${rcClass(p.note)}">${p.note}</span></td>
+    <td>${p.goals}⚽ ${p.assists}🎯</td>
+    <td>${formDots(p.form)}</td>
+    <td>${morale(p.morale)}</td>
+    <td><div style="display:flex;align-items:center;gap:6px;">
+      <div class="bar-wrap" style="flex:1"><div class="bar-fill green" style="width:${p.fitness}%"></div></div>
+      <span style="font-size:10px;color:${p.fitness>80?"var(--green)":p.fitness>60?"var(--yellow)":"#cc0000"}">${p.fitness}%</span>
+    </div></td>
+    <td>${p.injured?`<span style="color:#e74c3c;font-size:11px">🚑 ${p.injuryWeeks}s</span>`:'<span style="color:var(--green)">✓</span>'}</td>
+    <td>${p.contract}</td>
+    <td style="color:var(--gold)">€${p.val}M</td>
+  </tr>`).join("");
+}
+
+function filterSquad(pos,btn){
+  document.querySelectorAll("#sec-squad .btn").forEach(b=>b.classList.remove("primary"));
+  btn.classList.add("primary");
+  renderSquad(pos);
+}
+
+function renderFormations(){
+  document.getElementById("formation-list").innerHTML=formations.map(f=>`
+    <button class="form-btn ${G.formation===f?'active':''}" onclick="G.formation='${f}';renderFormations()">${f}</button>`).join("");
+}
+
+function renderLineup(){
+  const lineup=SQUAD.filter(p=>!p.injured).slice(0,11);
+  document.getElementById("lineup-body").innerHTML=lineup.map(p=>`<tr>
+    <td><span class="badge ${p.pos}">${p.pos}</span></td>
+    <td style="font-weight:600">${p.name}</td>
+    <td><span class="rc ${rcClass(p.note)}">${p.note}</span></td>
+    <td><div style="display:flex;align-items:center;gap:6px;"><div class="bar-wrap" style="width:70px"><div class="bar-fill ${p.fitness>70?'green':'primary'}" style="width:${p.fitness}%"></div></div><span style="font-size:11px">${p.fitness}%</span></div></td>
+    <td>${morale(p.morale)}</td>
+  </tr>`).join("");
+}
+
+// ==================== MATCH ENGINE ====================
+const COM = {
+  normal:["Beau mouvement collectif côté gauche.","Le milieu adverse tente une percée.","Corner pour les locaux !","Faute sifflée au milieu.","Longue transversale interceptée.","Le bloc défensif tient.","Pression adverse dans le camp.","Combinaison rapide sur l'aile.","Frappe bloquée in extremis.","Hors-jeu signalé à l'avant.","Belle récupération défensive.","L'arbitre laisse jouer.","Coup franc à 25 mètres.","Tête qui passe au-dessus.","Tentative de dribble stoppée."],
+  goal_h:["⚽ BUT ! L'équipe ouvre le score !","⚽ GOALLL ! Quel but magnifique !","⚽ Le stade explose !"],
+  goal_a:["⚽ But de l'adversaire...","⚽ L'adversaire égalise.","⚽ But encaissé."],
+  save:["🧤 Arrêt réflexe du gardien !","🧤 Le poteau sauve l'équipe !","🧤 Sortie spectaculaire du gardien !"],
+  card:["🟡 Carton jaune !","🟡 L'arbitre sort le carton.","🟥 EXPULSION ! À 10 !"],
+  chance:["Frappe sur le poteau !","Belle occasion ratée !","Tir au-dessus du cadre."],
+};
+
+function setVenue(v){
+  G.venue=v;
+  document.getElementById("home-btn").className="btn "+(v==="home"?"primary":"");
+  document.getElementById("away-btn").className="btn "+(v==="away"?"primary":"");
+}
+
+function renderPreMatch(){
+  const opp=document.getElementById("opp-select").value;
+  const os=oppStr[opp]||72;
+  const available=SQUAD.filter(p=>!p.injured);
+  const ss=Math.round(available.slice(0,11).reduce((a,p)=>a+p.note,0)/Math.min(11,available.length));
+  const adv=G.venue==="home"?2:-2;
+  document.getElementById("pre-match-info").innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
+      <div style="text-align:center">
+        <div style="font-size:11px;color:var(--gray3);margin-bottom:4px">${CL.name}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--primary-light)">${ss+adv}</div>
+        <div style="font-size:10px;color:var(--gray3)">Force équipe</div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gray3)">VS</div>
+      <div style="text-align:center">
+        <div style="font-size:11px;color:var(--gray3);margin-bottom:4px">${opp}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--gray3)">${os}</div>
+        <div style="font-size:10px;color:var(--gray3)">Force équipe</div>
+      </div>
+    </div>
+    <div style="padding:8px;background:var(--dark3);border-radius:4px;font-size:12px;color:var(--gray3);text-align:center;margin-bottom:8px;">
+      ${G.venue==="home"?"🏠 Domicile — avantage terrain +2":"✈️ Extérieur — désavantage -2"}
+    </div>
+    <div style="font-size:12px;color:var(--gray3)">Formation : <span style="color:var(--white);font-weight:600">${G.formation}</span></div>`;
+  document.getElementById("match-day-lbl").textContent=G.week+1;
+  document.getElementById("m-home-abbr").textContent=CL.abbr;
+}
+
+function startMatch(){
+  if(matchRunning)return;
+  const opp=document.getElementById("opp-select").value;
+  const tBonus=parseInt(document.getElementById("match-tactic").value)||0;
+  matchRunning=true;
+  document.getElementById("play-btn").disabled=true;
+  document.getElementById("m-min").style.display="block";
+  document.getElementById("match-summary").style.display="none";
+  document.getElementById("commentary").innerHTML="";
+  document.getElementById("m-home-score").textContent="0";
+  document.getElementById("m-away-score").textContent="0";
+  document.getElementById("m-away-abbr").textContent=opp.split(" ")[0].slice(0,3).toUpperCase();
+
+  const available=SQUAD.filter(p=>!p.injured);
+  const ss=Math.round(available.slice(0,11).reduce((a,p)=>a+p.note,0)/Math.min(11,available.length))+(G.venue==="home"?2:-2)+tBonus;
+  const os=oppStr[opp]||72;
+  const scorerPool=available.filter(p=>p.pos==="ATT"||p.pos==="MID").slice(0,6);
+
+  const events=[];
+  let min=1;
+  while(min<=90){
+    const r=Math.random();
+    if(r<0.08){ const h=Math.random()*(ss+os)<ss; events.push({min,type:"goal",home:h,scorer:h&&scorerPool.length?scorerPool[Math.floor(Math.random()*scorerPool.length)]:null}); }
+    else if(r<0.14){ events.push({min,type:"save"}); }
+    else if(r<0.17){ events.push({min,type:"card"}); }
+    else if(r<0.20){ events.push({min,type:"chance"}); }
+    else { events.push({min,type:"normal",text:COM.normal[Math.floor(Math.random()*COM.normal.length)]}); }
+    min+=1+Math.floor(Math.random()*4);
+  }
+
+  let score=[0,0], ei=0, m=0;
+  renderPitchTokens(opp);
+  matchInterval=setInterval(()=>{
+    m+=3; if(m>90){ clearInterval(matchInterval); endMatch(opp,score); return; }
+    document.getElementById("m-min").textContent=m+"'";
+    while(ei<events.length&&events[ei].min<=m){
+      const ev=events[ei++];
+      addComment(ev,opp);
+      if(ev.type==="goal"){
+        if(ev.home){ score[0]++; if(ev.scorer){ev.scorer.goals++;} }
+        else score[1]++;
+        document.getElementById("m-home-score").textContent=score[0];
+        document.getElementById("m-away-score").textContent=score[1];
+        const tk=document.querySelector(`.pt.${ev.home?'home':'away'}`);
+        if(tk){tk.classList.add("goal-anim");setTimeout(()=>tk.classList.remove("goal-anim"),1500);}
+      }
+    }
+  },120);
+}
+
+function addComment(ev,opp){
+  const box=document.getElementById("commentary");
+  let text="",cls="";
+  if(ev.type==="goal"){
+    text=ev.home?(COM.goal_h[Math.floor(Math.random()*COM.goal_h.length)]+(ev.scorer?" "+ev.scorer.name+" !":"")):COM.goal_a[Math.floor(Math.random()*COM.goal_a.length)];
+    cls=ev.home?"goal-ev":"";
+  } else if(ev.type==="save"){text=COM.save[Math.floor(Math.random()*COM.save.length)];cls="save-ev";}
+  else if(ev.type==="card"){text=COM.card[Math.floor(Math.random()*COM.card.length)];cls="card-ev";}
+  else if(ev.type==="chance"){text=COM.chance[Math.floor(Math.random()*COM.chance.length)];}
+  else{text=ev.text;}
+  const d=document.createElement("div");
+  d.className=`ev ${cls}`;
+  d.innerHTML=`<span class="min">${ev.min}'</span>${text}`;
+  box.prepend(d);
+}
+
+function endMatch(opp,score){
+  matchRunning=false;
+  document.getElementById("play-btn").disabled=false;
+  document.getElementById("m-min").style.display="none";
+  const [gh,ga]=score;
+  const result=gh>ga?"W":gh===ga?"D":"L";
+  const pts=result==="W"?3:result==="D"?1:0;
+  G.pts+=pts; G.week++;
+  if(result==="W")G.wins++;else if(result==="D")G.draws++;else G.losses++;
+  G.gf+=gh; G.ga+=ga;
+  G.form.push(result); if(G.form.length>10)G.form.shift();
+  SQUAD.forEach(p=>{if(!p.injured){p.fitness=Math.max(48,p.fitness-Math.floor(Math.random()*12)-4);p.form.push(result);if(p.form.length>10)p.form.shift();}});
+
+  const myKey=Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name);
+  const myRow=leagueTable.find(t=>t.clubKey===myKey);
+  if(myRow){myRow.pts=G.pts;myRow.j=G.week;myRow.g=G.wins;myRow.n=G.draws;myRow.p=G.losses;myRow.bp=G.gf;myRow.bc=G.ga;}
+
+  const badge=result==="W"?'<span class="badge W">Victoire</span>':result==="D"?'<span class="badge D">Match nul</span>':'<span class="badge L">Défaite</span>';
+  document.getElementById("match-summary").style.display="block";
+  document.getElementById("match-summary").innerHTML=`
+    <div class="card" style="border:1px solid ${result==="W"?"var(--green)":result==="D"?"var(--yellow)":"#cc0000"}">
+      <div style="text-align:center;margin-bottom:12px;">${badge}<span style="margin-left:8px;font-size:12px;color:var(--gray3)">+${pts} point${pts>1?"s":""}</span></div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:18px;">
+        <div style="text-align:center"><div style="font-size:11px;color:var(--gray3);margin-bottom:4px">${CL.name}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--primary-light)">${gh}</div></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gray3)">:</div>
+        <div style="text-align:center"><div style="font-size:11px;color:var(--gray3);margin-bottom:4px">${opp}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--white)">${ga}</div></div>
+      </div>
+      <div style="text-align:center;margin-top:10px;font-size:12px;color:var(--gray3)">${G.pts} pts · ${getPos()}e place</div>
+    </div>`;
+  renderHeader(); renderClassement(); renderDashboard();
+  showNotif(`Match terminé ! ${gh}:${ga} — +${pts} pt${pts>1?"s":""}${result==="W"?" 🎉":result==="L"?" 😔":""}`);
+}
+
+function renderPitchTokens(opp){
+  const container=document.getElementById("pitch-tokens");
+  container.innerHTML="";
+  const home_pos=[[50,88],[20,72],[37,72],[63,72],[80,72],[20,52],[37,52],[63,52],[80,52],[37,25],[63,25]];
+  const away_pos=[[50,12],[20,28],[37,28],[63,28],[80,28],[20,48],[37,48],[63,48],[80,48],[37,75],[63,75]];
+  SQUAD.filter(p=>!p.injured).slice(0,11).forEach((p,i)=>{
+    if(!home_pos[i])return;
+    const el=document.createElement("div");
+    el.className="pt home";el.style.left=home_pos[i][0]+"%";el.style.top=home_pos[i][1]+"%";
+    el.textContent=p.short.slice(0,4);el.title=`${p.name} (${p.note})`;container.appendChild(el);
+  });
+  for(let i=0;i<11;i++){
+    if(!away_pos[i])return;
+    const el=document.createElement("div");
+    el.className="pt away";el.style.left=away_pos[i][0]+"%";el.style.top=away_pos[i][1]+"%";
+    el.textContent=opp.split(" ")[0].slice(0,3).toUpperCase();container.appendChild(el);
+  }
+}
+
+// ==================== CLASSEMENT ====================
+function renderClassement(){
+  const sorted=[...leagueTable].sort((a,b)=>b.pts-a.pts);
+  const myKey=Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name);
+  document.getElementById("league-table").innerHTML=sorted.map((t,i)=>{
+    const isMe=t.clubKey===myKey;
+    const diff=t.bp-t.bc;
+    const pc=i<2?"cl":i<5?"eu":i>=9?"rel":"nor";
+    return `<tr class="${isMe?"highlight":""}">
+      <td><span class="pos-b ${pc}">${i+1}</span></td>
+      <td style="font-weight:${isMe?700:400};color:${isMe?"var(--primary-light)":"inherit"}">${isMe?CL.icon+" ":""}${t.club}</td>
+      <td>${t.j}</td><td>${t.g}</td><td>${t.n}</td><td>${t.p}</td>
+      <td>${t.bp}</td><td>${t.bc}</td>
+      <td style="color:${diff>0?"var(--green)":diff<0?"#cc0000":"inherit"}">${diff>0?"+":""}${diff}</td>
+      <td style="font-weight:700">${t.pts}</td>
+    </tr>`;
+  }).join("");
+
+  const topScorers=[...SQUAD].sort((a,b)=>b.goals-a.goals).slice(0,5).map(p=>({name:p.name,club:CL.name,goals:p.goals}));
+  const extraScorers=[{name:"Vanaken",club:"Club Brugge KV",goals:15},{name:"Jutglà",club:"Club Brugge KV",goals:16},{name:"Orban",club:"Gent",goals:14},{name:"Boniface",club:"Union SG",goals:13},{name:"Denkey",club:"Cercle Brugge",goals:16}];
+  const allScorers=[...topScorers,...extraScorers].sort((a,b)=>b.goals-a.goals).slice(0,8);
+  document.getElementById("scorers-table").innerHTML=allScorers.map((s,i)=>`
+    <tr><td style="color:var(--gray3)">${i+1}</td><td style="font-weight:600">${s.name}</td><td style="color:var(--gray3)">${s.club}</td><td style="font-weight:700;color:var(--green)">${s.goals}</td></tr>`).join("");
+
+  document.getElementById("next-fixtures").innerHTML=sorted.slice(0,3).map(t=>`
+    <div style="padding:7px;border-bottom:1px solid var(--dark4);font-size:12px;display:flex;justify-content:space-between;">
+      <span style="color:${t.clubKey===myKey?"var(--primary-light)":"inherit"};font-weight:${t.clubKey===myKey?600:400}">${CL.name} vs ${t.club}</span>
+      <span style="color:var(--gray3)">J${G.week+1}</span>
+    </div>`).join("");
+}
+
+// ==================== TRANSFERS ====================
+function renderTransfers(filter="all"){
+  let list=transfers.filter(p=>!SQUAD.find(s=>s.name===p.name));
+  if(filter==="cheap")list=list.filter(p=>p.price<=5);
+  else if(filter==="free")list=list.filter(p=>p.price===0);
+  else if(filter!=="all")list=list.filter(p=>p.pos===filter);
+  document.getElementById("transfer-list").innerHTML=list.map((p,i)=>`
+    <div class="tp">
+      <div class="avatar">${p.name.split(" ").map(w=>w[0]).join("").slice(0,2)}</div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:13px">${p.name} <span class="badge ${p.pos}">${p.pos}</span></div>
+        <div style="font-size:11px;color:var(--gray3);margin-top:2px">${p.nat||""} ${p.club} · ${p.age} ans</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+          <span class="rc ${rcClass(p.note)}">${p.note}</span>
+          <span style="font-size:11px;color:var(--gray3)">€${p.wage}K/sem</span>
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold)">${p.price===0?"LIBRE":"€"+p.price+"M"}</div>
+        <button class="btn ${p.price<=G.budget?"primary":""}" onclick="recruit('${p.name}')" ${p.price>G.budget?"disabled":""}>
+          ${p.price>G.budget?"Budget insuf.":"Recruter"}
+        </button>
+      </div>
+    </div>`).join("");
+}
+
+function filterTransfers(f,btn){
+  document.querySelectorAll("#sec-mercato .btn").forEach(b=>b.classList.remove("primary"));
+  btn.classList.add("primary");
+  renderTransfers(f);
+}
+
+function recruit(name){
+  const p=transfers.find(t=>t.name===name);
+  if(!p||G.budget<p.price){showNotif("❌ Budget insuffisant !"); return;}
+  G.budget-=p.price;
+  SQUAD.push({n:99,name:p.name,short:p.name.split(" ").slice(-1)[0],pos:p.pos,age:p.age,nat:p.nat||"🌍",note:p.note,maxNote:p.note+2,val:p.price,wage:p.wage,contract:"2028",fitness:85,morale:4,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W"]});
+  transfers.splice(transfers.indexOf(p),1);
+  showNotif(`✅ ${p.name} recruté ${p.price===0?"(libre)":"pour €"+p.price+"M"} !`);
+  renderHeader(); renderTransfers(); renderSquad(); renderLineup();
+}
+
+// ==================== TRAINING ====================
+function renderTraining(){
+  document.getElementById("training-week").innerHTML=trainingDays.map((d,i)=>`
+    <div class="tr-day ${trainingTypes[i]!=='Repos'?'active':''}" onclick="cycleTraining(${i},this)">
+      <div class="dname">${d}</div>
+      <div class="dtype">${trainingTypes[i]}</div>
+    </div>`).join("");
+
+  document.getElementById("training-effects").innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      ${[["Note moyenne","+0.2","var(--green)"],["Fitness","+8%","var(--blue)"],["Moral équipe","+1","var(--gold)"],["Risque blessure","Faible","var(--gray3)"]].map(e=>`
+      <div style="display:flex;justify-content:space-between;padding:6px 10px;background:var(--dark4);border-radius:4px;">
+        <span style="font-size:12px;color:var(--gray3)">${e[0]}</span>
+        <span style="font-size:12px;font-weight:600;color:${e[2]}">${e[1]}</span>
+      </div>`).join("")}
+    </div>`;
+
+  document.getElementById("training-body").innerHTML=SQUAD.slice(0,12).map(p=>{
+    const prog=Math.round((p.note/p.maxNote)*100);
+    return `<tr>
+      <td style="font-weight:600">${p.name}</td>
+      <td><span class="badge ${p.pos}">${p.pos}</span></td>
+      <td><span class="rc ${rcClass(p.note)}">${p.note}</span></td>
+      <td><span class="rc ${rcClass(p.maxNote)}">${p.maxNote}</span></td>
+      <td><div class="bar-wrap" style="width:80px;display:inline-block"><div class="bar-fill gold" style="width:${prog}%"></div></div> <span style="font-size:10px;color:var(--gray3)">${prog}%</span></td>
+      <td style="color:var(--gray3)">${p.sessions}</td>
+    </tr>`;
+  }).join("");
+}
+
+function cycleTraining(i,el){
+  const cur=trainingOptions.indexOf(trainingTypes[i]);
+  trainingTypes[i]=trainingOptions[(cur+1)%trainingOptions.length];
+  el.querySelector(".dtype").textContent=trainingTypes[i];
+  el.classList.toggle("active",trainingTypes[i]!=="Repos");
+}
+
+function applyTraining(){
+  SQUAD.forEach(p=>{
+    p.fitness=Math.min(100,p.fitness+8);
+    p.sessions++;
+    if(p.sessions%5===0&&p.note<p.maxNote){p.note++;showNotif(`📈 ${p.name} progresse → ${p.note}`);}
+    if(p.morale<5&&Math.random()>0.7)p.morale++;
+  });
+  renderTraining(); renderSquad(); renderLineup();
+  showNotif("✅ Semaine d'entraînement appliquée !");
+}
+
+// ==================== FINANCES ====================
+function renderFinances(){
+  const sources=[["Droits TV",G.income*0.33],["Billetterie",G.income*0.24],["Sponsors",G.income*0.26],["Transferts",G.income*0.17]];
+  document.getElementById("income-breakdown").innerHTML=sources.map(s=>`
+    <div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px;"><span>${s[0]}</span><span style="font-weight:600;color:var(--green)">€${s[1].toFixed(1)}M</span></div>
+      <div class="bar-wrap"><div class="bar-fill green" style="width:${Math.round(s[1]/G.income*100)}%"></div></div>
+    </div>`).join("");
+
+  document.getElementById("wages-body").innerHTML=[...SQUAD].sort((a,b)=>b.wage-a.wage).slice(0,12).map(p=>`
+    <tr><td style="font-weight:600">${p.name}</td><td><span class="badge ${p.pos}">${p.pos}</span></td><td style="color:var(--gold)">€${p.wage}K</td><td>${p.contract}</td></tr>`).join("");
+}
+
+// ==================== NAV & NOTIF ====================
+function showSection(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
+  document.getElementById("sec-"+id).classList.add("active");
+  const idx=["dashboard","squad","tactics","match","classement","mercato","training","finances"].indexOf(id);
+  document.querySelectorAll(".nav-item")[idx]?.classList.add("active");
+  if(id==="match")renderPreMatch();
+  if(id==="classement")renderClassement();
+  if(id==="training")renderTraining();
+  if(id==="finances")renderFinances();
+}
+
+function showNotif(msg){
+  const el=document.getElementById("notif");
+  el.textContent=msg; el.style.display="block";
+  clearTimeout(el._t); el._t=setTimeout(()=>el.style.display="none",3500);
+}
+
+// ==================== INIT ====================
+renderClubSelection();
+</script>
+</body>
+</html>
