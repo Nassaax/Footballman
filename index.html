@@ -2,1226 +2,1758 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>FM26 — Jupiler Pro League</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --primary: #CC0000;
-  --primary-dark: #990000;
-  --primary-light: #ff4444;
-  --on-primary: #ffffff;
-  --black: #0a0a0a;
-  --dark: #111111;
-  --dark2: #1a1a1a;
-  --dark3: #222222;
-  --dark4: #2a2a2a;
-  --gray: #444;
-  --gray2: #666;
-  --gray3: #999;
-  --light: #ccc;
-  --white: #f5f5f5;
-  --green: #27ae60;
-  --yellow: #f39c12;
-  --blue: #2980b9;
-  --gold: #c9a84c;
-}
+:root{--p:#CC0000;--pd:#990000;--pl:#ff4444;--op:#fff;--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--bg4:#222;--bg5:#2a2a2a;--g:#444;--g2:#666;--g3:#999;--w:#f5f5f5;--green:#27ae60;--yellow:#f39c12;--blue:#2980b9;--gold:#c9a84c;}
 *{box-sizing:border-box;margin:0;padding:0;}
 html{font-size:14px;}
-body{background:var(--black);color:var(--white);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;}
-
-/* ===== CLUB SELECTION ===== */
-#club-select-screen{
-  position:fixed;inset:0;background:var(--black);z-index:999;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:20px;overflow-y:auto;
-}
-.select-title{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:4px;text-align:center;margin-bottom:4px;}
-.select-sub{font-size:13px;color:var(--gray3);letter-spacing:1px;text-transform:uppercase;margin-bottom:32px;text-align:center;}
-.clubs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;max-width:900px;width:100%;}
-.club-card{
-  background:var(--dark2);border:2px solid var(--dark4);border-radius:12px;
-  padding:20px 14px;text-align:center;cursor:pointer;transition:all 0.2s;
-}
-.club-card:hover{transform:translateY(-4px);border-color:var(--club-color);}
-.club-card .crest{
-  width:60px;height:60px;border-radius:10px;margin:0 auto 12px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;
-}
-.club-card .cname{font-size:13px;font-weight:700;margin-bottom:2px;}
-.club-card .cleague{font-size:11px;color:var(--gray3);}
-.club-card .cbudget{font-size:11px;color:var(--gold);margin-top:4px;}
-.club-card .crating{font-size:11px;color:var(--gray3);margin-top:2px;}
-
-/* ===== HEADER ===== */
-.header{
-  background:var(--dark);border-bottom:2px solid var(--primary);
-  padding:10px 20px;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:100;
-}
-.header-logo{display:flex;align-items:center;gap:12px;}
-.header-crest{
-  width:36px;height:36px;border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;
-  background:var(--primary);color:var(--on-primary);
-}
-.header-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;}
-.header-subtitle{font-size:11px;color:var(--gray3);letter-spacing:1px;text-transform:uppercase;}
-.header-stats{display:flex;gap:18px;}
-.hstat{text-align:center;}
-.hstat-val{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--primary-light);line-height:1;}
-.hstat-lbl{font-size:10px;color:var(--gray3);text-transform:uppercase;letter-spacing:.5px;}
-.change-club-btn{
-  padding:5px 12px;border-radius:4px;font-size:11px;font-weight:600;
-  text-transform:uppercase;letter-spacing:.5px;cursor:pointer;
-  background:transparent;border:1px solid var(--gray2);color:var(--gray3);
-  transition:all .2s;
-}
-.change-club-btn:hover{border-color:var(--primary);color:var(--primary);}
-
-/* ===== NAV ===== */
-.nav{background:var(--dark2);display:flex;gap:2px;padding:0 20px;border-bottom:1px solid var(--dark4);overflow-x:auto;}
-.nav-item{padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray3);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
-.nav-item:hover{color:var(--white);}
-.nav-item.active{color:var(--primary-light);border-bottom-color:var(--primary);}
-
-/* ===== MAIN ===== */
-.main{padding:20px;max-width:1100px;margin:0 auto;}
-.section{display:none;}
-.section.active{display:block;}
-.section-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;margin-bottom:4px;}
-.section-sub{font-size:12px;color:var(--gray3);margin-bottom:20px;}
-
-/* ===== GRIDS ===== */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
-
-/* ===== CARDS ===== */
-.card{background:var(--dark2);border:1px solid var(--dark4);border-radius:8px;padding:16px;}
-.card-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;color:var(--gray3);margin-bottom:12px;text-transform:uppercase;}
-.stat-card{background:var(--dark3);border:1px solid var(--dark4);border-radius:8px;padding:14px;text-align:center;}
-.stat-card .val{font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1;margin-bottom:4px;}
-.stat-card .lbl{font-size:10px;color:var(--gray3);text-transform:uppercase;letter-spacing:.5px;}
-
-/* ===== BUTTONS ===== */
-.btn{padding:7px 14px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;border:1px solid var(--dark4);background:var(--dark3);color:var(--white);transition:all .15s;}
-.btn:hover{background:var(--dark4);}
-.btn.primary{background:var(--primary);border-color:var(--primary-dark);color:var(--on-primary);}
-.btn.primary:hover{filter:brightness(1.15);}
-.btn:disabled{opacity:.4;cursor:not-allowed;}
-
-/* ===== BADGES ===== */
-.badge{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
-.badge.GK{background:#4a3000;color:#f39c12;}
-.badge.DEF{background:#003366;color:#5dade2;}
-.badge.MID{background:#003300;color:#2ecc71;}
-.badge.ATT{background:#440000;color:#e74c3c;}
-.badge.W{background:#0d3d1a;color:#27ae60;}
-.badge.D{background:#3d3400;color:#f39c12;}
-.badge.L{background:#3d0000;color:#e74c3c;}
-
-/* ===== RATING ===== */
-.rc{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;}
-.rc.elite{background:#1a4a00;color:#27ae60;border:1px solid #27ae60;}
-.rc.good{background:#1a3300;color:#2ecc71;border:1px solid #2ecc71;}
-.rc.avg{background:#3d3400;color:#f39c12;border:1px solid #f39c12;}
-.rc.low{background:#3d0000;color:#e74c3c;border:1px solid #e74c3c;}
-
-/* ===== TABLE ===== */
-.data-table{width:100%;border-collapse:collapse;font-size:12px;}
-.data-table th{text-align:left;padding:8px 10px;color:var(--gray3);border-bottom:1px solid var(--dark4);font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;}
-.data-table td{padding:8px 10px;border-bottom:1px solid var(--dark3);vertical-align:middle;}
-.data-table tr:hover td{background:var(--dark3);}
-.data-table tr:last-child td{border-bottom:none;}
-.data-table tr.highlight td{background:rgba(255,255,255,.04);}
-
-/* ===== PROGRESS BAR ===== */
-.bar-wrap{background:var(--dark4);border-radius:3px;height:5px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:3px;transition:width .3s;}
-.bar-fill.green{background:var(--green);}
-.bar-fill.primary{background:var(--primary);}
-.bar-fill.gold{background:var(--gold);}
-.bar-fill.blue{background:var(--blue);}
-
-/* ===== FORM DOTS ===== */
-.form-row{display:flex;gap:4px;align-items:center;}
-.fd{width:17px;height:17px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;}
+body{background:var(--bg);color:var(--w);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;}
+/* ---- SELECT SCREEN ---- */
+#sel{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:30px 20px;overflow-y:auto;}
+.sel-brand{position:fixed;bottom:16px;right:20px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;color:var(--g2);}
+.sel-title{font-family:'Bebas Neue',sans-serif;font-size:56px;letter-spacing:6px;text-align:center;margin-bottom:2px;line-height:1;}
+.sel-sub{font-size:12px;color:var(--g3);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;text-align:center;}
+.sel-nassaax{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--p);letter-spacing:3px;margin-bottom:28px;text-align:center;}
+.clubs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;max-width:1000px;width:100%;}
+.cc{background:var(--bg3);border:2px solid var(--bg5);border-radius:10px;padding:16px 12px;text-align:center;cursor:pointer;transition:all .2s;}
+.cc:hover{transform:translateY(-4px);border-color:var(--club-c,var(--p));box-shadow:0 0 20px rgba(0,0,0,.5);}
+.cc .badge{width:56px;height:56px;border-radius:8px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;}
+.cc .cn{font-size:12px;font-weight:700;margin-bottom:2px;line-height:1.2;}
+.cc .cs{font-size:10px;color:var(--g3);margin-top:3px;}
+.cc .cb{font-size:11px;color:var(--gold);margin-top:3px;}
+/* ---- GAME UI ---- */
+#game{display:none;min-height:100vh;}
+/* Header */
+.hdr{background:var(--bg2);border-bottom:2px solid var(--p);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.hdr-logo{display:flex;align-items:center;gap:10px;}
+.hdr-crest{width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;background:var(--p);color:var(--op);}
+.hdr-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;}
+.hdr-sub{font-size:10px;color:var(--g3);letter-spacing:.5px;text-transform:uppercase;}
+.hdr-stats{display:flex;gap:16px;}
+.hs{text-align:center;}
+.hs-v{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--pl);line-height:1;}
+.hs-l{font-size:9px;color:var(--g3);text-transform:uppercase;letter-spacing:.5px;}
+.hdr-right{display:flex;gap:8px;align-items:center;}
+.hdr-nassaax{font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--g2);letter-spacing:2px;}
+.btn-sm{padding:5px 10px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;border:1px solid var(--bg5);background:var(--bg4);color:var(--g3);transition:all .15s;}
+.btn-sm:hover{border-color:var(--p);color:var(--pl);}
+/* Nav */
+.nav{background:var(--bg3);display:flex;gap:2px;padding:0 18px;border-bottom:1px solid var(--bg5);overflow-x:auto;}
+.ni{padding:9px 14px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--g3);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+.ni:hover{color:var(--w);}
+.ni.active{color:var(--pl);border-bottom-color:var(--p);}
+/* Main */
+.main{padding:18px;max-width:1100px;margin:0 auto;}
+.sec{display:none;}.sec.active{display:block;}
+.sec-t{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;margin-bottom:3px;}
+.sec-s{font-size:11px;color:var(--g3);margin-bottom:18px;}
+/* Grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+/* Card */
+.card{background:var(--bg3);border:1px solid var(--bg5);border-radius:8px;padding:14px;}
+.ct{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1.5px;color:var(--g3);margin-bottom:10px;text-transform:uppercase;}
+.stat-c{background:var(--bg4);border:1px solid var(--bg5);border-radius:8px;padding:12px;text-align:center;}
+.stat-v{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;margin-bottom:3px;}
+.stat-l{font-size:9px;color:var(--g3);text-transform:uppercase;letter-spacing:.5px;}
+/* Buttons */
+.btn{padding:7px 13px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;border:1px solid var(--bg5);background:var(--bg4);color:var(--w);transition:all .15s;}
+.btn:hover{background:var(--bg5);}
+.btn.p{background:var(--p);border-color:var(--pd);color:var(--op);}
+.btn.p:hover{filter:brightness(1.15);}
+.btn.g{background:var(--green);border-color:#1a7a40;color:#fff;}
+.btn.o{background:var(--gold);border-color:#a88730;color:#1a1a00;}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+/* Badges */
+.b{display:inline-block;padding:2px 6px;border-radius:3px;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.b.GK{background:#4a3000;color:#f39c12;}
+.b.DEF{background:#003366;color:#5dade2;}
+.b.MID{background:#003300;color:#2ecc71;}
+.b.ATT{background:#440000;color:#e74c3c;}
+.b.W{background:#0d3d1a;color:var(--green);}
+.b.D{background:#3d3400;color:var(--yellow);}
+.b.L{background:#3d0000;color:#e74c3c;}
+/* Rating circle */
+.rc{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;}
+.rc.e{background:#1a4a00;color:var(--green);border:1px solid var(--green);}
+.rc.g{background:#1a3300;color:#2ecc71;border:1px solid #2ecc71;}
+.rc.a{background:#3d3400;color:var(--yellow);border:1px solid var(--yellow);}
+.rc.l{background:#3d0000;color:#e74c3c;border:1px solid #e74c3c;}
+/* Table */
+.dt{width:100%;border-collapse:collapse;font-size:11px;}
+.dt th{text-align:left;padding:7px 9px;color:var(--g3);border-bottom:1px solid var(--bg5);font-size:9px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;}
+.dt td{padding:7px 9px;border-bottom:1px solid var(--bg4);vertical-align:middle;}
+.dt tr:hover td{background:var(--bg4);}
+.dt tr:last-child td{border-bottom:none;}
+.dt tr.hl td{background:rgba(255,255,255,.04);}
+/* Bar */
+.bar{background:var(--bg5);border-radius:3px;height:5px;overflow:hidden;}
+.bar-f{height:100%;border-radius:3px;transition:width .3s;}
+/* Form dots */
+.fd-row{display:flex;gap:3px;align-items:center;}
+.fd{width:15px;height:15px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;}
 .fd.W{background:var(--green);color:#fff;}
 .fd.D{background:var(--yellow);color:#1a1a00;}
 .fd.L{background:#cc0000;color:#fff;}
-
-/* ===== PITCH ===== */
-.pitch{background:#1d3d1d;border-radius:8px;border:2px solid #2a5a2a;position:relative;height:360px;overflow:hidden;margin-bottom:16px;}
-.pitch-halfway{position:absolute;top:0;left:50%;width:1.5px;height:100%;background:rgba(255,255,255,.1);}
-.pitch-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:75px;height:75px;border:1.5px solid rgba(255,255,255,.12);border-radius:50%;}
-.pitch-dot{position:absolute;top:50%;left:50%;width:6px;height:6px;background:rgba(255,255,255,.25);border-radius:50%;transform:translate(-50%,-50%);}
-.pitch-box-t{position:absolute;top:0;left:50%;transform:translateX(-50%);width:170px;height:70px;border:1.5px solid rgba(255,255,255,.1);border-top:none;}
-.pitch-box-b{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:170px;height:70px;border:1.5px solid rgba(255,255,255,.1);border-bottom:none;}
-.score-disp{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.88);border:1px solid var(--dark4);border-radius:6px;padding:5px 18px;display:flex;align-items:center;gap:14px;z-index:10;}
-.score-team{font-size:10px;color:var(--gray3);font-weight:700;letter-spacing:.5px;}
-.score-num{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;color:var(--white);}
-.score-sep{color:var(--gray2);font-size:16px;font-family:'Bebas Neue',sans-serif;}
-.match-min{position:absolute;top:10px;right:10px;background:var(--primary);color:var(--on-primary);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;padding:3px 9px;border-radius:4px;display:none;}
-.pt{position:absolute;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;cursor:pointer;transition:transform .2s;border:2px solid rgba(255,255,255,.25);transform:translate(-50%,-50%);}
-.pt:hover{transform:translate(-50%,-50%) scale(1.15);z-index:5;}
-.pt.home{background:var(--primary);color:var(--on-primary);}
-.pt.away{background:var(--dark);color:var(--light);}
-
-/* ===== COMMENTARY ===== */
-.com-box{background:var(--dark3);border:1px solid var(--dark4);border-radius:6px;height:140px;overflow-y:auto;padding:10px 12px;font-size:12px;line-height:1.7;}
-.com-box .ev{padding:2px 0;border-bottom:1px solid var(--dark4);}
-.com-box .ev:last-child{border-bottom:none;}
-.com-box .min{color:var(--primary-light);font-family:'JetBrains Mono',monospace;font-size:11px;margin-right:6px;}
-.com-box .goal-ev{color:var(--green);font-weight:700;}
-.com-box .save-ev{color:#5dade2;}
-.com-box .card-ev{color:var(--yellow);}
-
-/* ===== FORMATION BTNS ===== */
-.form-btn{padding:5px 12px;border-radius:4px;border:1px solid var(--dark4);background:var(--dark3);color:var(--gray3);font-size:11px;font-weight:700;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .2s;}
-.form-btn.active{background:var(--primary);border-color:var(--primary-dark);color:var(--on-primary);}
-
-/* ===== NEWS ===== */
-.news-item{border-left:3px solid var(--primary);padding:8px 12px;margin-bottom:8px;background:var(--dark3);border-radius:0 4px 4px 0;}
-.news-item .ntype{font-size:10px;color:var(--primary-light);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:3px;}
-.news-item .ntext{font-size:12px;color:var(--light);}
-.news-item .ntime{font-size:10px;color:var(--gray3);margin-top:3px;}
-
-/* ===== TRANSFER ===== */
-.tp{background:var(--dark3);border:1px solid var(--dark4);border-radius:6px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
-.avatar{width:40px;height:40px;border-radius:50%;background:var(--dark4);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--gray3);flex-shrink:0;}
-
-/* ===== TRAINING ===== */
-.tr-day{background:var(--dark3);border-radius:6px;padding:8px;text-align:center;border:1px solid var(--dark4);cursor:pointer;transition:border-color .2s;}
-.tr-day.active{border-color:var(--primary);}
-.tr-day .dname{font-size:10px;color:var(--gray3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
-.tr-day .dtype{font-size:11px;font-weight:600;}
-
-/* ===== OBJECTIVE ===== */
-.obj-item{display:flex;align-items:center;gap:12px;padding:9px 12px;background:var(--dark3);border-radius:6px;margin-bottom:8px;border:1px solid var(--dark4);}
-.obj-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;}
-.obj-dot.done{background:var(--green);}
-.obj-dot.pending{background:var(--yellow);}
-
-/* ===== POS BADGE ===== */
-.pos-b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-size:11px;font-weight:700;}
-.pos-b.cl{background:#1a3d00;color:#27ae60;border:1px solid #27ae60;}
-.pos-b.eu{background:#001a3d;color:#5dade2;border:1px solid #5dade2;}
-.pos-b.rel{background:#3d0000;color:#e74c3c;border:1px solid #e74c3c;}
-.pos-b.nor{background:var(--dark4);color:var(--gray3);}
-
-/* ===== NOTIF ===== */
-.notif{position:fixed;bottom:20px;right:20px;background:var(--dark2);border:1px solid var(--primary);border-radius:8px;padding:11px 16px;font-size:13px;max-width:300px;z-index:9999;display:none;}
-
-/* ===== GOAL ANIM ===== */
-@keyframes goalPop{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.4);}}
-.goal-anim{animation:goalPop .4s ease 3;}
-
-/* ===== SCROLLBAR ===== */
+/* Pos badge */
+.pb{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-size:10px;font-weight:700;}
+.pb.cl{background:#1a3d00;color:var(--green);border:1px solid var(--green);}
+.pb.eu{background:#001a3d;color:#5dade2;border:1px solid #5dade2);}
+.pb.rel{background:#3d0000;color:#e74c3c;border:1px solid #e74c3c;}
+.pb.nor{background:var(--bg5);color:var(--g3);}
+/* ---- TACTICS PITCH ---- */
+.tac-pitch-wrap{position:relative;width:100%;padding-bottom:52%;background:#1a3d1a;border-radius:8px;border:2px solid #2a5a2a;overflow:hidden;user-select:none;}
+.tac-pitch{position:absolute;inset:0;}
+/* Pitch markings - horizontal */
+.pm{position:absolute;pointer-events:none;}
+.pm-mid{top:0;left:50%;width:1.5px;height:100%;background:rgba(255,255,255,.12);}
+.pm-circle{top:50%;left:50%;transform:translate(-50%,-50%);width:15%;padding-bottom:15%;border-radius:50%;border:1.5px solid rgba(255,255,255,.12);}
+.pm-dot{top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);}
+.pm-box-l{top:50%;left:0;transform:translateY(-50%);height:50%;width:14%;border:1.5px solid rgba(255,255,255,.12);border-left:none;}
+.pm-box-r{top:50%;right:0;transform:translateY(-50%);height:50%;width:14%;border:1.5px solid rgba(255,255,255,.12);border-right:none;}
+.pm-goal-l{top:50%;left:0;transform:translateY(-50%);height:22%;width:3%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.2);border-left:none;}
+.pm-goal-r{top:50%;right:0;transform:translateY(-50%);height:22%;width:3%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.2);border-right:none;}
+/* Player tokens on tactics */
+.tac-token{position:absolute;transform:translate(-50%,-50%);cursor:grab;transition:box-shadow .15s;z-index:10;}
+.tac-token:active{cursor:grabbing;}
+.tac-token .tok-circle{width:34px;height:34px;border-radius:50%;background:var(--p);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--op);line-height:1.1;text-align:center;transition:transform .15s;}
+.tac-token:hover .tok-circle{transform:scale(1.15);}
+.tac-token .tok-name{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:3px;font-size:9px;font-weight:600;white-space:nowrap;background:rgba(0,0,0,.75);padding:1px 4px;border-radius:3px;color:var(--w);pointer-events:none;}
+.tac-token.unselected .tok-circle{background:var(--bg5);opacity:.5;}
+/* ---- MATCH CANVAS ---- */
+#match-canvas{width:100%;background:#1a3d1a;border-radius:8px;border:2px solid #2a5a2a;display:block;}
+/* Match UI */
+.match-hud{position:relative;background:rgba(0,0,0,.88);border:1px solid var(--bg5);border-radius:6px;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.match-score{display:flex;align-items:center;gap:12px;}
+.match-team{font-size:11px;color:var(--g3);font-weight:700;}
+.match-num{font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1;color:var(--w);}
+.match-sep{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--g2);}
+.match-min-badge{background:var(--p);color:var(--op);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;padding:3px 10px;border-radius:4px;}
+.match-min-badge.ht{background:var(--yellow);color:#1a1a00;}
+/* Commentary */
+.com-box{background:var(--bg4);border:1px solid var(--bg5);border-radius:6px;height:130px;overflow-y:auto;padding:9px 12px;font-size:11px;line-height:1.7;}
+.com-ev{padding:2px 0;border-bottom:1px solid var(--bg5);}
+.com-ev:last-child{border-bottom:none;}
+.com-min{color:var(--pl);font-family:'JetBrains Mono',monospace;font-size:10px;margin-right:6px;}
+.com-ev.goal{color:var(--green);font-weight:700;}
+.com-ev.save{color:#5dade2;}
+.com-ev.card{color:var(--yellow);}
+/* HT Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;display:flex;align-items:center;justify-content:center;}
+.modal{background:var(--bg3);border:1px solid var(--bg5);border-radius:10px;padding:20px;width:90%;max-width:560px;max-height:80vh;overflow-y:auto;}
+.modal-t{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:14px;}
+/* Speed control */
+.speed-btns{display:flex;gap:6px;}
+.speed-btn{padding:5px 12px;border-radius:4px;border:1px solid var(--bg5);background:var(--bg4);color:var(--g3);font-size:11px;font-weight:700;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .15s;}
+.speed-btn.active{background:var(--p);border-color:var(--pd);color:var(--op);}
+/* Calendar */
+.cal-day{background:var(--bg4);border:1px solid var(--bg5);border-radius:6px;padding:10px;margin-bottom:8px;}
+.cal-day.current{border-color:var(--p);}
+.cal-day.played{opacity:.6;}
+.cal-day-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:11px;}
+.cal-day-num{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--pl);}
+.cal-fix{font-size:11px;padding:3px 0;border-bottom:1px solid var(--bg5);display:flex;justify-content:space-between;}
+.cal-fix:last-child{border-bottom:none;}
+.cal-fix .home{text-align:right;flex:1;}
+.cal-fix .score{min-width:40px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--g3);}
+.cal-fix .away{flex:1;}
+.cal-fix .my{color:var(--pl);font-weight:700;}
+/* Transfer card */
+.tc{background:var(--bg4);border:1px solid var(--bg5);border-radius:6px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:12px;}
+.av{width:38px;height:38px;border-radius:50%;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--g3);flex-shrink:0;}
+/* News */
+.news{border-left:3px solid var(--p);padding:7px 11px;margin-bottom:7px;background:var(--bg4);border-radius:0 4px 4px 0;}
+.news-t{font-size:9px;color:var(--pl);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:2px;}
+/* Bonus malus panel */
+.bm-item{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;border-radius:4px;margin-bottom:5px;font-size:11px;}
+.bm-pos{background:#0d3d1a;color:var(--green);}
+.bm-neg{background:#3d0000;color:#e74c3c;}
+.bm-neu{background:var(--bg4);color:var(--g3);}
+/* Notif */
+.notif{position:fixed;bottom:18px;right:18px;background:var(--bg3);border:1px solid var(--p);border-radius:8px;padding:10px 15px;font-size:12px;max-width:280px;z-index:9999;display:none;}
+/* Save indicator */
+.save-ind{font-size:10px;color:var(--g3);display:flex;align-items:center;gap:4px;}
+/* Formation buttons */
+.fb{padding:4px 11px;border-radius:4px;border:1px solid var(--bg5);background:var(--bg4);color:var(--g3);font-size:11px;font-weight:700;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .15s;}
+.fb.active{background:var(--p);border-color:var(--pd);color:var(--op);}
+/* Player list for selection */
+.pl-item{display:flex;align-items:center;gap:10px;padding:7px 10px;background:var(--bg4);border-radius:5px;margin-bottom:5px;border:1px solid var(--bg5);cursor:pointer;transition:all .15s;}
+.pl-item:hover{border-color:var(--p);}
+.pl-item.selected{border-color:var(--green);background:rgba(39,174,96,.06);}
+.pl-item.injured{border-color:#e74c3c;opacity:.6;}
+.pl-item.suspended{border-color:var(--yellow);opacity:.7;}
+/* Scrollbar */
 ::-webkit-scrollbar{width:5px;height:5px;}
-::-webkit-scrollbar-track{background:var(--dark2);}
-::-webkit-scrollbar-thumb{background:var(--dark4);border-radius:3px;}
-
-@media(max-width:680px){
-  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr 1fr;}
-  .header-stats{gap:10px;}
-  .main{padding:10px;}
-  .clubs-grid{grid-template-columns:repeat(2,1fr);}
-}
+::-webkit-scrollbar-track{background:var(--bg3);}
+::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:3px;}
+@keyframes goalFX{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.4);}}
+@media(max-width:700px){.g2,.g3,.g4{grid-template-columns:1fr 1fr;}.hdr-stats{gap:8px;}.main{padding:10px;}.clubs-grid{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
 <body>
 
-<!-- ===== CLUB SELECTION SCREEN ===== -->
-<div id="club-select-screen">
-  <div class="select-title">FM 26</div>
-  <div class="select-sub">Jupiler Pro League · Choisissez votre club</div>
+<!-- ======= CLUB SELECTION ======= -->
+<div id="sel">
+  <div class="sel-title">FM 26</div>
+  <div class="sel-sub">Jupiler Pro League · Saison 2025/26</div>
+  <div class="sel-nassaax">by Nassaax</div>
   <div class="clubs-grid" id="clubs-grid"></div>
+  <div class="sel-brand">by Nassaax</div>
 </div>
 
-<!-- ===== HEADER (hidden until club chosen) ===== -->
-<div id="game-ui" style="display:none;">
-<div class="header">
-  <div class="header-logo">
-    <div class="header-crest" id="h-crest">SdL</div>
-    <div>
-      <div class="header-title" id="h-title">Standard de Liège</div>
-      <div class="header-subtitle">FM26 · Jupiler Pro League · Saison 2025/26</div>
-    </div>
+<!-- ======= GAME UI ======= -->
+<div id="game">
+<div class="hdr">
+  <div class="hdr-logo">
+    <div class="hdr-crest" id="h-crest">–</div>
+    <div><div class="hdr-name" id="h-name">–</div><div class="hdr-sub">FM26 · JPL · Saison 2025/26</div></div>
   </div>
-  <div class="header-stats">
-    <div class="hstat"><div class="hstat-val" id="h-pos">–</div><div class="hstat-lbl">Position</div></div>
-    <div class="hstat"><div class="hstat-val" id="h-pts">–</div><div class="hstat-lbl">Points</div></div>
-    <div class="hstat"><div class="hstat-val" id="h-budget">–</div><div class="hstat-lbl">Budget</div></div>
-    <div class="hstat"><div class="hstat-val" id="h-week">–</div><div class="hstat-lbl">Journée</div></div>
+  <div class="hdr-stats">
+    <div class="hs"><div class="hs-v" id="h-pos">–</div><div class="hs-l">Position</div></div>
+    <div class="hs"><div class="hs-v" id="h-pts">–</div><div class="hs-l">Points</div></div>
+    <div class="hs"><div class="hs-v" id="h-budget">–</div><div class="hs-l">Budget</div></div>
+    <div class="hs"><div class="hs-v" id="h-jday">J1</div><div class="hs-l">Journée</div></div>
   </div>
-  <button class="change-club-btn" onclick="changeClub()">⇄ Changer</button>
+  <div class="hdr-right">
+    <span class="hdr-nassaax">by Nassaax</span>
+    <button class="btn-sm" onclick="undo()" id="btn-undo" disabled>↩ Retour</button>
+    <button class="btn-sm" onclick="saveGame()">💾 Sauver</button>
+    <button class="btn-sm" onclick="loadGame()">📂 Charger</button>
+    <button class="btn-sm" onclick="changeClub()">⇄ Club</button>
+  </div>
 </div>
 <div class="nav">
-  <div class="nav-item active" onclick="showSection('dashboard')">🏠 Dashboard</div>
-  <div class="nav-item" onclick="showSection('squad')">👥 Effectif</div>
-  <div class="nav-item" onclick="showSection('tactics')">🗺️ Tactique</div>
-  <div class="nav-item" onclick="showSection('match')">⚽ Match</div>
-  <div class="nav-item" onclick="showSection('classement')">📊 Classement</div>
-  <div class="nav-item" onclick="showSection('mercato')">💶 Mercato</div>
-  <div class="nav-item" onclick="showSection('training')">💪 Entraînement</div>
-  <div class="nav-item" onclick="showSection('finances')">💰 Finances</div>
+  <div class="ni active" onclick="showSec('dashboard')">🏠 Dashboard</div>
+  <div class="ni" onclick="showSec('calendar')">📅 Calendrier</div>
+  <div class="ni" onclick="showSec('squad')">👥 Effectif</div>
+  <div class="ni" onclick="showSec('tactics')">🗺️ Tactique</div>
+  <div class="ni" onclick="showSec('match')">⚽ Match</div>
+  <div class="ni" onclick="showSec('league')">📊 Classement</div>
+  <div class="ni" onclick="showSec('mercato')">💶 Mercato</div>
+  <div class="ni" onclick="showSec('training')">💪 Entraînement</div>
+  <div class="ni" onclick="showSec('finances')">💰 Finances</div>
+</div>
+<div class="main">
+
+<!-- DASHBOARD -->
+<div class="sec active" id="sec-dashboard">
+  <div class="sec-t">Tableau de Bord</div>
+  <div class="sec-s" id="db-season-lbl">Saison 2025/26</div>
+  <div class="g4" style="margin-bottom:14px;">
+    <div class="stat-c"><div class="stat-v" style="color:var(--pl)" id="db-pos">–</div><div class="stat-l">Position</div></div>
+    <div class="stat-c"><div class="stat-v" id="db-pts">–</div><div class="stat-l">Points</div></div>
+    <div class="stat-c"><div class="stat-v" style="color:var(--green)" id="db-gf">–</div><div class="stat-l">Buts</div></div>
+    <div class="stat-c"><div class="stat-v" style="color:var(--gold)" id="db-budget">–</div><div class="stat-l">Budget</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:14px;">
+    <div class="card">
+      <div class="ct">Prochain match — Journée <span id="db-next-jday">–</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="text-align:center;flex:1;"><div style="font-size:10px;color:var(--g3);margin-bottom:4px;" id="db-home-name">–</div><div style="font-size:24px;" id="db-home-ico">⚽</div></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--g3)">VS</div>
+        <div style="text-align:center;flex:1;"><div style="font-size:10px;color:var(--g3);margin-bottom:4px;" id="db-away-name">–</div><div style="font-size:24px;" id="db-away-ico">⚽</div></div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <button class="btn p" style="flex:1" onclick="showSec('match')">Préparer →</button>
+        <button class="btn g" onclick="advanceDay()" id="btn-advance">⏩ Avancer J+1</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">Forme récente</div>
+      <div class="fd-row" id="db-form" style="margin-bottom:12px;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;text-align:center;">
+        <div style="background:var(--bg4);border-radius:4px;padding:7px;"><div style="font-size:18px;font-weight:700;color:var(--green)" id="db-w">0</div><div style="font-size:9px;color:var(--g3);text-transform:uppercase">V</div></div>
+        <div style="background:var(--bg4);border-radius:4px;padding:7px;"><div style="font-size:18px;font-weight:700;color:var(--yellow)" id="db-d">0</div><div style="font-size:9px;color:var(--g3);text-transform:uppercase">N</div></div>
+        <div style="background:var(--bg4);border-radius:4px;padding:7px;"><div style="font-size:18px;font-weight:700;color:#cc0000" id="db-l">0</div><div style="font-size:9px;color:var(--g3);text-transform:uppercase">D</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="ct">Objectifs</div><div id="db-objectives"></div></div>
+    <div class="card"><div class="ct">Actualités du club</div><div id="db-news"></div></div>
+  </div>
 </div>
 
-<div class="main">
-<!-- DASHBOARD -->
-<div class="section active" id="sec-dashboard">
-  <div class="section-title">Tableau de Bord</div>
-  <div class="section-sub">Vue d'ensemble — Saison 2025/26</div>
-  <div class="grid-4" style="margin-bottom:16px;">
-    <div class="stat-card"><div class="val" style="color:var(--primary-light)" id="d-pos">–</div><div class="lbl">Position</div></div>
-    <div class="stat-card"><div class="val" id="d-pts">–</div><div class="lbl">Points</div></div>
-    <div class="stat-card"><div class="val" style="color:var(--green)" id="d-buts">–</div><div class="lbl">Buts marqués</div></div>
-    <div class="stat-card"><div class="val" style="color:var(--gold)" id="d-budget">–</div><div class="lbl">Budget mercato</div></div>
+<!-- CALENDAR -->
+<div class="sec" id="sec-calendar">
+  <div class="sec-t">Calendrier</div>
+  <div class="sec-s">Jupiler Pro League 2025/26 — 30 journées</div>
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+    <button class="btn p" onclick="advanceDay()">⏩ Journée suivante</button>
+    <button class="btn" onclick="undo()" id="btn-undo2">↩ Annuler dernière journée</button>
+    <button class="btn o" onclick="downloadResults()">⬇ Exporter résultats</button>
   </div>
-  <div class="grid-2" style="margin-bottom:16px;">
-    <div class="card">
-      <div class="card-title">Prochain match</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-        <div style="text-align:center;flex:1;"><div style="font-size:11px;color:var(--gray3);margin-bottom:4px;" id="next-home-name">–</div><div style="font-size:22px;" id="next-home-icon">🔴</div></div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--gray3);padding:0 10px;">VS</div>
-        <div style="text-align:center;flex:1;"><div style="font-size:11px;color:var(--gray3);margin-bottom:4px;" id="next-away-name">–</div><div style="font-size:22px;" id="next-away-icon">⚽</div></div>
-      </div>
-      <div style="font-size:11px;color:var(--gray3);text-align:center;margin-bottom:10px;" id="next-info">Journée 29</div>
-      <button class="btn primary" style="width:100%" onclick="showSection('match')">Préparer le match →</button>
-    </div>
-    <div class="card">
-      <div class="card-title">Forme récente</div>
-      <div class="form-row" id="d-form" style="margin-bottom:14px;"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;">
-        <div style="background:var(--dark3);border-radius:4px;padding:8px;"><div style="font-size:20px;font-weight:700;color:var(--green)" id="d-wins">–</div><div style="font-size:10px;color:var(--gray3);text-transform:uppercase">V</div></div>
-        <div style="background:var(--dark3);border-radius:4px;padding:8px;"><div style="font-size:20px;font-weight:700;color:var(--yellow)" id="d-draws">–</div><div style="font-size:10px;color:var(--gray3);text-transform:uppercase">N</div></div>
-        <div style="background:var(--dark3);border-radius:4px;padding:8px;"><div style="font-size:20px;font-weight:700;color:#cc0000" id="d-losses">–</div><div style="font-size:10px;color:var(--gray3);text-transform:uppercase">D</div></div>
-      </div>
-    </div>
-  </div>
-  <div class="grid-2">
-    <div class="card"><div class="card-title">Objectifs de saison</div><div id="objectives-list"></div></div>
-    <div class="card"><div class="card-title">Actualités</div><div id="news-feed"></div></div>
-  </div>
+  <div id="cal-list" style="max-height:70vh;overflow-y:auto;"></div>
 </div>
 
 <!-- SQUAD -->
-<div class="section" id="sec-squad">
-  <div class="section-title">Effectif</div>
-  <div class="section-sub" id="squad-sub">– joueurs</div>
-  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-    <button class="btn primary" onclick="filterSquad('ALL',this)">Tous</button>
-    <button class="btn" onclick="filterSquad('GK',this)">GK</button>
-    <button class="btn" onclick="filterSquad('DEF',this)">Défenseurs</button>
-    <button class="btn" onclick="filterSquad('MID',this)">Milieux</button>
-    <button class="btn" onclick="filterSquad('ATT',this)">Attaquants</button>
+<div class="sec" id="sec-squad">
+  <div class="sec-t">Effectif</div>
+  <div class="sec-s" id="sq-sub">–</div>
+  <div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;">
+    <button class="btn p" onclick="filterSq('ALL',this)">Tous</button>
+    <button class="btn" onclick="filterSq('GK',this)">GK</button>
+    <button class="btn" onclick="filterSq('DEF',this)">Déf.</button>
+    <button class="btn" onclick="filterSq('MID',this)">Mil.</button>
+    <button class="btn" onclick="filterSq('ATT',this)">Att.</button>
   </div>
   <div class="card" style="padding:0;overflow:auto;">
-    <table class="data-table">
-      <thead><tr>
-        <th>#</th><th>Joueur</th><th>Pos</th><th>Âge</th><th>Nat</th><th>Note</th>
-        <th>Stats</th><th>Forme</th><th>Moral</th><th>Fitness</th><th>Bless.</th><th>Contrat</th><th>Valeur</th>
-      </tr></thead>
-      <tbody id="squad-body"></tbody>
+    <table class="dt">
+      <thead><tr><th>#</th><th>Joueur</th><th>Pos</th><th>Rôle</th><th>Âge</th><th>Nat</th><th>Note</th><th>Pot.</th><th>Stats</th><th>Forme</th><th>Moral</th><th>Fit.</th><th>Statut</th><th>Sélec.</th><th>Capt.</th><th>Val.</th></tr></thead>
+      <tbody id="sq-body"></tbody>
     </table>
   </div>
 </div>
 
 <!-- TACTICS -->
-<div class="section" id="sec-tactics">
-  <div class="section-title">Tactique</div>
-  <div class="section-sub">Système de jeu et instructions</div>
-  <div class="grid-2" style="margin-bottom:16px;">
-    <div class="card">
-      <div class="card-title">Formation</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;" id="formation-list"></div>
-      <div class="card-title">Pressing</div>
-      <input type="range" min="1" max="5" value="3" id="press-slider" style="width:100%;margin:8px 0;accent-color:var(--primary);" oninput="document.getElementById('press-lbl').textContent=['','Bas bloc','Compact','Équilibré','Actif','Gegenpress'][this.value]">
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--gray3);margin-bottom:14px;"><span>Bas bloc</span><span id="press-lbl" style="color:var(--white);font-weight:600">Équilibré</span><span>Gegenpress</span></div>
-      <div class="card-title">Tempo</div>
-      <input type="range" min="1" max="5" value="3" id="tempo-slider" style="width:100%;margin:8px 0;accent-color:var(--primary);" oninput="document.getElementById('tempo-lbl').textContent=['','Lent','Calme','Équilibré','Rapide','Très rapide'][this.value]">
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--gray3);"><span>Lent</span><span id="tempo-lbl" style="color:var(--white);font-weight:600">Équilibré</span><span>Très rapide</span></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Style de jeu</div>
-      <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:16px;">
-        <label style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--dark3);border-radius:4px;cursor:pointer;font-size:13px;"><input type="radio" name="gstyle" value="possession" checked style="accent-color:var(--primary)"> Jeu de possession</label>
-        <label style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--dark3);border-radius:4px;cursor:pointer;font-size:13px;"><input type="radio" name="gstyle" value="direct" style="accent-color:var(--primary)"> Jeu direct</label>
-        <label style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--dark3);border-radius:4px;cursor:pointer;font-size:13px;"><input type="radio" name="gstyle" value="counter" style="accent-color:var(--primary)"> Contre-attaque</label>
-        <label style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--dark3);border-radius:4px;cursor:pointer;font-size:13px;"><input type="radio" name="gstyle" value="highline" style="accent-color:var(--primary)"> Ligne haute</label>
+<div class="sec" id="sec-tactics">
+  <div class="sec-t">Tactique</div>
+  <div class="sec-s">Positionnez vos joueurs librement — Glisser/déposer</div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:12px;">
+        <div class="ct">Formation</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="form-btns"></div>
+        <div style="margin-top:12px;">
+          <div class="ct">Style de jeu</div>
+          <div style="display:flex;flex-direction:column;gap:5px;" id="style-list"></div>
+        </div>
+        <div style="margin-top:12px;">
+          <div class="ct">Pressing</div>
+          <input type="range" min="1" max="5" value="3" id="press-r" style="width:100%;margin:6px 0;accent-color:var(--p);" oninput="updateSlider('press',this.value)">
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--g3);"><span>Bas bloc</span><b id="press-lbl" style="color:var(--w)">Équilibré</b><span>Gegenpress</span></div>
+        </div>
+        <div style="margin-top:10px;">
+          <div class="ct">Tempo</div>
+          <input type="range" min="1" max="5" value="3" id="tempo-r" style="width:100%;margin:6px 0;accent-color:var(--p);" oninput="updateSlider('tempo',this.value)">
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--g3);"><span>Lent</span><b id="tempo-lbl" style="color:var(--w)">Équilibré</b><span>Très rapide</span></div>
+        </div>
       </div>
-      <div class="card-title">Instructions</div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <label style="display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px solid var(--dark3);cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary)"> Attaquer dans le dos de la défense</label>
-        <label style="display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px solid var(--dark3);cursor:pointer;"><input type="checkbox" style="accent-color:var(--primary)"> Retraitement bas après perte</label>
-        <label style="display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px solid var(--dark3);cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary)"> Débordements par les ailes</label>
-        <label style="display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 0;cursor:pointer;"><input type="checkbox" checked style="accent-color:var(--primary)"> Tirs de loin autorisés</label>
+      <div class="card">
+        <div class="ct">Bonus / Malus tactiques</div>
+        <div id="bm-list"></div>
+        <div style="margin-top:10px;padding:8px;background:var(--bg5);border-radius:4px;text-align:center;">
+          <div style="font-size:10px;color:var(--g3)">Modificateur total</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;" id="bm-total">0</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="card">
-    <div class="card-title">11 Titulaires</div>
-    <table class="data-table"><thead><tr><th>Pos</th><th>Joueur</th><th>Note</th><th>Fitness</th><th>Moral</th></tr></thead><tbody id="lineup-body"></tbody></table>
+    <div>
+      <div class="card" style="margin-bottom:10px;">
+        <div class="ct">Terrain tactique — <span style="color:var(--pl)" id="tac-formation">4-4-2</span></div>
+        <div style="font-size:10px;color:var(--g3);margin-bottom:8px;">Glissez les joueurs pour les repositionner · Équipe attaque vers la droite</div>
+        <div class="tac-pitch-wrap" id="tac-pitch-wrap">
+          <div class="tac-pitch" id="tac-pitch">
+            <div class="pm pm-mid"></div>
+            <div class="pm pm-circle"></div>
+            <div class="pm pm-dot"></div>
+            <div class="pm pm-box-l"></div>
+            <div class="pm pm-box-r"></div>
+            <div class="pm pm-goal-l"></div>
+            <div class="pm pm-goal-r"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct">Rôles individuels</div>
+        <div style="max-height:200px;overflow-y:auto;" id="roles-list"></div>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- MATCH -->
-<div class="section" id="sec-match">
-  <div class="section-title">Simulation de Match</div>
-  <div class="section-sub">Journée <span id="match-day-lbl">29</span></div>
-  <div class="grid-2" style="margin-bottom:14px;">
+<div class="sec" id="sec-match">
+  <div class="sec-t">Simulation de Match</div>
+  <div class="sec-s">Journée <span id="m-jday">–</span> · Jupiler Pro League</div>
+  <div class="g2" style="margin-bottom:14px;">
     <div class="card">
-      <div class="card-title">Configuration</div>
-      <div style="margin-bottom:10px;">
-        <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Adversaire</label>
-        <select id="opp-select" style="width:100%;background:var(--dark3);color:var(--white);border:1px solid var(--dark4);border-radius:4px;padding:8px;font-size:13px;" onchange="renderPreMatch()"></select>
+      <div class="ct">Configuration</div>
+      <div style="margin-bottom:9px;">
+        <label style="font-size:9px;color:var(--g3);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px;">Adversaire</label>
+        <select id="opp-sel" style="width:100%;background:var(--bg4);color:var(--w);border:1px solid var(--bg5);border-radius:4px;padding:7px;font-size:12px;" onchange="renderPreMatch()"></select>
       </div>
-      <div style="margin-bottom:10px;">
-        <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Lieu</label>
-        <div style="display:flex;gap:8px;">
-          <button class="btn primary" id="home-btn" onclick="setVenue('home')">🏠 Domicile</button>
-          <button class="btn" id="away-btn" onclick="setVenue('away')">✈️ Extérieur</button>
+      <div style="margin-bottom:9px;">
+        <label style="font-size:9px;color:var(--g3);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px;">Lieu</label>
+        <div style="display:flex;gap:6px;">
+          <button class="btn p" id="btn-home" onclick="setVenue('home')">🏠 Dom.</button>
+          <button class="btn" id="btn-away" onclick="setVenue('away')">✈️ Ext.</button>
         </div>
       </div>
       <div style="margin-bottom:12px;">
-        <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Tactique</label>
-        <select id="match-tactic" style="width:100%;background:var(--dark3);color:var(--white);border:1px solid var(--dark4);border-radius:4px;padding:8px;font-size:13px;">
-          <option value="0">Équilibré (4-4-2)</option>
-          <option value="2">Offensif (4-3-3)</option>
-          <option value="-1">Défensif (5-4-1)</option>
-          <option value="1">Contre-attaque (4-5-1)</option>
-          <option value="1">Haute pression (4-2-4)</option>
-        </select>
+        <label style="font-size:9px;color:var(--g3);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px;">Vitesse simulation</label>
+        <div class="speed-btns" id="speed-btns">
+          <button class="speed-btn active" onclick="setSpeed(1,this)">x1</button>
+          <button class="speed-btn" onclick="setSpeed(2,this)">x2</button>
+          <button class="speed-btn" onclick="setSpeed(4,this)">x4</button>
+          <button class="speed-btn" onclick="setSpeed(0,this)">Résultat</button>
+        </div>
       </div>
-      <button class="btn primary" style="width:100%;padding:10px;" id="play-btn" onclick="startMatch()">▶ JOUER LE MATCH</button>
+      <button class="btn p" style="width:100%;padding:9px;" id="play-btn" onclick="startMatch()">▶ JOUER LE MATCH</button>
     </div>
-    <div class="card" id="pre-match-card"><div class="card-title">Analyse</div><div id="pre-match-info"></div></div>
-  </div>
-  <div class="pitch" id="pitch-view">
-    <div class="pitch-halfway"></div><div class="pitch-center"></div><div class="pitch-dot"></div>
-    <div class="pitch-box-t"></div><div class="pitch-box-b"></div>
-    <div class="score-disp">
-      <div class="score-team" id="m-home-abbr">STD</div>
-      <div class="score-num" id="m-home-score">0</div>
-      <div class="score-sep">:</div>
-      <div class="score-num" id="m-away-score">0</div>
-      <div class="score-team" id="m-away-abbr">OPP</div>
+    <div class="card" id="prematch-card">
+      <div class="ct">Analyse pré-match</div>
+      <div id="prematch-info"></div>
     </div>
-    <div class="match-min" id="m-min">0'</div>
-    <div id="pitch-tokens"></div>
   </div>
-  <div class="card"><div class="card-title">Commentaire en direct</div><div class="com-box" id="commentary"></div></div>
+  <!-- Match HUD -->
+  <div class="match-hud" id="match-hud">
+    <div class="match-score">
+      <div class="match-team" id="m-h-name">STD</div>
+      <div class="match-num" id="m-h-score" style="color:var(--pl)">0</div>
+      <div class="match-sep">:</div>
+      <div class="match-num" id="m-a-score">0</div>
+      <div class="match-team" id="m-a-name">OPP</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="match-min-badge" id="m-minute" style="display:none">0'</div>
+      <button class="btn" id="btn-sub" onclick="openSubs()" style="display:none;font-size:10px;">🔄 Changement</button>
+    </div>
+  </div>
+  <!-- Canvas -->
+  <canvas id="match-canvas" height="220"></canvas>
+  <div class="card" style="margin-top:12px;">
+    <div class="ct">Commentaire en direct</div>
+    <div class="com-box" id="commentary"></div>
+  </div>
   <div id="match-summary" style="display:none;margin-top:14px;"></div>
 </div>
 
-<!-- CLASSEMENT -->
-<div class="section" id="sec-classement">
-  <div class="section-title">Classement</div>
-  <div class="section-sub">Jupiler Pro League · Saison 2025/26</div>
-  <div class="grid-2">
+<!-- LEAGUE -->
+<div class="sec" id="sec-league">
+  <div class="sec-t">Classement</div>
+  <div class="sec-s">Jupiler Pro League · Saison 2025/26</div>
+  <div class="g2">
     <div class="card" style="padding:0;overflow:auto;">
-      <table class="data-table"><thead><tr><th>#</th><th>Club</th><th>J</th><th>G</th><th>N</th><th>P</th><th>BP</th><th>BC</th><th>+/-</th><th>Pts</th></tr></thead>
-      <tbody id="league-table"></tbody></table>
+      <table class="dt"><thead><tr><th>#</th><th>Club</th><th>J</th><th>G</th><th>N</th><th>P</th><th>BP</th><th>BC</th><th>+/-</th><th>Pts</th></tr></thead>
+      <tbody id="league-body"></tbody></table>
     </div>
     <div>
-      <div class="card" style="margin-bottom:14px;">
-        <div class="card-title">Buteurs</div>
-        <table class="data-table"><thead><tr><th>#</th><th>Joueur</th><th>Club</th><th>Buts</th></tr></thead><tbody id="scorers-table"></tbody></table>
-      </div>
-      <div class="card">
-        <div class="card-title">Prochains matches</div>
-        <div id="next-fixtures"></div>
+      <div class="card" style="margin-bottom:12px;">
+        <div class="ct">Buteurs</div>
+        <table class="dt"><thead><tr><th>#</th><th>Joueur</th><th>Club</th><th>⚽</th></tr></thead>
+        <tbody id="scorers-body"></tbody></table>
       </div>
     </div>
   </div>
 </div>
 
 <!-- MERCATO -->
-<div class="section" id="sec-mercato">
-  <div class="section-title">Mercato</div>
-  <div class="section-sub">Fenêtre de transferts · Budget : <span id="mercato-budget" style="color:var(--gold)">–</span></div>
-  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-    <button class="btn primary" onclick="filterTransfers('all',this)">Tous</button>
-    <button class="btn" onclick="filterTransfers('GK',this)">GK</button>
-    <button class="btn" onclick="filterTransfers('DEF',this)">Défenseurs</button>
-    <button class="btn" onclick="filterTransfers('MID',this)">Milieux</button>
-    <button class="btn" onclick="filterTransfers('ATT',this)">Attaquants</button>
-    <button class="btn" onclick="filterTransfers('cheap',this)">≤ €5M</button>
-    <button class="btn" onclick="filterTransfers('free',this)">Joueurs libres</button>
+<div class="sec" id="sec-mercato">
+  <div class="sec-t">Mercato</div>
+  <div class="sec-s">Budget disponible : <span id="m-budget" style="color:var(--gold)">–</span></div>
+  <div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;">
+    <button class="btn p" onclick="filterT('all',this)">Tous</button>
+    <button class="btn" onclick="filterT('GK',this)">GK</button>
+    <button class="btn" onclick="filterT('DEF',this)">Déf.</button>
+    <button class="btn" onclick="filterT('MID',this)">Mil.</button>
+    <button class="btn" onclick="filterT('ATT',this)">Att.</button>
+    <button class="btn" onclick="filterT('cheap',this)">≤€5M</button>
+    <button class="btn" onclick="filterT('free',this)">Libres</button>
   </div>
   <div id="transfer-list"></div>
 </div>
 
 <!-- TRAINING -->
-<div class="section" id="sec-training">
-  <div class="section-title">Entraînement</div>
-  <div class="section-sub">Planifiez la semaine pour améliorer l'effectif</div>
-  <div class="grid-2" style="margin-bottom:14px;">
+<div class="sec" id="sec-training">
+  <div class="sec-t">Entraînement</div>
+  <div class="sec-s">Programme hebdomadaire</div>
+  <div class="g2" style="margin-bottom:12px;">
     <div class="card">
-      <div class="card-title">Programme de la semaine</div>
-      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:12px;" id="training-week"></div>
-      <button class="btn primary" style="width:100%" onclick="applyTraining()">✅ Appliquer l'entraînement</button>
+      <div class="ct">Programme</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:12px;" id="train-week"></div>
+      <button class="btn p" style="width:100%" onclick="applyTraining()">✅ Appliquer</button>
     </div>
     <div class="card">
-      <div class="card-title">Effets estimés</div>
-      <div id="training-effects"></div>
+      <div class="ct">Effets estimés</div>
+      <div id="train-fx"></div>
     </div>
   </div>
   <div class="card">
-    <div class="card-title">Progression des joueurs</div>
-    <table class="data-table"><thead><tr><th>Joueur</th><th>Pos</th><th>Note</th><th>Note max</th><th>Progression</th><th>Sessions</th></tr></thead>
-    <tbody id="training-body"></tbody></table>
+    <div class="ct">Progression des joueurs</div>
+    <table class="dt"><thead><tr><th>Joueur</th><th>Pos</th><th>Note</th><th>Potentiel</th><th>Progression</th><th>Sessions</th></tr></thead>
+    <tbody id="train-body"></tbody></table>
   </div>
 </div>
 
 <!-- FINANCES -->
-<div class="section" id="sec-finances">
-  <div class="section-title">Finances</div>
-  <div class="section-sub">Bilan financier · Saison 2025/26</div>
-  <div class="grid-4" style="margin-bottom:16px;">
-    <div class="stat-card"><div class="val" style="color:var(--green)" id="f-income">–</div><div class="lbl">Revenus</div></div>
-    <div class="stat-card"><div class="val" style="color:#cc0000" id="f-wages">–</div><div class="lbl">Masse salariale</div></div>
-    <div class="stat-card"><div class="val" style="color:var(--gold)" id="f-budget">–</div><div class="lbl">Budget transferts</div></div>
-    <div class="stat-card"><div class="val" id="f-balance">–</div><div class="lbl">Bilan</div></div>
+<div class="sec" id="sec-finances">
+  <div class="sec-t">Finances</div>
+  <div class="sec-s">Bilan saison 2025/26</div>
+  <div class="g4" style="margin-bottom:14px;">
+    <div class="stat-c"><div class="stat-v" style="color:var(--green)" id="fi-inc">–</div><div class="stat-l">Revenus</div></div>
+    <div class="stat-c"><div class="stat-v" style="color:#cc0000" id="fi-wg">–</div><div class="stat-l">Salaires</div></div>
+    <div class="stat-c"><div class="stat-v" style="color:var(--gold)" id="fi-b">–</div><div class="stat-l">Budget</div></div>
+    <div class="stat-c"><div class="stat-v" id="fi-bal">–</div><div class="stat-l">Bilan</div></div>
   </div>
-  <div class="grid-2">
-    <div class="card"><div class="card-title">Revenus détaillés</div><div id="income-breakdown"></div></div>
-    <div class="card"><div class="card-title">Salaires</div>
-      <table class="data-table"><thead><tr><th>Joueur</th><th>Pos</th><th>Salaire/sem</th><th>Contrat</th></tr></thead><tbody id="wages-body"></tbody></table>
+  <div class="g2">
+    <div class="card"><div class="ct">Revenus</div><div id="fi-breakdown"></div></div>
+    <div class="card"><div class="ct">Salaires</div>
+      <table class="dt"><thead><tr><th>Joueur</th><th>Pos</th><th>/sem.</th><th>Contrat</th></tr></thead>
+      <tbody id="fi-wages"></tbody></table>
     </div>
   </div>
 </div>
+
 </div><!-- /main -->
-</div><!-- /game-ui -->
+</div><!-- /game -->
+
+<!-- HT Modal -->
+<div id="ht-modal" class="modal-bg" style="display:none;">
+  <div class="modal">
+    <div class="modal-t">⏱ Mi-Temps</div>
+    <div id="ht-stats" style="margin-bottom:14px;"></div>
+    <div class="ct">Changements (max 3)</div>
+    <div id="sub-list"></div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="btn p" style="flex:1" onclick="resumeMatch()">▶ Reprendre 2ème mi-temps</button>
+    </div>
+  </div>
+</div>
+
 <div class="notif" id="notif"></div>
 
 <script>
 // ==================== CLUBS DATABASE ====================
-const CLUBS = {
-  standard: {
-    name:"Standard de Liège", abbr:"STD", short:"SdL",
-    primary:"#CC0000", primaryDark:"#990000", primaryLight:"#ff4444", onPrimary:"#ffffff",
-    icon:"🔴", budget:8.5, income:24.5, wages:18.2,
-    pts:42, wins:13, draws:3, losses:12, gf:44, ga:42, week:28,
-    form:["W","D","W","L","W"],
-    stadium:"Stade Maurice Dufrasne (27 221 places)",
-    squad:[
-      {n:1,name:"Arnaud Bodart",short:"Bodart",pos:"GK",age:29,nat:"🇧🇪",note:76,maxNote:78,val:2.5,wage:15,contract:"2026",fitness:85,morale:3,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","W"]},
-      {n:13,name:"Mathis Epolo",short:"Epolo",pos:"GK",age:21,nat:"🇧🇪",note:72,maxNote:82,val:1.7,wage:8,contract:"2027",fitness:90,morale:4,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","L"]},
-      {n:5,name:"Alexandro Calut",short:"Calut",pos:"DEF",age:24,nat:"🇧🇪",note:74,maxNote:78,val:3,wage:12,contract:"2026",fitness:78,morale:3,goals:2,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["W","D","L","W","W"]},
-      {n:3,name:"Moussa Sissako",short:"Sissako",pos:"DEF",age:25,nat:"🇲🇱",note:73,maxNote:77,val:2,wage:10,contract:"2027",fitness:88,morale:3,goals:1,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
-      {n:15,name:"Dion Cools",short:"Cools",pos:"DEF",age:28,nat:"🇧🇪",note:71,maxNote:74,val:1.5,wage:9,contract:"2026",fitness:82,morale:2,goals:0,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["L","W","D","W","L"]},
-      {n:6,name:"Elias Cobbaut",short:"Cobbaut",pos:"DEF",age:27,nat:"🇧🇪",note:72,maxNote:75,val:1.8,wage:9,contract:"2027",fitness:60,morale:3,goals:1,assists:1,injured:true,injuryWeeks:2,sessions:0,form:["W","D","W","W","D"]},
-      {n:4,name:"Nicolas Raskin",short:"Raskin",pos:"MID",age:23,nat:"🇧🇪",note:78,maxNote:84,val:8,wage:22,contract:"2027",fitness:87,morale:5,goals:6,assists:8,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
-      {n:10,name:"Sébastien Lahaye",short:"Lahaye",pos:"MID",age:24,nat:"🇧🇪",note:73,maxNote:77,val:2.5,wage:10,contract:"2026",fitness:85,morale:3,goals:4,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","W"]},
-      {n:7,name:"Isaac Price",short:"Price",pos:"MID",age:22,nat:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",note:77,maxNote:85,val:6,wage:18,contract:"2027",fitness:93,morale:4,goals:5,assists:9,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
-      {n:23,name:"Ilaimaharitra",short:"Ilaima",pos:"MID",age:29,nat:"🇲🇬",note:71,maxNote:73,val:1,wage:8,contract:"2026",fitness:80,morale:3,goals:2,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","D"]},
-      {n:8,name:"Andi Zeqiri",short:"Zeqiri",pos:"ATT",age:25,nat:"🇨🇭",note:75,maxNote:80,val:5,wage:16,contract:"2026",fitness:86,morale:4,goals:12,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
-      {n:24,name:"Karamoko",short:"Kara",pos:"ATT",age:23,nat:"🇬🇳",note:73,maxNote:78,val:2.5,wage:10,contract:"2027",fitness:88,morale:3,goals:7,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","L"]},
-      {n:11,name:"Doumbia",short:"Doumbia",pos:"ATT",age:26,nat:"🇨🇮",note:74,maxNote:77,val:3.5,wage:11,contract:"2026",fitness:79,morale:3,goals:9,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
-      {n:9,name:"Ibe Hautekiet",short:"Haute",pos:"ATT",age:22,nat:"🇧🇪",note:72,maxNote:82,val:2,wage:9,contract:"2028",fitness:91,morale:4,goals:5,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
-    ],
+const CLUBS={
+  standard:{
+    name:"Standard de Liège",abbr:"STD",short:"SdL",p:"#CC0000",pd:"#990000",pl:"#ff4444",op:"#fff",
+    icon:"🔴",budget:9,income:26,wages:19,pts:0,wins:0,draws:0,losses:0,gf:0,ga:0,
+    form:[],stadium:"Stade Maurice Dufrasne",cap:30023,manager:"Vincent Euvrard",
     objectives:[
-      {text:"Terminer dans le Top 4",check:g=>g.pts>=48},
-      {text:"Marquer 55+ buts",check:g=>g.gf>=55},
-      {text:"Atteindre les playoffs",check:g=>g.pts>=54},
+      {t:"Top 6 en saison régulière",fn:g=>g.pts>=36},
+      {t:"Marquer 40+ buts",fn:g=>g.gf>=40},
+      {t:"Champions Play-offs",fn:g=>g.pts>=50},
+    ],
+    squad:[
+      {n:1,nm:"Arnaud Bodart",sh:"Bodart",pos:"GK",role:"Gardien",age:30,nat:"🇧🇪",nt:76,pt:78,val:2.5,wg:15,ct:"2027",ft:87,mr:3,gls:0,ats:0,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:30,nm:"Lucas Pirard",sh:"Pirard",pos:"GK",role:"Gardien",age:25,nat:"🇧🇪",nt:71,pt:75,val:1.2,wg:7,ct:"2028",ft:90,mr:3,gls:0,ats:0,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:2,nm:"Marlon Fossey",sh:"Fossey",pos:"DEF",role:"Latéral droit",age:26,nat:"🇬🇧",nt:73,pt:76,val:3,wg:14,ct:"2027",ft:85,mr:4,gls:2,ats:3,inj:false,sus:false,sel:true,cap:true,sess:0,form:[]},
+      {n:5,nm:"Alexandro Calut",sh:"Calut",pos:"DEF",role:"Défenseur central",age:25,nat:"🇧🇪",nt:74,pt:78,val:3.5,wg:13,ct:"2027",ft:82,mr:3,gls:2,ats:1,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:3,nm:"Moussa Sissako",sh:"Sissako",pos:"DEF",role:"Défenseur central",age:26,nat:"🇲🇱",nt:73,pt:76,val:2.5,wg:11,ct:"2027",ft:87,mr:3,gls:1,ats:2,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:15,nm:"Nayel Mehssatou",sh:"Mehssatou",pos:"DEF",role:"Latéral gauche",age:24,nat:"🇨🇱",nt:72,pt:76,val:2,wg:9,ct:"2028",ft:88,mr:3,gls:1,ats:3,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:17,nm:"Josué Homawoo",sh:"Homawoo",pos:"DEF",role:"Défenseur central",age:26,nat:"🇹🇬",nt:70,pt:73,val:1.2,wg:8,ct:"2027",ft:82,mr:3,gls:0,ats:0,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:18,nm:"Tobias Mohr",sh:"Mohr",pos:"DEF",role:"Latéral droit",age:28,nat:"🇩🇪",nt:72,pt:74,val:1.8,wg:9,ct:"2027",ft:80,mr:3,gls:1,ats:4,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:4,nm:"Nicolas Raskin",sh:"Raskin",pos:"MID",role:"Box-to-box",age:24,nat:"🇧🇪",nt:79,pt:85,val:9,wg:24,ct:"2028",ft:88,mr:5,gls:5,ats:7,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:7,nm:"Isaac Price",sh:"Price",pos:"MID",role:"Milieu relayeur",age:23,nat:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",nt:78,pt:86,val:7,wg:19,ct:"2028",ft:91,mr:4,gls:4,ats:8,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:8,nm:"Casper Nielsen",sh:"Nielsen",pos:"MID",role:"Regista",age:30,nat:"🇩🇰",nt:76,pt:77,val:3,wg:14,ct:"2027",ft:84,mr:4,gls:3,ats:7,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:23,nm:"Ilaimaharitra",sh:"Ilaima",pos:"MID",role:"Milieu défensif",age:30,nat:"🇲🇬",nt:71,pt:73,val:1,wg:8,ct:"2027",ft:79,mr:3,gls:2,ats:3,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:20,nm:"Adnane Abid",sh:"Abid",pos:"MID",role:"Milieu relayeur",age:24,nat:"🇧🇪",nt:72,pt:77,val:2,wg:8,ct:"2028",ft:85,mr:3,gls:2,ats:3,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:10,nm:"Ilay Camara",sh:"Camara",pos:"MID",role:"Ailier gauche",age:22,nat:"🇸🇳",nt:75,pt:82,val:5,wg:12,ct:"2028",ft:89,mr:4,gls:6,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:11,nm:"Dennis Eckert Ayensa",sh:"Eckert",pos:"ATT",role:"Avant-centre",age:27,nat:"🇩🇪",nt:74,pt:77,val:4,wg:14,ct:"2027",ft:84,mr:3,gls:8,ats:3,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:9,nm:"Ibe Hautekiet",sh:"Hautekiet",pos:"ATT",role:"Avant-centre",age:23,nat:"🇧🇪",nt:73,pt:83,val:3,wg:10,ct:"2029",ft:90,mr:4,gls:5,ats:3,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:24,nm:"Karamoko",sh:"Kara",pos:"ATT",role:"Ailier droit",age:24,nat:"🇬🇳",nt:73,pt:78,val:3,wg:11,ct:"2027",ft:86,mr:3,gls:6,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
     ]
   },
-  brugge: {
-    name:"Club Brugge KV", abbr:"CLB", short:"Brugge",
-    primary:"#003DA5", primaryDark:"#002a75", primaryLight:"#4d7ddd", onPrimary:"#ffffff",
-    icon:"🔵", budget:18, income:42, wages:30,
-    pts:59, wins:18, draws:5, losses:5, gf:58, ga:28, week:28,
-    form:["W","W","W","D","W"],
-    stadium:"Jan Breydel Stadion (29 062 places)",
+  brugge:{
+    name:"Club Brugge KV",abbr:"CLB",short:"Brugge",p:"#003DA5",pd:"#002a75",pl:"#4d7ddd",op:"#fff",
+    icon:"🔵",budget:22,income:48,wages:35,pts:0,wins:0,draws:0,losses:0,gf:0,ga:0,
+    form:[],stadium:"Jan Breydel Stadion",cap:29042,manager:"Ivan Leko",
+    objectives:[{t:"Remporter le titre",fn:g=>g.pts>=65},{t:"20+ victoires",fn:g=>g.wins>=20},{t:"Phase de groupes UEFA",fn:g=>g.pts>=70}],
     squad:[
-      {n:1,name:"Simon Mignolet",short:"Mignolet",pos:"GK",age:37,nat:"🇧🇪",note:80,maxNote:81,val:1.5,wage:25,contract:"2026",fitness:88,morale:5,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
-      {n:4,name:"Brandon Mechele",short:"Mechele",pos:"DEF",age:32,nat:"🇧🇪",note:76,maxNote:77,val:2,wage:18,contract:"2026",fitness:82,morale:4,goals:3,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
-      {n:5,name:"Joel Ordoñez",short:"Ordoñez",pos:"DEF",age:22,nat:"🇪🇨",note:77,maxNote:84,val:10,wage:15,contract:"2027",fitness:91,morale:4,goals:2,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
-      {n:3,name:"Bjorn Meijer",short:"Meijer",pos:"DEF",age:23,nat:"🇳🇱",note:74,maxNote:80,val:7,wage:14,contract:"2027",fitness:85,morale:3,goals:1,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","W"]},
-      {n:8,name:"Hans Vanaken",short:"Vanaken",pos:"MID",age:32,nat:"🇧🇪",note:82,maxNote:83,val:5,wage:32,contract:"2026",fitness:84,morale:5,goals:15,assists:9,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
-      {n:10,name:"Casper Nielsen",short:"Nielsen",pos:"MID",age:29,nat:"🇩🇰",note:78,maxNote:80,val:6,wage:20,contract:"2026",fitness:87,morale:4,goals:8,assists:11,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
-      {n:7,name:"Andreas Skov Olsen",short:"Skov",pos:"MID",age:25,nat:"🇩🇰",note:80,maxNote:83,val:14,wage:24,contract:"2027",fitness:90,morale:4,goals:10,assists:8,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","W","D"]},
-      {n:6,name:"Raphael Onyedika",short:"Onyedika",pos:"MID",age:23,nat:"🇳🇬",note:78,maxNote:84,val:12,wage:16,contract:"2027",fitness:92,morale:4,goals:4,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","W"]},
-      {n:19,name:"Ferran Jutglà",short:"Jutglà",pos:"ATT",age:25,nat:"🇪🇸",note:78,maxNote:81,val:11,wage:22,contract:"2027",fitness:88,morale:4,goals:16,assists:7,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
-      {n:20,name:"Christos Tzolis",short:"Tzolis",pos:"ATT",age:24,nat:"🇬🇷",note:77,maxNote:81,val:9,wage:18,contract:"2026",fitness:85,morale:3,goals:9,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
-      {n:9,name:"Kyriani Sabbe",short:"Sabbe",pos:"ATT",age:22,nat:"🇧🇪",note:74,maxNote:80,val:8,wage:12,contract:"2027",fitness:91,morale:4,goals:6,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","W","D"]},
-    ],
-    objectives:[
-      {text:"Remporter le titre",check:g=>g.pts>=72},
-      {text:"Atteindre 20 victoires",check:g=>g.wins>=20},
-      {text:"Garder 15 clean sheets",check:g=>false},
+      {n:1,nm:"Simon Mignolet",sh:"Mignolet",pos:"GK",role:"Gardien",age:38,nat:"🇧🇪",nt:79,pt:80,val:1.2,wg:22,ct:"2027",ft:84,mr:4,gls:0,ats:0,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:4,nm:"Brandon Mechele",sh:"Mechele",pos:"DEF",role:"Défenseur central",age:33,nat:"🇧🇪",nt:75,pt:76,val:1.5,wg:16,ct:"2027",ft:80,mr:4,gls:2,ats:1,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:5,nm:"Joel Ordoñez",sh:"Ordoñez",pos:"DEF",role:"Défenseur central",age:23,nat:"🇪🇨",nt:78,pt:85,val:14,wg:16,ct:"2028",ft:90,mr:4,gls:2,ats:2,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:3,nm:"Bjorn Meijer",sh:"Meijer",pos:"DEF",role:"Latéral gauche",age:24,nat:"🇳🇱",nt:74,pt:80,val:8,wg:13,ct:"2027",ft:86,mr:3,gls:1,ats:4,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:22,nm:"Ludovit Reis",sh:"Reis",pos:"MID",role:"Milieu défensif",age:26,nat:"🇳🇱",nt:78,pt:81,val:12,wg:18,ct:"2028",ft:88,mr:4,gls:3,ats:6,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:8,nm:"Hans Vanaken",sh:"Vanaken",pos:"MID",role:"Milieu offensif",age:33,nat:"🇧🇪",nt:81,pt:82,val:4,wg:30,ct:"2027",ft:83,mr:5,gls:12,ats:9,inj:false,sus:false,sel:true,cap:true,sess:0,form:[]},
+      {n:7,nm:"Andreas Skov Olsen",sh:"Skov Olsen",pos:"MID",role:"Ailier droit",age:26,nat:"🇩🇰",nt:80,pt:82,val:16,wg:25,ct:"2028",ft:90,mr:4,gls:11,ats:8,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:6,nm:"Raphael Onyedika",sh:"Onyedika",pos:"MID",role:"Box-to-box",age:24,nat:"🇳🇬",nt:79,pt:85,val:14,wg:18,ct:"2028",ft:92,mr:4,gls:4,ats:6,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:19,nm:"Christos Tzolis",sh:"Tzolis",pos:"ATT",role:"Ailier gauche",age:25,nat:"🇬🇷",nt:78,pt:81,val:10,wg:19,ct:"2027",ft:87,mr:4,gls:10,ats:6,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:9,nm:"Ferran Jutglà",sh:"Jutglà",pos:"ATT",role:"Avant-centre",age:26,nat:"🇪🇸",nt:79,pt:81,val:12,wg:23,ct:"2027",ft:88,mr:4,gls:18,ats:7,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:20,nm:"Kyriani Sabbe",sh:"Sabbe",pos:"ATT",role:"Ailier droit",age:23,nat:"🇧🇪",nt:75,pt:81,val:9,wg:12,ct:"2028",ft:91,mr:4,gls:8,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
     ]
   },
-  anderlecht: {
-    name:"RSC Anderlecht", abbr:"RSC", short:"Anderlecht",
-    primary:"#6B2D8B", primaryDark:"#4a1f62", primaryLight:"#9b5dbf", onPrimary:"#ffffff",
-    icon:"🟣", budget:15, income:38, wages:28,
-    pts:54, wins:16, draws:6, losses:6, gf:52, ga:32, week:28,
-    form:["W","W","D","L","W"],
-    stadium:"Lotto Park (21 500 places)",
+  anderlecht:{
+    name:"RSC Anderlecht",abbr:"RSC",short:"Anderlecht",p:"#6B2D8B",pd:"#4a1f62",pl:"#9b5dbf",op:"#fff",
+    icon:"🟣",budget:16,income:40,wages:30,pts:0,wins:0,draws:0,losses:0,gf:0,ga:0,
+    form:[],stadium:"Lotto Park",cap:21500,manager:"Brian Riemer",
+    objectives:[{t:"Top 3 saison régulière",fn:g=>g.pts>=56},{t:"50+ buts marqués",fn:g=>g.gf>=50},{t:"Champions Play-offs",fn:g=>g.pts>=50}],
     squad:[
-      {n:1,name:"Hendrik Van Crombrugge",short:"Van Crom",pos:"GK",age:33,nat:"🇧🇪",note:77,maxNote:78,val:1.5,wage:18,contract:"2026",fitness:86,morale:4,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","L","W"]},
-      {n:4,name:"Jan Vertonghen",short:"Vertonghen",pos:"DEF",age:38,nat:"🇧🇪",note:74,maxNote:75,val:0.5,wage:20,contract:"2026",fitness:75,morale:4,goals:1,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","W"]},
-      {n:5,name:"Zeno Debast",short:"Debast",pos:"DEF",age:21,nat:"🇧🇪",note:79,maxNote:86,val:20,wage:22,contract:"2027",fitness:90,morale:4,goals:2,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","L","W"]},
-      {n:13,name:"Killian Sardella",short:"Sardella",pos:"DEF",age:22,nat:"🇧🇪",note:76,maxNote:82,val:12,wage:14,contract:"2027",fitness:88,morale:4,goals:2,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","W"]},
-      {n:8,name:"Leandro Trossard",short:"Trossard",pos:"MID",age:30,nat:"🇧🇪",note:83,maxNote:84,val:8,wage:40,contract:"2026",fitness:85,morale:4,goals:13,assists:9,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
-      {n:10,name:"Francis Amuzu",short:"Amuzu",pos:"MID",age:24,nat:"🇧🇪",note:77,maxNote:81,val:9,wage:18,contract:"2026",fitness:87,morale:3,goals:7,assists:8,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","W"]},
-      {n:6,name:"Amadou Diawara",short:"Diawara",pos:"MID",age:27,nat:"🇬🇳",note:76,maxNote:79,val:7,wage:16,contract:"2027",fitness:89,morale:3,goals:3,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
-      {n:7,name:"Thorgan Hazard",short:"T.Hazard",pos:"MID",age:32,nat:"🇧🇪",note:77,maxNote:78,val:3,wage:25,contract:"2026",fitness:78,morale:3,goals:6,assists:10,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","L"]},
-      {n:9,name:"Luis Vazquez",short:"Vazquez",pos:"ATT",age:24,nat:"🇦🇷",note:77,maxNote:82,val:10,wage:20,contract:"2027",fitness:86,morale:4,goals:14,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","L","W"]},
-      {n:11,name:"Theo Leoni",short:"Leoni",pos:"ATT",age:21,nat:"🇧🇪",note:74,maxNote:82,val:8,wage:12,contract:"2028",fitness:90,morale:4,goals:7,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","W","W","D","W"]},
-      {n:17,name:"Nilufar Rashidova",short:"Rashidov",pos:"ATT",age:23,nat:"🇺🇿",note:72,maxNote:78,val:5,wage:10,contract:"2027",fitness:88,morale:3,goals:3,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","W"]},
-    ],
-    objectives:[
-      {text:"Terminer 2e ou mieux",check:g=>g.pts>=58},
-      {text:"Dépasser 60 buts marqués",check:g=>g.gf>=60},
-      {text:"Garder la Coupe de Belgique",check:g=>false},
+      {n:1,nm:"Colin Coosemans",sh:"Coosemans",pos:"GK",role:"Gardien",age:31,nat:"🇧🇪",nt:76,pt:77,val:2,wg:14,ct:"2027",ft:85,mr:3,gls:0,ats:0,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:5,nm:"Zeno Debast",sh:"Debast",pos:"DEF",role:"Défenseur central",age:22,nat:"🇧🇪",nt:80,pt:87,val:22,wg:24,ct:"2028",ft:90,mr:4,gls:2,ats:3,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:13,nm:"Killian Sardella",sh:"Sardella",pos:"DEF",role:"Latéral droit",age:23,nat:"🇧🇪",nt:77,pt:83,val:14,wg:15,ct:"2028",ft:88,mr:4,gls:2,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:3,nm:"Bart Verbruggen",sh:"Verbruggen",pos:"GK",role:"Gardien",age:22,nat:"🇳🇱",nt:79,pt:86,val:18,wg:22,ct:"2028",ft:91,mr:4,gls:0,ats:0,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:8,nm:"Leandro Trossard",sh:"Trossard",pos:"MID",role:"Ailier gauche",age:31,nat:"🇧🇪",nt:82,pt:83,val:7,wg:38,ct:"2027",ft:84,mr:4,gls:13,ats:9,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:10,nm:"Francis Amuzu",sh:"Amuzu",pos:"MID",role:"Ailier droit",age:25,nat:"🇧🇪",nt:78,pt:82,val:10,wg:19,ct:"2027",ft:87,mr:3,gls:7,ats:8,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:6,nm:"Amadou Diawara",sh:"Diawara",pos:"MID",role:"Milieu défensif",age:28,nat:"🇬🇳",nt:77,pt:79,val:8,wg:17,ct:"2027",ft:89,mr:3,gls:3,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:14,nm:"Cedric Hatenboer",sh:"Hatenboer",pos:"MID",role:"Milieu relayeur",age:20,nat:"🇳🇱",nt:74,pt:84,val:6,wg:9,ct:"2029",ft:90,mr:4,gls:3,ats:4,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:17,nm:"Ibrahim Kanate",sh:"Kanate",pos:"ATT",role:"Ailier gauche",age:20,nat:"🇲🇱",nt:73,pt:83,val:5,wg:8,ct:"2028",ft:88,mr:4,gls:5,ats:4,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:9,nm:"Luis Vazquez",sh:"Vazquez",pos:"ATT",role:"Avant-centre",age:25,nat:"🇦🇷",nt:78,pt:83,val:12,wg:22,ct:"2027",ft:86,mr:4,gls:15,ats:4,inj:false,sus:false,sel:true,cap:true,sess:0,form:[]},
+      {n:19,nm:"Adriano Bertaccini",sh:"Bertaccini",pos:"ATT",role:"Avant-centre",age:28,nat:"🇧🇪",nt:75,pt:77,val:6,wg:14,ct:"2028",ft:83,mr:3,gls:9,ats:3,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
     ]
   },
-  gent: {
-    name:"K.A.A. Gent", abbr:"GAA", short:"Gent",
-    primary:"#1B3D6E", primaryDark:"#122a4e", primaryLight:"#4a7abf", onPrimary:"#ffffff",
-    icon:"🔵", budget:10, income:28, wages:20,
-    pts:49, wins:14, draws:7, losses:7, gf:45, ga:35, week:28,
-    form:["W","D","W","W","L"],
-    stadium:"Ghelamco Arena (20 000 places)",
+  genk:{
+    name:"KRC Genk",abbr:"GNK",short:"Genk",p:"#0055A4",pd:"#003d7a",pl:"#4d8dd4",op:"#fff",
+    icon:"🔵",budget:13,income:30,wages:22,pts:0,wins:0,draws:0,losses:0,gf:0,ga:0,
+    form:[],stadium:"Cegeka Arena",cap:24956,manager:"Nicky Hayen",
+    objectives:[{t:"Top 4 saison régulière",fn:g=>g.pts>=50},{t:"Champions Play-offs",fn:g=>g.pts>=50},{t:"30+ buts marqués",fn:g=>g.gf>=30}],
     squad:[
-      {n:1,name:"Davy Roef",short:"Roef",pos:"GK",age:30,nat:"🇧🇪",note:75,maxNote:77,val:2,wage:12,contract:"2026",fitness:87,morale:3,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","L"]},
-      {n:5,name:"Alessio Castro-Montes",short:"Castro",pos:"DEF",age:27,nat:"🇧🇪",note:75,maxNote:78,val:5,wage:14,contract:"2027",fitness:84,morale:3,goals:2,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","L"]},
-      {n:3,name:"Jens Toornstra",short:"Toornstra",pos:"DEF",age:35,nat:"🇳🇱",note:72,maxNote:73,val:1,wage:12,contract:"2026",fitness:78,morale:3,goals:1,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","W"]},
-      {n:4,name:"Malick Fofana",short:"Fofana",pos:"DEF",age:19,nat:"🇧🇪",note:74,maxNote:85,val:15,wage:10,contract:"2027",fitness:92,morale:5,goals:0,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","L"]},
-      {n:8,name:"Sven Kums",short:"Kums",pos:"MID",age:36,nat:"🇧🇪",note:74,maxNote:75,val:0.5,wage:14,contract:"2026",fitness:75,morale:4,goals:4,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","L"]},
-      {n:10,name:"Matisse Samoise",short:"Samoise",pos:"MID",age:23,nat:"🇧🇪",note:76,maxNote:81,val:8,wage:15,contract:"2027",fitness:88,morale:4,goals:10,assists:8,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","W","L"]},
-      {n:6,name:"Julien De Sart",short:"De Sart",pos:"MID",age:29,nat:"🇧🇪",note:73,maxNote:75,val:3,wage:11,contract:"2026",fitness:82,morale:3,goals:3,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","L","W"]},
-      {n:7,name:"Tarik Tissoudali",short:"Tissoudali",pos:"ATT",age:30,nat:"🇲🇦",note:77,maxNote:78,val:4,wage:16,contract:"2026",fitness:81,morale:3,goals:11,assists:6,injured:true,injuryWeeks:1,sessions:0,form:["W","D","W","W","L"]},
-      {n:9,name:"Gift Orban",short:"Orban",pos:"ATT",age:22,nat:"🇳🇬",note:78,maxNote:84,val:14,wage:18,contract:"2027",fitness:89,morale:4,goals:14,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","L"]},
-      {n:11,name:"Hyun-seok Hong",short:"Hong",pos:"ATT",age:28,nat:"🇰🇷",note:75,maxNote:77,val:5,wage:12,contract:"2026",fitness:86,morale:3,goals:8,assists:7,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","W"]},
-    ],
-    objectives:[
-      {text:"Terminer dans le Top 4",check:g=>g.pts>=50},
-      {text:"Dépasser Antwerp au classement",check:g=>g.pts>=42},
-      {text:"Qualification européenne",check:g=>g.pts>=54},
+      {n:1,nm:"Maarten Vandevoordt",sh:"Vandevoordt",pos:"GK",role:"Gardien",age:23,nat:"🇧🇪",nt:79,pt:86,val:14,wg:15,ct:"2028",ft:88,mr:4,gls:0,ats:0,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:5,nm:"Mark McKenzie",sh:"McKenzie",pos:"DEF",role:"Défenseur central",age:26,nat:"🇺🇸",nt:75,pt:78,val:6,wg:13,ct:"2027",ft:84,mr:3,gls:2,ats:1,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:3,nm:"Carlos Cuesta",sh:"Cuesta",pos:"DEF",role:"Défenseur central",age:27,nat:"🇨🇴",nt:74,pt:77,val:5,wg:12,ct:"2027",ft:83,mr:3,gls:1,ats:1,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:2,nm:"Patrik Hrosovsky",sh:"Hrosovsky",pos:"DEF",role:"Milieu défensif",age:34,nat:"🇸🇰",nt:72,pt:73,val:1.2,wg:11,ct:"2026",ft:78,mr:3,gls:1,ats:2,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:8,nm:"Bryan Heynen",sh:"Heynen",pos:"MID",role:"Capitaine box-to-box",age:30,nat:"🇧🇪",nt:76,pt:77,val:3.5,wg:15,ct:"2029",ft:83,mr:4,gls:5,ats:7,inj:false,sus:false,sel:true,cap:true,sess:0,form:[]},
+      {n:10,nm:"Jarne Steuckers",sh:"Steuckers",pos:"MID",role:"Milieu créateur",age:23,nat:"🇧🇪",nt:76,pt:84,val:9,wg:13,ct:"2028",ft:90,mr:4,gls:6,ats:8,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:11,nm:"Bilal El Khannous",sh:"El Khannous",pos:"MID",role:"Meneur de jeu",age:21,nat:"🇲🇦",nt:77,pt:85,val:16,wg:14,ct:"2029",ft:91,mr:4,gls:5,ats:9,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:18,nm:"Andi Zeqiri",sh:"Zeqiri",pos:"ATT",role:"Avant-centre",age:26,nat:"🇨🇭",nt:76,pt:79,val:6,wg:17,ct:"2027",ft:86,mr:4,gls:13,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:7,nm:"Tolu Arokodare",sh:"Arokodare",pos:"ATT",role:"Avant-centre puissant",age:25,nat:"🇳🇬",nt:77,pt:82,val:11,wg:15,ct:"2027",ft:89,mr:4,gls:14,ats:3,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:9,nm:"Luca Oyen",sh:"Oyen",pos:"ATT",role:"Ailier inverted",age:23,nat:"🇧🇪",nt:74,pt:81,val:8,wg:11,ct:"2028",ft:88,mr:4,gls:9,ats:6,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
     ]
   },
-  antwerp: {
-    name:"R. Antwerp FC", abbr:"ANT", short:"Antwerp",
-    primary:"#D32F2F", primaryDark:"#9a1a1a", primaryLight:"#ff6b6b", onPrimary:"#ffffff",
-    icon:"🔴", budget:12, income:30, wages:22,
-    pts:41, wins:12, draws:5, losses:11, gf:41, ga:38, week:28,
-    form:["L","W","W","D","W"],
-    stadium:"Bosuilstadion (16 144 places)",
+  union:{
+    name:"Union Saint-Gilloise",abbr:"USG",short:"Union SG",p:"#F5C518",pd:"#c9a000",pl:"#ffd84d",op:"#003087",
+    icon:"🟡",budget:10,income:24,wages:17,pts:0,wins:0,draws:0,losses:0,gf:0,ga:0,
+    form:[],stadium:"Stade Joseph Marien",cap:9400,manager:"David Hubert",
+    objectives:[{t:"Défendre le titre en PO",fn:g=>g.pts>=56},{t:"Top 3 régulière",fn:g=>g.pts>=54},{t:"45+ buts",fn:g=>g.gf>=45}],
     squad:[
-      {n:1,name:"Jean Butez",short:"Butez",pos:"GK",age:30,nat:"🇫🇷",note:78,maxNote:80,val:5,wage:16,contract:"2026",fitness:90,morale:4,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["L","W","W","D","W"]},
-      {n:5,name:"Toby Alderweireld",short:"Alderw.",pos:"DEF",age:36,nat:"🇧🇪",note:75,maxNote:76,val:0.8,wage:22,contract:"2026",fitness:78,morale:4,goals:2,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["L","W","W","D","W"]},
-      {n:4,name:"Jelle Bataille",short:"Bataille",pos:"DEF",age:25,nat:"🇧🇪",note:73,maxNote:77,val:4,wage:11,contract:"2027",fitness:85,morale:3,goals:1,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","L","W"]},
-      {n:3,name:"Aurelio Buta",short:"Buta",pos:"DEF",age:27,nat:"🇵🇹",note:74,maxNote:77,val:5,wage:12,contract:"2027",fitness:87,morale:3,goals:2,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
-      {n:8,name:"Ritchie De Laet",short:"De Laet",pos:"MID",age:36,nat:"🇧🇪",note:70,maxNote:71,val:0.5,wage:10,contract:"2026",fitness:72,morale:3,goals:1,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["L","W","W","D","W"]},
-      {n:6,name:"George Ilenikhena",short:"Ilenikh.",pos:"MID",age:18,nat:"🇳🇬",note:74,maxNote:86,val:8,wage:6,contract:"2028",fitness:93,morale:5,goals:3,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","L","W"]},
-      {n:10,name:"Radja Nainggolan",short:"Naingg.",pos:"MID",age:37,nat:"🇧🇪",note:72,maxNote:73,val:0.3,wage:15,contract:"2026",fitness:70,morale:3,goals:4,assists:5,injured:true,injuryWeeks:3,sessions:0,form:["L","W","W","D","W"]},
-      {n:7,name:"Viktor Gyökeres",short:"Gyökeres",pos:"ATT",age:26,nat:"🇸🇪",note:84,maxNote:87,val:65,wage:55,contract:"2027",fitness:91,morale:5,goals:20,assists:8,injured:false,injuryWeeks:0,sessions:0,form:["W","W","D","W","W"]},
-      {n:9,name:"Jannes Vansteenkiste",short:"Vanst.",pos:"ATT",age:22,nat:"🇧🇪",note:72,maxNote:80,val:4,wage:8,contract:"2027",fitness:88,morale:3,goals:6,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["L","W","W","D","W"]},
-      {n:11,name:"Michel-Ange Balikwisha",short:"Balikwisha",pos:"ATT",age:23,nat:"🇧🇪",note:73,maxNote:78,val:5,wage:10,contract:"2026",fitness:85,morale:3,goals:5,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
-    ],
-    objectives:[
-      {text:"Rester dans le Top 6",check:g=>g.pts>=40},
-      {text:"Gagner la Coupe de Belgique",check:g=>false},
-      {text:"Dépasser Gent au classement",check:g=>g.pts>=50},
+      {n:1,nm:"Anthony Moris",sh:"Moris",pos:"GK",role:"Gardien",age:35,nat:"🇱🇺",nt:76,pt:77,val:1.2,wg:12,ct:"2027",ft:84,mr:3,gls:0,ats:0,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:5,nm:"Ross McCrorie",sh:"McCrorie",pos:"DEF",role:"Défenseur central",age:28,nat:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",nt:74,pt:76,val:3.5,wg:11,ct:"2027",ft:83,mr:3,gls:1,ats:1,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:6,nm:"Christian Burgess",sh:"Burgess",pos:"DEF",role:"Défenseur central",age:34,nat:"🇬🇧",nt:72,pt:73,val:1,wg:9,ct:"2026",ft:78,mr:4,gls:1,ats:1,inj:false,sus:false,sel:true,cap:true,sess:0,form:[]},
+      {n:4,nm:"Koki Machida",sh:"Machida",pos:"DEF",role:"Milieu défensif",age:28,nat:"🇯🇵",nt:74,pt:78,val:6,wg:13,ct:"2027",ft:87,mr:4,gls:1,ats:3,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:8,nm:"Cameron Puertas",sh:"Puertas",pos:"MID",role:"Milieu créateur",age:28,nat:"🇪🇸",nt:78,pt:80,val:8,wg:15,ct:"2027",ft:87,mr:4,gls:7,ats:13,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:10,nm:"Franjo Ivanovic",sh:"Ivanovic",pos:"MID",role:"Milieu relayeur",age:25,nat:"🇭🇷",nt:75,pt:80,val:6,wg:11,ct:"2028",ft:87,mr:3,gls:5,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:7,nm:"Mohamed Amoura",sh:"Amoura",pos:"ATT",role:"Ailier gauche",age:26,nat:"🇩🇿",nt:78,pt:83,val:14,wg:18,ct:"2027",ft:89,mr:4,gls:12,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:9,nm:"Victor Boniface",sh:"Boniface",pos:"ATT",role:"Avant-centre",age:25,nat:"🇳🇬",nt:80,pt:85,val:25,wg:24,ct:"2028",ft:91,mr:5,gls:14,ats:6,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:11,nm:"Loïc Lapoussin",sh:"Lapoussin",pos:"ATT",role:"Ailier inverted",age:28,nat:"🇲🇬",nt:75,pt:77,val:4,wg:13,ct:"2027",ft:84,mr:3,gls:8,ats:7,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
     ]
   },
-  union: {
-    name:"Union Saint-Gilloise", abbr:"USG", short:"Union SG",
-    primary:"#F5C518", primaryDark:"#c9a000", primaryLight:"#ffd84d", onPrimary:"#003087",
-    icon:"🟡", budget:9, income:22, wages:16,
-    pts:38, wins:10, draws:8, losses:10, gf:35, ga:36, week:28,
-    form:["D","W","L","W","D"],
-    stadium:"Stade Joseph Marien (8 837 places)",
+  gent:{
+    name:"K.A.A. Gent",abbr:"GAA",short:"Gent",p:"#1B3D6E",pd:"#122a4e",pl:"#4a7abf",op:"#fff",
+    icon:"🔵",budget:11,income:29,wages:21,pts:0,wins:0,draws:0,losses:0,gf:0,ga:0,
+    form:[],stadium:"Ghelamco Arena",cap:20000,manager:"Rik De Mil",
+    objectives:[{t:"Top 5 saison régulière",fn:g=>g.pts>=46},{t:"35+ buts",fn:g=>g.gf>=35},{t:"Europe garantie",fn:g=>g.pts>=52}],
     squad:[
-      {n:1,name:"Anthony Moris",short:"Moris",pos:"GK",age:34,nat:"🇱🇺",note:76,maxNote:77,val:1.5,wage:12,contract:"2026",fitness:85,morale:3,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["D","W","L","W","D"]},
-      {n:5,name:"Ross McCrorie",short:"McCrorie",pos:"DEF",age:27,nat:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",note:73,maxNote:76,val:3,wage:10,contract:"2026",fitness:84,morale:3,goals:2,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","D"]},
-      {n:3,name:"Christian Burgess",short:"Burgess",pos:"DEF",age:33,nat:"🇬🇧",note:71,maxNote:72,val:1,wage:9,contract:"2026",fitness:78,morale:3,goals:1,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["D","W","L","W","D"]},
-      {n:4,name:"Koki Machida",short:"Machida",pos:"DEF",age:27,nat:"🇯🇵",note:74,maxNote:78,val:5,wage:12,contract:"2027",fitness:88,morale:4,goals:1,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","W"]},
-      {n:8,name:"Cameron Puertas",short:"Puertas",pos:"MID",age:27,nat:"🇪🇸",note:77,maxNote:80,val:7,wage:14,contract:"2026",fitness:86,morale:4,goals:7,assists:12,injured:false,injuryWeeks:0,sessions:0,form:["D","W","L","W","D"]},
-      {n:6,name:"Bart Nieuwkoop",short:"Nieuwkoop",pos:"MID",age:28,nat:"🇳🇱",note:73,maxNote:75,val:2,wage:10,contract:"2026",fitness:82,morale:3,goals:3,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["W","D","L","W","D"]},
-      {n:10,name:"Franjo Ivanovic",short:"Ivanovic",pos:"MID",age:24,nat:"🇭🇷",note:74,maxNote:79,val:5,wage:10,contract:"2027",fitness:87,morale:3,goals:5,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","D"]},
-      {n:9,name:"Victor Boniface",short:"Boniface",pos:"ATT",age:24,nat:"🇳🇬",note:79,maxNote:84,val:22,wage:22,contract:"2027",fitness:90,morale:5,goals:13,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["W","D","L","W","W"]},
-      {n:11,name:"Loïc Lapoussin",short:"Lapoussin",pos:"ATT",age:27,nat:"🇲🇬",note:75,maxNote:77,val:4,wage:12,contract:"2026",fitness:83,morale:3,goals:8,assists:7,injured:false,injuryWeeks:0,sessions:0,form:["D","W","L","W","D"]},
-      {n:7,name:"Mohamed Amoura",short:"Amoura",pos:"ATT",age:25,nat:"🇩🇿",note:77,maxNote:82,val:12,wage:16,contract:"2027",fitness:89,morale:4,goals:11,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","W"]},
-    ],
-    objectives:[
-      {text:"Accrocher le Top 6",check:g=>g.pts>=40},
-      {text:"Dépasser votre record de pts",check:g=>g.pts>=55},
-      {text:"Rester en JPL",check:g=>g.pts>=30},
+      {n:1,nm:"Davy Roef",sh:"Roef",pos:"GK",role:"Gardien",age:31,nat:"🇧🇪",nt:75,pt:77,val:2,wg:12,ct:"2027",ft:85,mr:3,gls:0,ats:0,inj:false,sus:false,sel:true,cap:true,sess:0,form:[]},
+      {n:5,nm:"Siebe Van der Heyden",sh:"Van der Heyden",pos:"DEF",role:"Défenseur central",age:24,nat:"🇧🇪",nt:76,pt:80,val:8,wg:13,ct:"2028",ft:87,mr:3,gls:2,ats:2,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:3,nm:"Alessio Castro-Montes",sh:"Castro",pos:"DEF",role:"Latéral droit",age:28,nat:"🇧🇪",nt:75,pt:77,val:5,wg:14,ct:"2027",ft:84,mr:3,gls:2,ats:4,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:10,nm:"Matisse Samoise",sh:"Samoise",pos:"MID",role:"Ailier droit",age:24,nat:"🇧🇪",nt:77,pt:82,val:9,wg:16,ct:"2028",ft:88,mr:4,gls:11,ats:8,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:8,nm:"Wilfried Kanga",sh:"Kanga",pos:"ATT",role:"Avant-centre",age:27,nat:"🇨🇮",nt:76,pt:78,val:7,wg:14,ct:"2027",ft:85,mr:3,gls:10,ats:4,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:9,nm:"Gift Orban",sh:"Orban",pos:"ATT",role:"Avant-centre",age:23,nat:"🇳🇬",nt:79,pt:85,val:16,wg:19,ct:"2028",ft:90,mr:4,gls:15,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:7,nm:"Hyun-seok Hong",sh:"Hong",pos:"ATT",role:"Ailier gauche",age:29,nat:"🇰🇷",nt:75,pt:77,val:5,wg:12,ct:"2026",ft:85,mr:3,gls:8,ats:7,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:6,nm:"Kjell Peersman",sh:"Peersman",pos:"MID",role:"Milieu défensif",age:22,nat:"🇧🇪",nt:73,pt:81,val:7,wg:9,ct:"2028",ft:89,mr:4,gls:3,ats:4,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:11,nm:"Michal Skoras",sh:"Skoras",pos:"MID",role:"Ailier gauche",age:25,nat:"🇵🇱",nt:74,pt:78,val:5,wg:11,ct:"2027",ft:83,mr:3,gls:5,ats:6,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
     ]
   },
-  genk: {
-    name:"Genk", abbr:"GNK", short:"Genk",
-    primary:"#0055A4", primaryDark:"#003d7a", primaryLight:"#4d8dd4", onPrimary:"#ffffff",
-    icon:"🔵", budget:11, income:26, wages:18,
-    pts:39, wins:11, draws:6, losses:11, gf:38, ga:40, week:28,
-    form:["W","L","W","D","W"],
-    stadium:"Cegeka Arena (24 000 places)",
+  antwerp:{
+    name:"Royal Antwerp FC",abbr:"ANT",short:"Antwerp",p:"#D32F2F",pd:"#9a1a1a",pl:"#ff6b6b",op:"#fff",
+    icon:"🔴",budget:13,income:31,wages:23,pts:0,wins:0,draws:0,losses:0,gf:0,ga:0,
+    form:[],stadium:"Bosuilstadion",cap:16144,manager:"Joseph Oosting",
+    objectives:[{t:"Top 6 saison régulière",fn:g=>g.pts>=42},{t:"Play-offs Europe",fn:g=>g.pts>=46},{t:"Victoire en Coupe",fn:g=>false}],
     squad:[
-      {n:1,name:"Maarten Vandevoordt",short:"Vandevoordt",pos:"GK",age:22,nat:"🇧🇪",note:77,maxNote:84,val:12,wage:14,contract:"2027",fitness:88,morale:4,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
-      {n:5,name:"Mark McKenzie",short:"McKenzie",pos:"DEF",age:25,nat:"🇺🇸",note:74,maxNote:78,val:5,wage:12,contract:"2026",fitness:84,morale:3,goals:2,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
-      {n:3,name:"Patrik Hrosovsky",short:"Hrosovsky",pos:"DEF",age:33,nat:"🇸🇰",note:73,maxNote:74,val:1.5,wage:11,contract:"2026",fitness:80,morale:3,goals:1,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["L","W","D","W","W"]},
-      {n:8,name:"Bryan Heynen",short:"Heynen",pos:"MID",age:29,nat:"🇧🇪",note:75,maxNote:77,val:3,wage:14,contract:"2026",fitness:83,morale:3,goals:5,assists:7,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
-      {n:10,name:"Jarne Steuckers",short:"Steuckers",pos:"MID",age:22,nat:"🇧🇪",note:75,maxNote:83,val:8,wage:12,contract:"2027",fitness:90,morale:4,goals:6,assists:8,injured:false,injuryWeeks:0,sessions:0,form:["W","D","W","L","W"]},
-      {n:6,name:"Carlos Cuesta",short:"Cuesta",pos:"DEF",age:26,nat:"🇨🇴",note:74,maxNote:77,val:4,wage:11,contract:"2026",fitness:85,morale:3,goals:2,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["W","W","L","D","W"]},
-      {n:7,name:"Tolu Arokodare",short:"Arokodare",pos:"ATT",age:24,nat:"🇳🇬",note:76,maxNote:81,val:9,wage:14,contract:"2027",fitness:88,morale:4,goals:12,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
-      {n:9,name:"Luca Oyen",short:"Oyen",pos:"ATT",age:22,nat:"🇧🇪",note:73,maxNote:80,val:7,wage:10,contract:"2027",fitness:87,morale:4,goals:8,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["D","W","W","L","W"]},
-      {n:11,name:"Bilal El Khannous",short:"El Khannous",pos:"MID",age:20,nat:"🇲🇦",note:76,maxNote:84,val:14,wage:12,contract:"2028",fitness:91,morale:4,goals:5,assists:9,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
-    ],
-    objectives:[
-      {text:"Accrocher les playoffs",check:g=>g.pts>=54},
-      {text:"Top 6 garanti",check:g=>g.pts>=42},
-      {text:"Qualifier pour l'Europe",check:g=>g.pts>=58},
+      {n:1,nm:"Jean Butez",sh:"Butez",pos:"GK",role:"Gardien",age:31,nat:"🇫🇷",nt:79,pt:80,val:5,wg:17,ct:"2027",ft:89,mr:4,gls:0,ats:0,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:22,nm:"Daam Foulon",sh:"Foulon",pos:"DEF",role:"Latéral gauche",age:27,nat:"🇧🇪",nt:73,pt:75,val:2.5,wg:10,ct:"2027",ft:84,mr:3,gls:1,ats:3,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:4,nm:"Aurelio Buta",sh:"Buta",pos:"DEF",role:"Latéral droit",age:28,nat:"🇵🇹",nt:74,pt:76,val:5,wg:12,ct:"2027",ft:87,mr:3,gls:2,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:5,nm:"Kiki Kouyaté",sh:"Kouyaté",pos:"DEF",role:"Défenseur central",age:31,nat:"🇲🇱",nt:73,pt:74,val:2,wg:10,ct:"2027",ft:83,mr:3,gls:1,ats:1,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:8,nm:"Geoffry Hairemans",sh:"Hairemans",pos:"MID",role:"Ailier droit",age:32,nat:"🇧🇪",nt:73,pt:74,val:1,wg:10,ct:"2027",ft:80,mr:3,gls:4,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:10,nm:"Vincent Janssen",sh:"Janssen",pos:"ATT",role:"Avant-centre",age:30,nat:"🇳🇱",nt:76,pt:77,val:4,wg:16,ct:"2027",ft:82,mr:4,gls:10,ats:4,inj:false,sus:false,sel:true,cap:true,sess:0,form:[]},
+      {n:18,nm:"George Ilenikhena",sh:"Ilenikhena",pos:"MID",role:"Ailier gauche",age:19,nat:"🇳🇬",nt:75,pt:87,val:10,wg:7,ct:"2029",ft:93,mr:5,gls:7,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:9,nm:"Isaac Babadi",sh:"Babadi",pos:"ATT",role:"Avant-centre",age:21,nat:"🇳🇱",nt:74,pt:82,val:4,wg:8,ct:"2026",ft:88,mr:4,gls:8,ats:4,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:7,nm:"Taishi Nozawa",sh:"Nozawa",pos:"GK",role:"Gardien",age:23,nat:"🇯🇵",nt:72,pt:78,val:3,wg:8,ct:"2028",ft:87,mr:3,gls:0,ats:0,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
     ]
   },
-  cercle: {
-    name:"Cercle Brugge", abbr:"CER", short:"Cercle",
-    primary:"#007A3D", primaryDark:"#005a2c", primaryLight:"#33a866", onPrimary:"#ffffff",
-    icon:"🟢", budget:5, income:14, wages:10,
-    pts:32, wins:9, draws:5, losses:14, gf:30, ga:45, week:28,
-    form:["L","W","L","D","W"],
-    stadium:"Jan Breydel Stadion (29 062 places)",
+  cercle:{
+    name:"Cercle Brugge",abbr:"CER",short:"Cercle",p:"#007A3D",pd:"#005a2c",pl:"#33a866",op:"#fff",
+    icon:"🟢",budget:5,income:13,wages:9,pts:0,wins:0,draws:0,losses:0,gf:0,ga:0,
+    form:[],stadium:"Jan Breydel Stadion",cap:29042,manager:"Onur Cinel",
+    objectives:[{t:"Maintien garanti",fn:g=>g.pts>=30},{t:"Top 10",fn:g=>g.pts>=36},{t:"20+ buts",fn:g=>g.gf>=20}],
     squad:[
-      {n:1,name:"Warleson",short:"Warleson",pos:"GK",age:28,nat:"🇧🇷",note:73,maxNote:76,val:2,wage:8,contract:"2026",fitness:85,morale:3,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["L","W","L","D","W"]},
-      {n:5,name:"Hannes Van der Bruggen",short:"Van der B.",pos:"DEF",age:29,nat:"🇧🇪",note:71,maxNote:73,val:1.5,wage:9,contract:"2026",fitness:81,morale:2,goals:1,assists:1,injured:false,injuryWeeks:0,sessions:0,form:["W","L","D","W","L"]},
-      {n:3,name:"Mathias Fixelles",short:"Fixelles",pos:"DEF",age:24,nat:"🇧🇪",note:70,maxNote:74,val:1.5,wage:8,contract:"2026",fitness:84,morale:3,goals:0,assists:2,injured:false,injuryWeeks:0,sessions:0,form:["L","W","L","D","W"]},
-      {n:8,name:"Kevin Denkey",short:"Denkey",pos:"ATT",age:24,nat:"🇹🇬",note:78,maxNote:82,val:12,wage:14,contract:"2027",fitness:88,morale:4,goals:16,assists:5,injured:false,injuryWeeks:0,sessions:0,form:["W","L","W","D","W"]},
-      {n:10,name:"Arne Engels",short:"Engels",pos:"MID",age:21,nat:"🇧🇪",note:76,maxNote:83,val:10,wage:11,contract:"2027",fitness:89,morale:4,goals:7,assists:9,injured:false,injuryWeeks:0,sessions:0,form:["L","W","L","D","W"]},
-      {n:6,name:"Sidy Sarr",short:"Sarr",pos:"MID",age:22,nat:"🇸🇳",note:73,maxNote:79,val:5,wage:9,contract:"2027",fitness:87,morale:3,goals:4,assists:6,injured:false,injuryWeeks:0,sessions:0,form:["L","D","W","L","W"]},
-      {n:7,name:"Christophe Antonucci",short:"Antonucci",pos:"ATT",age:26,nat:"🇧🇪",note:73,maxNote:76,val:3,wage:10,contract:"2026",fitness:83,morale:3,goals:5,assists:4,injured:false,injuryWeeks:0,sessions:0,form:["L","W","L","D","W"]},
-      {n:9,name:"Jérémy Taravel",short:"Taravel",pos:"MID",age:36,nat:"🇫🇷",note:68,maxNote:69,val:0.3,wage:7,contract:"2026",fitness:71,morale:2,goals:2,assists:3,injured:false,injuryWeeks:0,sessions:0,form:["W","L","D","W","L"]},
-    ],
-    objectives:[
-      {text:"Assurer le maintien",check:g=>g.pts>=35},
-      {text:"Sortir des 3 dernières places",check:g=>g.pts>=30},
-      {text:"Top 8 en fin de saison",check:g=>g.pts>=42},
+      {n:1,nm:"Warleson",sh:"Warleson",pos:"GK",role:"Gardien",age:29,nat:"🇧🇷",nt:73,pt:75,val:1.8,wg:8,ct:"2027",ft:84,mr:3,gls:0,ats:0,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:5,nm:"Hannes Van der Bruggen",sh:"Van der B.",pos:"DEF",role:"Défenseur central",age:30,nat:"🇧🇪",nt:71,pt:72,val:1.2,wg:9,ct:"2026",ft:79,mr:3,gls:1,ats:1,inj:false,sus:false,sel:true,cap:true,sess:0,form:[]},
+      {n:10,nm:"Arne Engels",sh:"Engels",pos:"MID",role:"Meneur de jeu",age:22,nat:"🇧🇪",nt:77,pt:84,val:12,wg:12,ct:"2028",ft:89,mr:4,gls:7,ats:9,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:9,nm:"Kevin Denkey",sh:"Denkey",pos:"ATT",role:"Avant-centre",age:25,nat:"🇹🇬",nt:79,pt:83,val:14,wg:15,ct:"2028",ft:88,mr:4,gls:17,ats:5,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:7,nm:"Sidy Sarr",sh:"Sarr",pos:"MID",role:"Milieu relayeur",age:23,nat:"🇸🇳",nt:74,pt:80,val:6,wg:10,ct:"2028",ft:87,mr:3,gls:4,ats:6,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
+      {n:11,nm:"Christophe Antonucci",sh:"Antonucci",pos:"ATT",role:"Ailier gauche",age:27,nat:"🇧🇪",nt:73,pt:75,val:3,wg:10,ct:"2027",ft:82,mr:3,gls:5,ats:4,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]},
     ]
   },
 };
 
-const TRANSFERS = [
-  {name:"Lois Openda",pos:"ATT",age:24,nat:"🇧🇪",note:84,club:"RB Leipzig",price:28,wage:45},
-  {name:"Yannick Carrasco",pos:"MID",age:31,nat:"🇧🇪",note:78,club:"Al-Shabab",price:4,wage:20},
-  {name:"Arthur Theate",pos:"DEF",age:24,nat:"🇧🇪",note:79,club:"Stade Rennais",price:18,wage:28},
-  {name:"Loïc Lapoussin",pos:"ATT",age:27,nat:"🇧🇪",note:76,club:"Union SG",price:8,wage:15},
-  {name:"Jarne Steuckers",pos:"MID",age:22,nat:"🇧🇪",note:75,club:"Genk",price:6,wage:12},
-  {name:"Sheraldo Becker",pos:"ATT",age:29,nat:"🇳🇱",note:77,club:"Al-Ettifaq",price:5,wage:18},
-  {name:"Zinho Vanheusden",pos:"DEF",age:26,nat:"🇧🇪",note:74,club:"Bologne",price:7,wage:14},
-  {name:"Charles De Ketelaere",pos:"MID",age:24,nat:"🇧🇪",note:81,club:"Atalanta",price:22,wage:38},
-  {name:"Hugo Siquet",pos:"DEF",age:23,nat:"🇧🇪",note:73,club:"Fribourg",price:5,wage:10},
-  {name:"Benito Raman",pos:"ATT",age:31,nat:"🇧🇪",note:72,club:"Sans club",price:0,wage:8},
-  {name:"Jordan Lukaku",pos:"DEF",age:30,nat:"🇧🇪",note:71,club:"Sans club",price:0,wage:7},
-  {name:"Adnan Januzaj",pos:"MID",age:30,nat:"🇧🇪",note:74,club:"Sans club",price:0,wage:10},
+// Transfer market
+const TRANSFERS=[
+  {nm:"Lois Openda",pos:"ATT",age:25,nat:"🇧🇪",nt:85,club:"RB Leipzig",price:30,wg:48},
+  {nm:"Charles De Ketelaere",pos:"MID",age:25,nat:"🇧🇪",nt:82,club:"Atalanta",price:24,wg:40},
+  {nm:"Yannick Carrasco",pos:"MID",age:31,nat:"🇧🇪",nt:78,club:"Libre",price:0,wg:18},
+  {nm:"Arthur Theate",pos:"DEF",age:25,nat:"🇧🇪",nt:80,club:"Stade Rennais",price:20,wg:30},
+  {nm:"Adrien Trebel",pos:"MID",age:33,nat:"🇫🇷",nt:72,club:"Libre",price:0,wg:9},
+  {nm:"Sheraldo Becker",pos:"ATT",age:30,nat:"🇳🇱",nt:77,club:"Libre",price:0,wg:16},
+  {nm:"Hugo Siquet",pos:"DEF",age:24,nat:"🇧🇪",nt:74,club:"SC Fribourg",price:5,wg:11},
+  {nm:"Jordan Lukaku",pos:"DEF",age:31,nat:"🇧🇪",nt:71,club:"Libre",price:0,wg:7},
+  {nm:"Amadou Onana",pos:"MID",age:25,nat:"🇧🇪",nt:83,club:"Aston Villa",price:48,wg:62},
+  {nm:"Benito Raman",pos:"ATT",age:32,nat:"🇧🇪",nt:72,club:"Libre",price:0,wg:7},
+  {nm:"Timothé Nkada",pos:"ATT",age:23,nat:"🇫🇷",nt:73,club:"Standard de Liège",price:4,wg:10},
+  {nm:"Mohammed El Hankouri",pos:"MID",age:28,nat:"🇲🇦",nt:73,club:"Standard",price:3,wg:9},
 ];
 
-const LEAGUE_BASE = [
-  {club:"Club Brugge KV",j:28,g:18,n:5,p:5,bp:58,bc:28,pts:59,clubKey:"brugge"},
-  {club:"RSC Anderlecht",j:28,g:16,n:6,p:6,bp:52,bc:32,pts:54,clubKey:"anderlecht"},
-  {club:"K.A.A. Gent",j:28,g:14,n:7,p:7,bp:45,bc:35,pts:49,clubKey:"gent"},
-  {club:"Standard de Liège",j:28,g:13,n:3,p:12,bp:44,bc:42,pts:42,clubKey:"standard"},
-  {club:"R. Antwerp FC",j:28,g:12,n:5,p:11,bp:41,bc:38,pts:41,clubKey:"antwerp"},
-  {club:"Genk",j:28,g:11,n:6,p:11,bp:38,bc:40,pts:39,clubKey:"genk"},
-  {club:"Union Saint-Gilloise",j:28,g:10,n:8,p:10,bp:35,bc:36,pts:38,clubKey:"union"},
-  {club:"OH Louvain",j:28,g:9,n:6,p:13,bp:32,bc:43,pts:33,clubKey:null},
-  {club:"Cercle Brugge",j:28,g:9,n:5,p:14,bp:30,bc:45,pts:32,clubKey:"cercle"},
-  {club:"RFC Seraing",j:28,g:8,n:5,p:15,bp:27,bc:50,pts:29,clubKey:null},
-  {club:"Westerlo",j:28,g:7,n:6,p:15,bp:26,bc:48,pts:27,clubKey:null},
-  {club:"Eupen",j:28,g:5,n:5,p:18,bp:22,bc:58,pts:20,clubKey:null},
+// League teams (16 JPL 2025/26)
+const LEAGUE_TEAMS=[
+  {n:"Club Brugge KV",k:"brugge",pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"Union Saint-Gilloise",k:"union",pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"RSC Anderlecht",k:"anderlecht",pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"KRC Genk",k:"genk",pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"KAA Gent",k:"gent",pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"Standard de Liège",k:"standard",pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"Royal Antwerp FC",k:"antwerp",pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"OH Louvain",k:null,pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"Cercle Brugge",k:"cercle",pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"STVV Sint-Truiden",k:null,pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"Charleroi",k:null,pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"KV Mechelen",k:null,pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"Westerlo",k:null,pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"FCV Dender EH",k:null,pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"Zulte Waregem",k:null,pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
+  {n:"La Louvière",k:null,pts:0,j:0,g:0,d:0,p:0,bp:0,bc:0},
 ];
 
-// ==================== GAME STATE ====================
-let G = {}, CL = null, SQUAD = [], leagueTable = [], transfers = [...TRANSFERS];
-let matchRunning = false, matchInterval = null;
-const formations = ["4-4-2","4-3-3","4-2-3-1","5-4-1","3-5-2","4-5-1"];
-const trainingTypes = ["Repos","Physique","Tactique","Tirs","Défense","Physique","Repos"];
-const trainingDays = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
-const trainingOptions = ["Repos","Physique","Tactique","Tirs","Défense","Gardiens","Récupération"];
-const oppStr = {
-  "Club Brugge KV":83,"RSC Anderlecht":80,"K.A.A. Gent":77,"R. Antwerp FC":76,
-  "Genk":75,"Union Saint-Gilloise":76,"OH Louvain":70,"Cercle Brugge":69,
-  "RFC Seraing":65,"Westerlo":67
+const TEAM_STRENGTH={
+  "Club Brugge KV":82,"Union Saint-Gilloise":79,"RSC Anderlecht":80,"KRC Genk":77,
+  "KAA Gent":76,"Standard de Liège":73,"Royal Antwerp FC":75,"OH Louvain":67,
+  "Cercle Brugge":70,"STVV Sint-Truiden":66,"Charleroi":68,"KV Mechelen":69,
+  "Westerlo":65,"FCV Dender EH":62,"Zulte Waregem":64,"La Louvière":60
 };
 
-// ==================== CLUB SELECTION ====================
-function renderClubSelection(){
-  const grid = document.getElementById("clubs-grid");
-  grid.innerHTML = Object.entries(CLUBS).map(([key,c])=>`
-    <div class="club-card" style="--club-color:${c.primary}" onclick="selectClub('${key}')">
-      <div class="crest" style="background:${c.primary};color:${c.onPrimary}">${c.abbr}</div>
-      <div class="cname">${c.name}</div>
-      <div class="cleague">Jupiler Pro League</div>
-      <div class="cbudget">Budget : €${c.budget}M</div>
-      <div class="crating">Note moy. : ${Math.round(c.squad.reduce((a,p)=>a+p.note,0)/c.squad.length)}</div>
-    </div>`).join("");
+// ==================== STATE ====================
+let G={},SQUAD=[],leagueTable=[...LEAGUE_TEAMS.map(t=>({...t}))],
+    transfers=[...TRANSFERS],CL=null,
+    CALENDAR=[],matchSpeed=1,venue="home",
+    history=[],matchRunning=false,matchInterval=null,
+    matchPhase="pre",halfScore=[0,0],subCount=0,
+    trainingTypes=["Repos","Physique","Tactique","Tirs","Défense","Physique","Repos"],
+    positions={};
+
+// Formation presets (x%, y% = left%, top% on horizontal pitch)
+const FORMATIONS={
+  "4-4-2":[
+    {p:4,t:50},{p:15,t:20},{p:15,t:43},{p:15,t:65},{p:15,t:84},
+    {p:40,t:20},{p:40,t:43},{p:40,t:65},{p:40,t:84},
+    {p:72,t:35},{p:72,t:65}
+  ],
+  "4-3-3":[
+    {p:4,t:50},{p:15,t:15},{p:15,t:40},{p:15,t:65},{p:15,t:84},
+    {p:40,t:25},{p:40,t:50},{p:40,t:75},
+    {p:72,t:20},{p:72,t:50},{p:72,t:80}
+  ],
+  "4-2-3-1":[
+    {p:4,t:50},{p:15,t:15},{p:15,t:40},{p:15,t:65},{p:15,t:84},
+    {p:33,t:38},{p:33,t:65},
+    {p:55,t:20},{p:55,t:50},{p:55,t:80},
+    {p:78,t:50}
+  ],
+  "3-5-2":[
+    {p:4,t:50},{p:15,t:25},{p:15,t:50},{p:15,t:75},
+    {p:35,t:12},{p:35,t:33},{p:35,t:52},{p:35,t:71},{p:35,t:90},
+    {p:72,t:35},{p:72,t:65}
+  ],
+  "5-4-1":[
+    {p:4,t:50},{p:12,t:10},{p:12,t:30},{p:12,t:50},{p:12,t:70},{p:12,t:90},
+    {p:38,t:20},{p:38,t:43},{p:38,t:65},{p:38,t:84},
+    {p:75,t:50}
+  ],
+  "4-5-1":[
+    {p:4,t:50},{p:14,t:15},{p:14,t:40},{p:14,t:65},{p:14,t:84},
+    {p:38,t:12},{p:38,t:30},{p:38,t:50},{p:38,t:70},{p:38,t:88},
+    {p:76,t:50}
+  ],
+};
+
+const STYLES=[
+  {id:"possession",lbl:"Jeu de possession",bns:1},
+  {id:"direct",lbl:"Jeu direct",bns:0},
+  {id:"counter",lbl:"Contre-attaque",bns:1},
+  {id:"highline",lbl:"Ligne haute",bns:2},
+];
+const ROLES={GK:["Gardien","Sweeper keeper"],DEF:["Défenseur central","Libéro","Latéral offensif","Stopper"],MID:["Box-to-box","Regista","Milieu défensif","Milieu relayeur","Ailier gauche","Ailier droit","Meneur de jeu","Ailier inverted"],ATT:["Avant-centre","Faux 9","Avant-centre puissant","Pointe","Second attaquant"]};
+const PRESS_LBL=["","Bas bloc","Compact","Équilibré","Actif","Gegenpress"];
+const TEMPO_LBL=["","Lent","Calme","Équilibré","Rapide","Très rapide"];
+const COM={
+  norm:["Beau mouvement offensif.","Défense bien organisée.","Corner pour l'équipe attaquante.","Faute sifflée au milieu.","Longue transversale interceptée.","Tir dévié par le défenseur.","Contre-attaque stoppée.","Combinaison rapide sur l'aile.","Le milieu adverse accélère.","Arrêt de jeu pour traitement.","Ballon au-dessus de la barre.","Belle récupération défensive.","L'arbitre laisse jouer.","Coup franc dans la surface !","Dribble stoppé in extremis.","Centre en retrait, la défense dégage."],
+  goal_h:["⚽ BUT ! Le stade explose !","⚽ GOOOOAL ! Quel but magnifique !","⚽ Le capitaine marque et hurle sa joie !","⚽ But superbe — finition clinique !"],
+  goal_a:["⚽ But encaissé. Le banc visiter s'enflamme.","⚽ L'adversaire marque. Silence dans les tribunes.","⚽ But de l'adversaire — il faut réagir !"],
+  save:["🧤 Arrêt réflexe du gardien !","🧤 Le poteau sauve l'équipe !","🧤 Sortie aérienne parfaite du gardien !","🧤 La barre ! Incroyable chance !"],
+  card:["🟡 Carton jaune pour faute grossière.","🟡 L'arbitre sort le carton sans hésiter.","🟥 EXPULSION ! L'équipe réduite à 10 !"],
+  chance:["Raté ! La balle passe au-dessus.","Occasion manquée sur ce coup franc.","Frappe croisée mais le gardien est là."],
+  sub:["↩️ Changement — entrée du remplaçant.","↩️ Substitution effectuée sur le banc."],
+};
+
+// ==================== CALENDAR GENERATOR ====================
+function generateCalendar(myClub){
+  const teams=LEAGUE_TEAMS.map(t=>t.n);
+  const n=teams.length;
+  const rounds=[];
+  const t=[...teams];
+  for(let r=0;r<n-1;r++){
+    const fixtures=[];
+    for(let i=0;i<n/2;i++){
+      fixtures.push({home:t[i],away:t[n-1-i]});
+    }
+    rounds.push(fixtures);
+    // Rotate all except first
+    const last=t.splice(n-1,1)[0];
+    t.splice(1,0,last);
+  }
+  // Return rounds (first leg 1-15, second leg 16-30)
+  const cal=[];
+  for(let r=0;r<rounds.length;r++){
+    cal.push({day:r+1,fixtures:rounds[r].map(f=>({home:f.home,away:f.away,played:false,score:null}))});
+  }
+  for(let r=0;r<rounds.length;r++){
+    cal.push({day:r+rounds.length+1,fixtures:rounds[r].map(f=>({home:f.away,away:f.home,played:false,score:null}))});
+  }
+  return cal;
 }
 
+// ==================== INIT GAME ====================
 function selectClub(key){
-  CL = CLUBS[key];
-  G = {
-    pts: CL.pts, wins: CL.wins, draws: CL.draws, losses: CL.losses,
-    gf: CL.gf, ga: CL.ga, week: CL.week, budget: CL.budget,
-    income: CL.income, wages: CL.wages, form: [...CL.form],
-    venue: "home", formation: "4-4-2",
-  };
-  SQUAD = CL.squad.map(p=>({...p, form:[...p.form]}));
-  leagueTable = LEAGUE_BASE.map(t=>({...t}));
-
+  CL=CLUBS[key];
+  G={pts:0,wins:0,draws:0,losses:0,gf:0,ga:0,week:1,budget:CL.budget,income:CL.income,wages:CL.wages,form:[],venue:"home",formation:"4-4-2",style:"possession",press:3,tempo:3};
+  SQUAD=CL.squad.map(p=>({...p,form:[]}));
+  leagueTable=LEAGUE_TEAMS.map(t=>({...t}));
+  transfers=[...TRANSFERS];
+  CALENDAR=generateCalendar(CL.name);
+  // Set default positions from formation
+  applyFormationToPositions("4-4-2");
+  history=[];
   applyTheme();
-  populateOpponents(key);
   renderAll();
-
-  document.getElementById("club-select-screen").style.display="none";
-  document.getElementById("game-ui").style.display="block";
-  document.getElementById("h-crest").textContent=CL.abbr;
-  document.getElementById("h-title").textContent=CL.name;
+  document.getElementById("sel").style.display="none";
+  document.getElementById("game").style.display="block";
+  renderTacticsPitch();
+  showNotif(`Bienvenue à ${CL.name} ! Saison 2025/26 débutée.`);
 }
 
 function applyTheme(){
-  const r = document.documentElement.style;
-  r.setProperty("--primary", CL.primary);
-  r.setProperty("--primary-dark", CL.primaryDark);
-  r.setProperty("--primary-light", CL.primaryLight);
-  r.setProperty("--on-primary", CL.onPrimary);
+  const r=document.documentElement.style;
+  r.setProperty("--p",CL.p);r.setProperty("--pd",CL.pd);
+  r.setProperty("--pl",CL.pl);r.setProperty("--op",CL.op);
 }
+function changeClub(){document.getElementById("sel").style.display="flex";document.getElementById("game").style.display="none";}
 
-function changeClub(){
-  document.getElementById("club-select-screen").style.display="flex";
-  document.getElementById("game-ui").style.display="none";
-}
-
-function populateOpponents(myKey){
-  const sel = document.getElementById("opp-select");
-  sel.innerHTML = LEAGUE_BASE
-    .filter(t=>t.clubKey!==myKey)
-    .map(t=>`<option>${t.club}</option>`).join("");
-}
-
-// ==================== UTILITIES ====================
-function rcClass(n){ return n>=80?"elite":n>=75?"good":n>=70?"avg":"low"; }
-function morale(m){ return ["","😞","😐","😊","😊","🔥"][m]||"😊"; }
-function formDots(arr){ return arr.slice(-5).map(r=>`<span class="fd ${r}">${r}</span>`).join(""); }
-function getPos(){
-  return leagueTable.slice().sort((a,b)=>b.pts-a.pts).findIndex(t=>t.clubKey===Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name))+1||4;
+function applyFormationToPositions(formation){
+  const preset=FORMATIONS[formation];
+  const available=SQUAD.filter(p=>!p.inj&&p.sel);
+  positions={};
+  available.slice(0,Math.min(11,preset.length)).forEach((p,i)=>{
+    positions[p.nm]={left:preset[i].p,top:preset[i].t};
+  });
 }
 
 // ==================== RENDER ALL ====================
 function renderAll(){
-  renderHeader(); renderDashboard(); renderSquad(); renderFormations(); renderLineup();
-  renderClassement(); renderTraining(); renderTransfers(); renderFinances(); renderPreMatch();
+  renderHeader();renderDashboard();renderCalendar();renderSquad();
+  renderFormations();renderStyleList();renderBonusMalus();renderRoles();
+  populateOppSelect();renderPreMatch();renderLeague();renderTransfers();
+  renderTraining();renderFinances();
 }
 
+function rcClass(n){return n>=80?"e":n>=75?"g":n>=70?"a":"l";}
+function morale(m){return["","😞","😐","😊","😊","🔥"][m]||"😊";}
+function fds(arr){return arr.slice(-5).map(r=>`<span class="fd ${r}">${r}</span>`).join("");}
+function getPos(){
+  const s=[...leagueTable].sort((a,b)=>b.pts-a.pts||b.bp-b.bc-(a.bp-a.bc));
+  return s.findIndex(t=>t.k===Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name))+1;
+}
+function getMyRow(){return leagueTable.find(t=>t.k===Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name));}
+
 function renderHeader(){
-  const pos = getPos();
-  ["h-pos","d-pos"].forEach(id=>document.getElementById(id).textContent=pos+"e");
-  ["h-pts","d-pts"].forEach(id=>document.getElementById(id).textContent=G.pts);
+  const pos=getPos();
+  document.getElementById("h-crest").textContent=CL.abbr;
+  document.getElementById("h-name").textContent=CL.name;
+  ["h-pos","db-pos"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=pos+"e";});
+  ["h-pts","db-pts"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=G.pts;});
   document.getElementById("h-budget").textContent="€"+G.budget.toFixed(1)+"M";
-  document.getElementById("h-week").textContent="J"+G.week;
-  document.getElementById("d-buts").textContent=G.gf;
-  document.getElementById("d-budget").textContent="€"+G.budget.toFixed(1)+"M";
-  document.getElementById("d-wins").textContent=G.wins;
-  document.getElementById("d-draws").textContent=G.draws;
-  document.getElementById("d-losses").textContent=G.losses;
-  document.getElementById("d-form").innerHTML=formDots(G.form);
-  document.getElementById("mercato-budget").textContent="€"+G.budget.toFixed(1)+"M";
-  document.getElementById("f-budget").textContent="€"+G.budget.toFixed(1)+"M";
-  document.getElementById("f-income").textContent="€"+G.income.toFixed(1)+"M";
-  document.getElementById("f-wages").textContent="€"+G.wages.toFixed(1)+"M";
+  document.getElementById("h-jday").textContent="J"+G.week;
+  document.getElementById("db-gf").textContent=G.gf;
+  document.getElementById("db-budget").textContent="€"+G.budget.toFixed(1)+"M";
+  document.getElementById("db-w").textContent=G.wins;
+  document.getElementById("db-d").textContent=G.draws;
+  document.getElementById("db-l").textContent=G.losses;
+  document.getElementById("db-form").innerHTML=fds(G.form);
+  document.getElementById("m-budget").textContent="€"+G.budget.toFixed(1)+"M";
+  document.getElementById("fi-b").textContent="€"+G.budget.toFixed(1)+"M";
+  document.getElementById("fi-inc").textContent="€"+G.income.toFixed(1)+"M";
+  document.getElementById("fi-wg").textContent="€"+G.wages.toFixed(1)+"M";
   const bal=G.income-G.wages;
-  const fb=document.getElementById("f-balance");
-  fb.textContent=(bal>=0?"+":"")+"€"+Math.abs(bal).toFixed(1)+"M";
-  fb.style.color=bal>=0?"var(--green)":"#cc0000";
+  const fbe=document.getElementById("fi-bal");
+  if(fbe){fbe.textContent=(bal>=0?"+":"")+"€"+Math.abs(bal).toFixed(1)+"M";fbe.style.color=bal>=0?"var(--green)":"#cc0000";}
+  document.getElementById("btn-undo").disabled=history.length===0;
+  const bu2=document.getElementById("btn-undo2");if(bu2)bu2.disabled=history.length===0;
 }
 
 function renderDashboard(){
-  const opp=leagueTable.find(t=>t.clubKey!==Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name))||leagueTable[0];
-  document.getElementById("next-home-name").textContent=CL.name;
-  document.getElementById("next-home-icon").textContent=CL.icon;
-  document.getElementById("next-away-name").textContent=opp.club;
-  document.getElementById("next-away-icon").textContent="⚽";
-  document.getElementById("next-info").textContent=`Jupiler Pro League · Journée ${G.week+1} · ${CL.stadium}`;
-
-  document.getElementById("objectives-list").innerHTML=(CL.objectives||[]).map(o=>{
-    const done=o.check(G);
-    return `<div class="obj-item"><div class="obj-dot ${done?'done':'pending'}"></div>
-      <div><div style="font-size:13px;font-weight:600">${o.text}</div>
-      <div style="font-size:11px;color:var(--gray3);margin-top:2px">${done?"✅ Accompli":"⏳ En cours"}</div></div></div>`;
+  if(G.week>CALENDAR.length){document.getElementById("db-next-jday").textContent="Fin";return;}
+  const nextDay=CALENDAR[G.week-1];
+  const myFix=nextDay?nextDay.fixtures.find(f=>f.home===CL.name||f.away===CL.name):null;
+  if(myFix){
+    document.getElementById("db-next-jday").textContent=G.week;
+    document.getElementById("db-home-name").textContent=myFix.home;
+    document.getElementById("db-away-name").textContent=myFix.away;
+    document.getElementById("db-home-ico").textContent=myFix.home===CL.name?CL.icon:"⚽";
+    document.getElementById("db-away-ico").textContent=myFix.away===CL.name?CL.icon:"⚽";
+  }
+  document.getElementById("db-objectives").innerHTML=(CL.objectives||[]).map(o=>{
+    const done=o.fn(G);
+    return `<div style="display:flex;align-items:center;gap:9px;padding:7px 10px;background:var(--bg4);border-radius:5px;margin-bottom:5px;">
+      <div style="width:16px;height:16px;border-radius:50%;background:${done?"var(--green)":"var(--yellow)"}"></div>
+      <div><div style="font-size:11px;font-weight:600">${o.t}</div><div style="font-size:10px;color:var(--g3)">${done?"✅ Accompli":"⏳ En cours"}</div></div>
+    </div>`;
   }).join("");
-
-  document.getElementById("news-feed").innerHTML=[
-    {type:"Mercato",text:`Un club anglais s'intéresse à votre meilleur joueur cet été.`,time:"Il y a 2 jours"},
-    {type:"Stade",text:`Le prochain match à ${CL.stadium} affiche complet.`,time:"Il y a 3 jours"},
-    {type:"Objectif",text:"La direction attend une qualification en playoffs.",time:"Il y a 5 jours"},
-    {type:"Talent",text:"Un jeune espoir de 17 ans signe son premier contrat pro.",time:"Il y a 1 semaine"},
-  ].map(n=>`<div class="news-item"><div class="ntype">${n.type}</div><div class="ntext">${n.text}</div><div class="ntime">${n.time}</div></div>`).join("");
+  document.getElementById("db-news").innerHTML=[
+    {t:"Direction",tx:`L'entraîneur ${CL.manager} vise le Top 6 cette saison.`,d:"Début de saison"},
+    {t:"Mercato",tx:"Plusieurs joueurs ont rejoint l'effectif cet été.",d:"Pré-saison"},
+    {t:"Stade",tx:`Capacité de ${CL.cap.toLocaleString()} places — ${CL.stadium}.`,d:"Info club"},
+    {t:"Objectif",tx:"La direction attend une saison solide et progressive.",d:"Conférence de presse"},
+  ].map(n=>`<div class="news"><div class="news-t">${n.t}</div><div style="font-size:11px;color:var(--g3)">${n.tx}</div><div style="font-size:10px;color:var(--g2);margin-top:2px">${n.d}</div></div>`).join("");
 }
 
-function renderSquad(filter="ALL"){
-  document.getElementById("squad-sub").textContent=`${CL.name} · ${SQUAD.length} joueurs`;
-  const list=SQUAD.filter(p=>filter==="ALL"||p.pos===filter).sort((a,b)=>b.note-a.note);
-  document.getElementById("squad-body").innerHTML=list.map(p=>`<tr>
-    <td style="color:var(--gray3)">${p.n}</td>
-    <td style="font-weight:600">${p.name}</td>
-    <td><span class="badge ${p.pos}">${p.pos}</span></td>
+// ==================== CALENDAR ====================
+function renderCalendar(){
+  const el=document.getElementById("cal-list");
+  if(!el)return;
+  el.innerHTML=CALENDAR.slice(0,Math.min(G.week+4,CALENDAR.length)).map(day=>{
+    const isNow=day.day===G.week;
+    const played=day.day<G.week||(day.day===G.week&&day.fixtures.some(f=>f.played));
+    return `<div class="cal-day ${isNow?"current":""} ${played?"played":""}">
+      <div class="cal-day-hdr">
+        <span class="cal-day-num">Journée ${day.day}</span>
+        <span style="font-size:10px;color:var(--g3)">${played?"Terminé":isNow?"En cours":"À venir"}</span>
+      </div>
+      ${day.fixtures.map(f=>{
+        const isMy=f.home===CL.name||f.away===CL.name;
+        const sc=f.score?`${f.score[0]}-${f.score[1]}`:"–";
+        return `<div class="cal-fix">
+          <span class="home ${f.home===CL.name?"my":""}">${f.home}</span>
+          <span class="score">${sc}</span>
+          <span class="away ${f.away===CL.name?"my":""}">${f.away}</span>
+        </div>`;
+      }).join("")}
+    </div>`;
+  }).join("");
+}
+
+// ==================== ADVANCE DAY ====================
+function advanceDay(){
+  if(G.week>CALENDAR.length){showNotif("Saison terminée !");return;}
+  // Save state to history
+  history.push(JSON.stringify({G:{...G},leagueTable:leagueTable.map(t=>({...t})),SQUAD:SQUAD.map(p=>({...p})),CALENDAR:JSON.parse(JSON.stringify(CALENDAR))}));
+  if(history.length>10)history.shift();
+
+  const day=CALENDAR[G.week-1];
+  day.fixtures.forEach(f=>{
+    if(f.played)return;
+    const hs=TEAM_STRENGTH[f.home]||68;
+    const as=TEAM_STRENGTH[f.away]||68;
+    const [g1,g2]=simScore(hs,as);
+    f.score=[g1,g2];f.played=true;
+    // Update table
+    updateTable(f.home,f.away,g1,g2);
+    // If my team
+    if(f.home===CL.name||f.away===CL.name){
+      const isHome=f.home===CL.name;
+      const myG=isHome?g1:g2,oppG=isHome?g2:g1;
+      const r=myG>oppG?"W":myG===oppG?"D":"L";
+      const pts=r==="W"?3:r==="D"?1:0;
+      G.pts+=pts;G.gf+=myG;G.ga+=oppG;
+      if(r==="W")G.wins++;else if(r==="D")G.draws++;else G.losses++;
+      G.form.push(r);if(G.form.length>10)G.form.shift();
+      SQUAD.forEach(p=>{if(!p.inj)p.fitness=Math.max(50,p.ft-Math.floor(Math.random()*10)-3);p.form.push(r);if(p.form.length>10)p.form.shift();});
+      showNotif(`J${G.week}: ${f.home} ${g1}–${g2} ${f.away}`);
+    }
+  });
+  G.week++;
+  syncLeagueRow();
+  renderAll();
+  renderTacticsPitch();
+}
+
+function simScore(hs,as){
+  const total=Math.random()<.15?0:Math.floor(Math.random()*5)+1;
+  let g1=0;
+  for(let i=0;i<total;i++){if(Math.random()*( hs+as)<hs)g1++;else;}
+  const g2=total-g1;
+  return[g1,g2];
+}
+function updateTable(home,away,g1,g2){
+  const hr=leagueTable.find(t=>t.n===home),ar=leagueTable.find(t=>t.n===away);
+  if(!hr||!ar)return;
+  hr.j++;ar.j++;hr.bp+=g1;hr.bc+=g2;ar.bp+=g2;ar.bc+=g1;
+  if(g1>g2){hr.g++;hr.pts+=3;ar.p++;}
+  else if(g1===g2){hr.d++;hr.pts++;ar.d++;ar.pts++;}
+  else{ar.g++;ar.pts+=3;hr.p++;}
+}
+function syncLeagueRow(){
+  const myKey=Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name);
+  const row=leagueTable.find(t=>t.k===myKey);
+  if(row){row.pts=G.pts;row.j=G.week-1;row.g=G.wins;row.d=G.draws;row.p=G.losses;row.bp=G.gf;row.bc=G.ga;}
+}
+
+function undo(){
+  if(history.length===0){showNotif("Aucune action à annuler.");return;}
+  const prev=JSON.parse(history.pop());
+  Object.assign(G,prev.G);
+  leagueTable=prev.leagueTable;
+  SQUAD=prev.SQUAD;
+  CALENDAR=prev.CALENDAR;
+  renderAll();renderTacticsPitch();
+  showNotif("↩️ Action annulée !");
+}
+
+// ==================== SQUAD ====================
+function renderSquad(f="ALL"){
+  document.getElementById("sq-sub").textContent=`${CL.name} · ${SQUAD.length} joueurs`;
+  const list=SQUAD.filter(p=>f==="ALL"||p.pos===f).sort((a,b)=>b.nt-a.nt);
+  document.getElementById("sq-body").innerHTML=list.map(p=>`<tr>
+    <td style="color:var(--g3)">${p.n}</td>
+    <td><b>${p.nm}</b>${p.cap?` <span style="color:var(--gold);font-size:10px">©</span>`:""}</td>
+    <td><span class="b ${p.pos}">${p.pos}</span></td>
+    <td style="font-size:10px;color:var(--g3);max-width:100px;overflow:hidden;white-space:nowrap;">${p.role}</td>
     <td>${p.age}</td><td>${p.nat}</td>
-    <td><span class="rc ${rcClass(p.note)}">${p.note}</span></td>
-    <td>${p.goals}⚽ ${p.assists}🎯</td>
-    <td>${formDots(p.form)}</td>
-    <td>${morale(p.morale)}</td>
-    <td><div style="display:flex;align-items:center;gap:6px;">
-      <div class="bar-wrap" style="flex:1"><div class="bar-fill green" style="width:${p.fitness}%"></div></div>
-      <span style="font-size:10px;color:${p.fitness>80?"var(--green)":p.fitness>60?"var(--yellow)":"#cc0000"}">${p.fitness}%</span>
-    </div></td>
-    <td>${p.injured?`<span style="color:#e74c3c;font-size:11px">🚑 ${p.injuryWeeks}s</span>`:'<span style="color:var(--green)">✓</span>'}</td>
-    <td>${p.contract}</td>
+    <td><span class="rc ${rcClass(p.nt)}">${p.nt}</span></td>
+    <td><span class="rc ${rcClass(p.pt)}" style="opacity:.7">${p.pt}</span></td>
+    <td style="font-size:10px">${p.gls}⚽ ${p.ats}🎯</td>
+    <td>${fds(p.form)}</td>
+    <td>${morale(p.mr)}</td>
+    <td>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <div class="bar" style="width:50px"><div class="bar-f" style="width:${p.ft}%;background:${p.ft>75?"var(--green)":p.ft>55?"var(--yellow)":"#cc0000"}"></div></div>
+        <span style="font-size:9px">${p.ft}%</span>
+      </div>
+    </td>
+    <td>${p.inj?`<span style="color:#e74c3c;font-size:10px">🚑 Blessé</span>`:p.sus?`<span style="color:var(--yellow);font-size:10px">🟡 Suspendu</span>`:`<span style="color:var(--green);font-size:10px">✓</span>`}</td>
+    <td><input type="checkbox" ${p.sel?"checked":""} onchange="toggleSel('${p.nm}',this.checked)" style="accent-color:var(--p)"></td>
+    <td><input type="radio" name="captain" ${p.cap?"checked":""} onchange="setCaptain('${p.nm}')" style="accent-color:var(--gold)"></td>
     <td style="color:var(--gold)">€${p.val}M</td>
   </tr>`).join("");
 }
-
-function filterSquad(pos,btn){
-  document.querySelectorAll("#sec-squad .btn").forEach(b=>b.classList.remove("primary"));
-  btn.classList.add("primary");
-  renderSquad(pos);
+function filterSq(pos,btn){
+  document.querySelectorAll("#sec-squad .btn").forEach(b=>b.classList.remove("p"));
+  btn.classList.add("p");renderSquad(pos);
 }
+function toggleSel(nm,v){const p=SQUAD.find(q=>q.nm===nm);if(p){p.sel=v;renderTacticsPitch();}}
+function setCaptain(nm){SQUAD.forEach(p=>p.cap=p.nm===nm);renderSquad();}
 
+// ==================== TACTICS ====================
 function renderFormations(){
-  document.getElementById("formation-list").innerHTML=formations.map(f=>`
-    <button class="form-btn ${G.formation===f?'active':''}" onclick="G.formation='${f}';renderFormations()">${f}</button>`).join("");
+  document.getElementById("form-btns").innerHTML=Object.keys(FORMATIONS).map(f=>`
+    <button class="fb ${G.formation===f?"active":""}" onclick="setFormation('${f}')">${f}</button>`).join("");
+  document.getElementById("tac-formation").textContent=G.formation;
+}
+function setFormation(f){G.formation=f;applyFormationToPositions(f);renderFormations();renderTacticsPitch();}
+
+function renderStyleList(){
+  document.getElementById("style-list").innerHTML=STYLES.map(s=>`
+    <label style="display:flex;align-items:center;gap:9px;padding:7px;background:var(--bg4);border-radius:4px;cursor:pointer;font-size:12px;">
+      <input type="radio" name="gstyle" value="${s.id}" ${G.style===s.id?"checked":""} style="accent-color:var(--p);" onchange="G.style='${s.id}';renderBonusMalus()">
+      ${s.lbl} <span style="margin-left:auto;font-size:10px;color:var(--g3)">+${s.bns}</span>
+    </label>`).join("");
 }
 
-function renderLineup(){
-  const lineup=SQUAD.filter(p=>!p.injured).slice(0,11);
-  document.getElementById("lineup-body").innerHTML=lineup.map(p=>`<tr>
-    <td><span class="badge ${p.pos}">${p.pos}</span></td>
-    <td style="font-weight:600">${p.name}</td>
-    <td><span class="rc ${rcClass(p.note)}">${p.note}</span></td>
-    <td><div style="display:flex;align-items:center;gap:6px;"><div class="bar-wrap" style="width:70px"><div class="bar-fill ${p.fitness>70?'green':'primary'}" style="width:${p.fitness}%"></div></div><span style="font-size:11px">${p.fitness}%</span></div></td>
-    <td>${morale(p.morale)}</td>
-  </tr>`).join("");
+function updateSlider(type,v){
+  G[type]=parseInt(v);
+  document.getElementById(type+"-lbl").textContent=type==="press"?PRESS_LBL[v]:TEMPO_LBL[v];
+  renderBonusMalus();
 }
+
+function renderBonusMalus(){
+  const lineup=SQUAD.filter(p=>!p.inj&&p.sel).slice(0,11);
+  const bms=[];
+  let total=0;
+  // Style bonus
+  const st=STYLES.find(s=>s.id===G.style);
+  if(st&&st.bns>0){bms.push({t:`Style ${st.lbl}`,v:"+"+st.bns,cls:"bm-pos"});total+=st.bns;}
+  // Morale
+  const avgMr=lineup.length?lineup.reduce((a,p)=>a+p.mr,0)/lineup.length:3;
+  if(avgMr>=4){bms.push({t:"Bon moral d'équipe",v:"+2",cls:"bm-pos"});total+=2;}
+  else if(avgMr<2.5){bms.push({t:"Moral bas",v:"-2",cls:"bm-neg"});total-=2;}
+  // Fitness
+  const avgFt=lineup.length?lineup.reduce((a,p)=>a+p.ft,0)/lineup.length:80;
+  if(avgFt>=85){bms.push({t:"Excellente forme physique",v:"+2",cls:"bm-pos"});total+=2;}
+  else if(avgFt<65){bms.push({t:"Équipe fatiguée",v:"-3",cls:"bm-neg"});total-=3;}
+  // Press
+  if(G.press>=4){bms.push({t:"Pressing intense actif",v:"+1",cls:"bm-pos"});total+=1;}
+  if(G.press<=1){bms.push({t:"Bloc bas — difficile à battre",v:"+1",cls:"bm-pos"});total+=1;}
+  // Injured/suspended
+  const miss=lineup.filter(p=>p.inj||p.sus).length;
+  if(miss>2){bms.push({t:`${miss} joueurs absents`,v:`-${miss}`,cls:"bm-neg"});total-=miss;}
+  // Out of position
+  const oop=lineup.filter(p=>{
+    if(p.pos==="GK")return false;
+    const pos=positions[p.nm];
+    if(!pos)return false;
+    if(p.pos==="DEF"&&pos.left>45)return true;
+    if(p.pos==="ATT"&&pos.left<30)return true;
+    return false;
+  }).length;
+  if(oop>2){bms.push({t:`${oop} joueurs hors position`,v:`-${oop}`,cls:"bm-neg"});total-=oop;}
+  if(bms.length===0)bms.push({t:"Configuration standard",v:"0",cls:"bm-neu"});
+  document.getElementById("bm-list").innerHTML=bms.map(b=>`<div class="bm-item ${b.cls}"><span>${b.t}</span><b>${b.v}</b></div>`).join("");
+  const tv=document.getElementById("bm-total");
+  tv.textContent=(total>=0?"+":"")+total;
+  tv.style.color=total>0?"var(--green)":total<0?"#cc0000":"var(--g3)";
+  return total;
+}
+
+function renderRoles(){
+  const rl=document.getElementById("roles-list");
+  if(!rl)return;
+  const lineup=SQUAD.filter(p=>!p.inj&&p.sel).slice(0,11);
+  rl.innerHTML=lineup.map(p=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bg5);">
+    <span class="b ${p.pos}">${p.pos}</span>
+    <span style="font-size:11px;font-weight:600;flex:1">${p.nm}</span>
+    <select onchange="setRole('${p.nm}',this.value)" style="background:var(--bg4);color:var(--w);border:1px solid var(--bg5);border-radius:3px;padding:2px 5px;font-size:10px;">
+      ${(ROLES[p.pos]||[]).map(r=>`<option value="${r}" ${p.role===r?"selected":""}>${r}</option>`).join("")}
+    </select>
+  </div>`).join("");
+}
+function setRole(nm,role){const p=SQUAD.find(q=>q.nm===nm);if(p)p.role=role;}
+
+// ==================== TACTICS DRAG & DROP ====================
+function renderTacticsPitch(){
+  const pitch=document.getElementById("tac-pitch");
+  // Remove existing tokens
+  document.querySelectorAll(".tac-token").forEach(e=>e.remove());
+  const lineup=SQUAD.filter(p=>!p.inj&&p.sel).slice(0,11);
+  lineup.forEach(p=>{
+    const pos=positions[p.nm]||{left:50,top:50};
+    const tok=document.createElement("div");
+    tok.className="tac-token";
+    tok.style.left=pos.left+"%";
+    tok.style.top=pos.top+"%";
+    tok.dataset.name=p.nm;
+    tok.innerHTML=`<div class="tok-circle">${p.sh.slice(0,5)}</div><div class="tok-name">${p.nm}</div>`;
+    tok.addEventListener("mousedown",startDrag);
+    tok.addEventListener("touchstart",startDragTouch,{passive:false});
+    pitch.appendChild(tok);
+  });
+}
+
+let dragging=null,dragOffX=0,dragOffY=0;
+function startDrag(e){
+  e.preventDefault();
+  dragging=e.currentTarget;
+  const rect=dragging.getBoundingClientRect();
+  dragOffX=e.clientX-rect.left-rect.width/2;
+  dragOffY=e.clientY-rect.top-rect.height/2;
+  document.addEventListener("mousemove",doDrag);
+  document.addEventListener("mouseup",endDrag);
+}
+function startDragTouch(e){
+  e.preventDefault();
+  const t=e.touches[0];
+  dragging=e.currentTarget;
+  const rect=dragging.getBoundingClientRect();
+  dragOffX=t.clientX-rect.left-rect.width/2;
+  dragOffY=t.clientY-rect.top-rect.height/2;
+  document.addEventListener("touchmove",doDragTouch,{passive:false});
+  document.addEventListener("touchend",endDragTouch);
+}
+function doDrag(e){
+  if(!dragging)return;
+  moveTok(e.clientX,e.clientY);
+}
+function doDragTouch(e){
+  e.preventDefault();
+  if(!dragging)return;
+  moveTok(e.touches[0].clientX,e.touches[0].clientY);
+}
+function moveTok(cx,cy){
+  const pitch=document.getElementById("tac-pitch-wrap");
+  const pr=pitch.getBoundingClientRect();
+  let lp=((cx-dragOffX-pr.left)/pr.width)*100;
+  let tp=((cy-dragOffY-pr.top)/pr.height)*100;
+  lp=Math.max(2,Math.min(97,lp));
+  tp=Math.max(2,Math.min(97,tp));
+  dragging.style.left=lp+"%";
+  dragging.style.top=tp+"%";
+  positions[dragging.dataset.name]={left:lp,top:tp};
+}
+function endDrag(){dragging=null;document.removeEventListener("mousemove",doDrag);document.removeEventListener("mouseup",endDrag);renderBonusMalus();}
+function endDragTouch(){dragging=null;document.removeEventListener("touchmove",doDragTouch);document.removeEventListener("touchend",endDragTouch);renderBonusMalus();}
 
 // ==================== MATCH ENGINE ====================
-const COM = {
-  normal:["Beau mouvement collectif côté gauche.","Le milieu adverse tente une percée.","Corner pour les locaux !","Faute sifflée au milieu.","Longue transversale interceptée.","Le bloc défensif tient.","Pression adverse dans le camp.","Combinaison rapide sur l'aile.","Frappe bloquée in extremis.","Hors-jeu signalé à l'avant.","Belle récupération défensive.","L'arbitre laisse jouer.","Coup franc à 25 mètres.","Tête qui passe au-dessus.","Tentative de dribble stoppée."],
-  goal_h:["⚽ BUT ! L'équipe ouvre le score !","⚽ GOALLL ! Quel but magnifique !","⚽ Le stade explose !"],
-  goal_a:["⚽ But de l'adversaire...","⚽ L'adversaire égalise.","⚽ But encaissé."],
-  save:["🧤 Arrêt réflexe du gardien !","🧤 Le poteau sauve l'équipe !","🧤 Sortie spectaculaire du gardien !"],
-  card:["🟡 Carton jaune !","🟡 L'arbitre sort le carton.","🟥 EXPULSION ! À 10 !"],
-  chance:["Frappe sur le poteau !","Belle occasion ratée !","Tir au-dessus du cadre."],
-};
+function populateOppSelect(){
+  const sel=document.getElementById("opp-sel");
+  sel.innerHTML=LEAGUE_TEAMS.filter(t=>t.n!==CL.name).map(t=>`<option>${t.n}</option>`).join("");
+  // Auto-set opponent from calendar
+  if(G.week<=CALENDAR.length){
+    const day=CALENDAR[G.week-1];
+    const myFix=day.fixtures.find(f=>f.home===CL.name||f.away===CL.name);
+    if(myFix){
+      const opp=myFix.home===CL.name?myFix.away:myFix.home;
+      sel.value=opp;
+      document.getElementById("btn-home").className="btn "+(myFix.home===CL.name?"p":"");
+      document.getElementById("btn-away").className="btn "+(myFix.away===CL.name?"p":"");
+      G.venue=myFix.home===CL.name?"home":"away";
+    }
+  }
+  renderPreMatch();
+}
 
 function setVenue(v){
   G.venue=v;
-  document.getElementById("home-btn").className="btn "+(v==="home"?"primary":"");
-  document.getElementById("away-btn").className="btn "+(v==="away"?"primary":"");
+  document.getElementById("btn-home").className="btn "+(v==="home"?"p":"");
+  document.getElementById("btn-away").className="btn "+(v==="away"?"p":"");
+  renderPreMatch();
+}
+
+function setSpeed(s,btn){
+  matchSpeed=s;
+  document.querySelectorAll(".speed-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
 }
 
 function renderPreMatch(){
-  const opp=document.getElementById("opp-select").value;
-  const os=oppStr[opp]||72;
-  const available=SQUAD.filter(p=>!p.injured);
-  const ss=Math.round(available.slice(0,11).reduce((a,p)=>a+p.note,0)/Math.min(11,available.length));
+  const opp=document.getElementById("opp-sel").value;
+  const os=TEAM_STRENGTH[opp]||68;
+  const lineup=SQUAD.filter(p=>!p.inj&&p.sel).slice(0,11);
+  const ss=Math.round(lineup.reduce((a,p)=>a+p.nt,0)/Math.max(1,lineup.length));
   const adv=G.venue==="home"?2:-2;
-  document.getElementById("pre-match-info").innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
-      <div style="text-align:center">
-        <div style="font-size:11px;color:var(--gray3);margin-bottom:4px">${CL.name}</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--primary-light)">${ss+adv}</div>
-        <div style="font-size:10px;color:var(--gray3)">Force équipe</div>
-      </div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gray3)">VS</div>
-      <div style="text-align:center">
-        <div style="font-size:11px;color:var(--gray3);margin-bottom:4px">${opp}</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--gray3)">${os}</div>
-        <div style="font-size:10px;color:var(--gray3)">Force équipe</div>
-      </div>
+  const bm=calcBMSilent();
+  const myStr=ss+adv+bm;
+  document.getElementById("prematch-info").innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:12px;">
+      <div style="text-align:center"><div style="font-size:10px;color:var(--g3);margin-bottom:3px">${CL.name}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--pl)">${myStr}</div>
+        <div style="font-size:9px;color:var(--g3)">Force</div></div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--g3)">VS</div>
+      <div style="text-align:center"><div style="font-size:10px;color:var(--g3);margin-bottom:3px">${opp}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--g3)">${os}</div>
+        <div style="font-size:9px;color:var(--g3)">Force</div></div>
     </div>
-    <div style="padding:8px;background:var(--dark3);border-radius:4px;font-size:12px;color:var(--gray3);text-align:center;margin-bottom:8px;">
-      ${G.venue==="home"?"🏠 Domicile — avantage terrain +2":"✈️ Extérieur — désavantage -2"}
+    <div style="padding:7px;background:var(--bg4);border-radius:4px;font-size:11px;color:var(--g3);text-align:center;margin-bottom:6px;">
+      ${G.venue==="home"?"🏠 Domicile +2":"✈️ Extérieur -2"} · Bonus/Malus tactiques: ${bm>=0?"+":""+(bm)}
     </div>
-    <div style="font-size:12px;color:var(--gray3)">Formation : <span style="color:var(--white);font-weight:600">${G.formation}</span></div>`;
-  document.getElementById("match-day-lbl").textContent=G.week+1;
-  document.getElementById("m-home-abbr").textContent=CL.abbr;
+    <div style="font-size:11px;color:var(--g3)">Formation: <b style="color:var(--w)">${G.formation}</b> · Style: <b style="color:var(--w)">${G.style}</b></div>
+    <div style="font-size:11px;color:var(--g3);margin-top:4px">Joueurs disponibles: <b style="color:var(--w)">${lineup.length}</b>/11</div>`;
+  document.getElementById("m-jday").textContent=G.week;
+  document.getElementById("m-h-name").textContent=CL.abbr;
 }
+
+function calcBMSilent(){
+  const lineup=SQUAD.filter(p=>!p.inj&&p.sel).slice(0,11);
+  let t=0;
+  const st=STYLES.find(s=>s.id===G.style);if(st)t+=st.bns;
+  const avg=lineup.length?lineup.reduce((a,p)=>a+p.mr,0)/lineup.length:3;
+  if(avg>=4)t+=2;else if(avg<2.5)t-=2;
+  const avgF=lineup.length?lineup.reduce((a,p)=>a+p.ft,0)/lineup.length:80;
+  if(avgF>=85)t+=2;else if(avgF<65)t-=3;
+  if(G.press>=4)t+=1;if(G.press<=1)t+=1;
+  return t;
+}
+
+// Canvas setup
+const canvas=document.getElementById("match-canvas");
+const ctx=canvas.getContext("2d");
+let animFrame=null,matchEvents=[],eventIdx=0,currentMin=0,matchGoals=[0,0];
+let htShown=false,subsDone=[];
 
 function startMatch(){
   if(matchRunning)return;
-  const opp=document.getElementById("opp-select").value;
-  const tBonus=parseInt(document.getElementById("match-tactic").value)||0;
-  matchRunning=true;
+  if(matchSpeed===0){simulateInstant();return;}
+  const opp=document.getElementById("opp-sel").value;
+  const os=TEAM_STRENGTH[opp]||68;
+  const lineup=SQUAD.filter(p=>!p.inj&&p.sel).slice(0,11);
+  const ss=Math.round(lineup.reduce((a,p)=>a+p.nt,0)/Math.max(1,lineup.length))+(G.venue==="home"?2:-2)+calcBMSilent();
+  matchRunning=true;matchGoals=[0,0];halfScore=[0,0];htShown=false;subsDone=[];subCount=0;matchPhase="first";
   document.getElementById("play-btn").disabled=true;
-  document.getElementById("m-min").style.display="block";
+  document.getElementById("m-minute").style.display="block";
   document.getElementById("match-summary").style.display="none";
   document.getElementById("commentary").innerHTML="";
-  document.getElementById("m-home-score").textContent="0";
-  document.getElementById("m-away-score").textContent="0";
-  document.getElementById("m-away-abbr").textContent=opp.split(" ")[0].slice(0,3).toUpperCase();
+  document.getElementById("btn-sub").style.display="inline-block";
+  document.getElementById("m-h-score").textContent="0";
+  document.getElementById("m-a-score").textContent="0";
+  document.getElementById("m-a-name").textContent=opp.split(" ")[0].slice(0,3).toUpperCase();
+  // Generate match events
+  matchEvents=generateEvents(ss,os,lineup,opp);
+  eventIdx=0;currentMin=0;
+  const delay=matchSpeed===1?120:matchSpeed===2?60:30;
+  resizeCanvas();
+  renderPitch();
+  matchInterval=setInterval(()=>tickMatch(opp,delay),delay);
+}
 
-  const available=SQUAD.filter(p=>!p.injured);
-  const ss=Math.round(available.slice(0,11).reduce((a,p)=>a+p.note,0)/Math.min(11,available.length))+(G.venue==="home"?2:-2)+tBonus;
-  const os=oppStr[opp]||72;
-  const scorerPool=available.filter(p=>p.pos==="ATT"||p.pos==="MID").slice(0,6);
+function tickMatch(opp,delay){
+  currentMin+=3;
+  if(currentMin===45&&!htShown&&matchPhase==="first"){
+    clearInterval(matchInterval);matchInterval=null;
+    halfScore=[...matchGoals];
+    htShown=true;matchPhase="ht";
+    document.getElementById("m-minute").textContent="MI-TEMPS";
+    document.getElementById("m-minute").className="match-min-badge ht";
+    openHalfTime(opp,delay);return;
+  }
+  if(currentMin>90){clearInterval(matchInterval);matchInterval=null;endMatch(opp);return;}
+  document.getElementById("m-minute").textContent=currentMin+"'";
+  document.getElementById("m-minute").className="match-min-badge";
+  while(eventIdx<matchEvents.length&&matchEvents[eventIdx].min<=currentMin){
+    processEvent(matchEvents[eventIdx],opp);eventIdx++;
+  }
+  animatePitch(currentMin);
+}
 
-  const events=[];
+function openHalfTime(opp,delay){
+  document.getElementById("ht-stats").innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:10px;">
+      <div style="text-align:center"><div style="font-size:11px;color:var(--g3)">${CL.name}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--pl)">${matchGoals[0]}</div></div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--g3)">:</div>
+      <div style="text-align:center"><div style="font-size:11px;color:var(--g3)">${opp}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:40px">${matchGoals[1]}</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--g3);text-align:center">Score à la mi-temps</div>`;
+  renderSubList();
+  document.getElementById("ht-modal").style.display="flex";
+  document.getElementById("ht-modal").dataset.opp=opp;
+  document.getElementById("ht-modal").dataset.delay=delay;
+}
+
+function resumeMatch(){
+  document.getElementById("ht-modal").style.display="none";
+  const opp=document.getElementById("ht-modal").dataset.opp;
+  const delay=parseInt(document.getElementById("ht-modal").dataset.delay)||120;
+  matchPhase="second";
+  document.getElementById("m-minute").textContent="45'";
+  document.getElementById("m-minute").className="match-min-badge";
+  addComment({type:"norm",text:"⏱️ Reprise de la 2ème mi-temps !"},opp);
+  matchInterval=setInterval(()=>tickMatch(opp,delay),delay);
+}
+
+function renderSubList(){
+  const available=SQUAD.filter(p=>!p.inj&&p.sel);
+  const on=available.slice(0,11);
+  const bench=available.slice(11);
+  document.getElementById("sub-list").innerHTML=`
+    <div style="font-size:11px;color:var(--g3);margin-bottom:8px">Changements effectués: ${subCount}/3</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div>
+        <div style="font-size:10px;color:var(--g3);margin-bottom:5px;text-transform:uppercase">Remplacer (sur le terrain)</div>
+        ${on.map((p,i)=>`<div class="pl-item" onclick="selectSubOut(${i})" id="subout-${i}">
+          <span class="b ${p.pos}">${p.pos}</span><span style="font-size:11px">${p.nm}</span>
+          <span style="font-size:10px;color:var(--g3);margin-left:auto">${p.ft}%</span>
+        </div>`).join("")}
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--g3);margin-bottom:5px;text-transform:uppercase">Faire entrer (banc)</div>
+        ${bench.map((p,i)=>`<div class="pl-item" onclick="selectSubIn(${i+11})" id="subin-${i+11}">
+          <span class="b ${p.pos}">${p.pos}</span><span style="font-size:11px">${p.nm}</span>
+          <span style="font-size:10px;color:var(--g3);margin-left:auto">${p.ft}%</span>
+        </div>`).join("")}
+      </div>
+    </div>`;
+}
+
+let subOutIdx=-1,subInIdx=-1;
+function selectSubOut(i){subOutIdx=i;document.querySelectorAll("[id^=subout-]").forEach(el=>el.classList.remove("selected"));const el=document.getElementById(`subout-${i}`);if(el)el.classList.add("selected");tryMakeSub();}
+function selectSubIn(i){subInIdx=i;document.querySelectorAll("[id^=subin-]").forEach(el=>el.classList.remove("selected"));const el=document.getElementById(`subin-${i}`);if(el)el.classList.add("selected");tryMakeSub();}
+function tryMakeSub(){
+  if(subOutIdx<0||subInIdx<0||subCount>=3)return;
+  const available=SQUAD.filter(p=>!p.inj&&p.sel);
+  const out=available[subOutIdx],inn=available[subInIdx];
+  if(!out||!inn)return;
+  addComment({type:"sub",text:`↩️ Changement: ${out.nm} → ${inn.nm}`},{});
+  subsDone.push({out:out.nm,in:inn.nm});subCount++;
+  subOutIdx=-1;subInIdx=-1;
+  renderSubList();
+  showNotif(`Changement: ${out.nm} → ${inn.nm}`);
+}
+function openSubs(){if(matchPhase==="second"){renderSubList();document.getElementById("ht-modal").style.display="flex";}}
+
+function generateEvents(ss,os,lineup,opp){
+  const evts=[];
+  const scorers=lineup.filter(p=>p.pos==="ATT"||p.pos==="MID");
   let min=1;
   while(min<=90){
     const r=Math.random();
-    if(r<0.08){ const h=Math.random()*(ss+os)<ss; events.push({min,type:"goal",home:h,scorer:h&&scorerPool.length?scorerPool[Math.floor(Math.random()*scorerPool.length)]:null}); }
-    else if(r<0.14){ events.push({min,type:"save"}); }
-    else if(r<0.17){ events.push({min,type:"card"}); }
-    else if(r<0.20){ events.push({min,type:"chance"}); }
-    else { events.push({min,type:"normal",text:COM.normal[Math.floor(Math.random()*COM.normal.length)]}); }
+    if(r<0.07){const h=Math.random()*(ss+os)<ss;evts.push({min,type:"goal",home:h,scorer:h&&scorers.length?scorers[Math.floor(Math.random()*scorers.length)]:null});}
+    else if(r<0.13){evts.push({min,type:"save"});}
+    else if(r<0.16){evts.push({min,type:"card"});}
+    else if(r<0.19){evts.push({min,type:"chance"});}
+    else{evts.push({min,type:"norm",text:COM.norm[Math.floor(Math.random()*COM.norm.length)]});}
     min+=1+Math.floor(Math.random()*4);
   }
+  return evts;
+}
 
-  let score=[0,0], ei=0, m=0;
-  renderPitchTokens(opp);
-  matchInterval=setInterval(()=>{
-    m+=3; if(m>90){ clearInterval(matchInterval); endMatch(opp,score); return; }
-    document.getElementById("m-min").textContent=m+"'";
-    while(ei<events.length&&events[ei].min<=m){
-      const ev=events[ei++];
-      addComment(ev,opp);
-      if(ev.type==="goal"){
-        if(ev.home){ score[0]++; if(ev.scorer){ev.scorer.goals++;} }
-        else score[1]++;
-        document.getElementById("m-home-score").textContent=score[0];
-        document.getElementById("m-away-score").textContent=score[1];
-        const tk=document.querySelector(`.pt.${ev.home?'home':'away'}`);
-        if(tk){tk.classList.add("goal-anim");setTimeout(()=>tk.classList.remove("goal-anim"),1500);}
-      }
-    }
-  },120);
+function processEvent(ev,opp){
+  if(ev.type==="goal"){
+    if(ev.home){matchGoals[0]++;if(ev.scorer){ev.scorer.gls++;updateScorers(ev.scorer,CL.name);}}
+    else matchGoals[1]++;
+    document.getElementById("m-h-score").textContent=matchGoals[0];
+    document.getElementById("m-a-score").textContent=matchGoals[1];
+  }
+  addComment(ev,opp);
 }
 
 function addComment(ev,opp){
   const box=document.getElementById("commentary");
   let text="",cls="";
   if(ev.type==="goal"){
-    text=ev.home?(COM.goal_h[Math.floor(Math.random()*COM.goal_h.length)]+(ev.scorer?" "+ev.scorer.name+" !":"")):COM.goal_a[Math.floor(Math.random()*COM.goal_a.length)];
-    cls=ev.home?"goal-ev":"";
-  } else if(ev.type==="save"){text=COM.save[Math.floor(Math.random()*COM.save.length)];cls="save-ev";}
-  else if(ev.type==="card"){text=COM.card[Math.floor(Math.random()*COM.card.length)];cls="card-ev";}
+    text=ev.home?(COM.goal_h[Math.floor(Math.random()*COM.goal_h.length)]+(ev.scorer?" "+ev.scorer.nm+"!":"")):COM.goal_a[Math.floor(Math.random()*COM.goal_a.length)];
+    cls="goal";
+  } else if(ev.type==="save"){text=COM.save[Math.floor(Math.random()*COM.save.length)];cls="save";}
+  else if(ev.type==="card"){text=COM.card[Math.floor(Math.random()*COM.card.length)];cls="card";}
   else if(ev.type==="chance"){text=COM.chance[Math.floor(Math.random()*COM.chance.length)];}
-  else{text=ev.text;}
-  const d=document.createElement("div");
-  d.className=`ev ${cls}`;
-  d.innerHTML=`<span class="min">${ev.min}'</span>${text}`;
+  else if(ev.type==="sub"){text=ev.text;}
+  else{text=ev.text||"";}
+  const d=document.createElement("div");d.className=`com-ev ${cls}`;
+  d.innerHTML=`<span class="com-min">${currentMin||ev.min||"–"}'</span>${text}`;
   box.prepend(d);
 }
 
-function endMatch(opp,score){
+let scorersList=[];
+function updateScorers(p,club){const existing=scorersList.find(s=>s.nm===p.nm);if(existing)existing.gls++;else scorersList.push({nm:p.nm,club,gls:p.gls});}
+
+function endMatch(opp){
   matchRunning=false;
   document.getElementById("play-btn").disabled=false;
-  document.getElementById("m-min").style.display="none";
-  const [gh,ga]=score;
+  document.getElementById("m-minute").style.display="none";
+  document.getElementById("btn-sub").style.display="none";
+  const [gh,ga]=matchGoals;
   const result=gh>ga?"W":gh===ga?"D":"L";
   const pts=result==="W"?3:result==="D"?1:0;
-  G.pts+=pts; G.week++;
+  // Save to history first
+  history.push(JSON.stringify({G:{...G},leagueTable:leagueTable.map(t=>({...t})),SQUAD:SQUAD.map(p=>({...p})),CALENDAR:JSON.parse(JSON.stringify(CALENDAR))}));
+  if(history.length>10)history.shift();
+  G.pts+=pts;G.gf+=gh;G.ga+=ga;G.week++;
   if(result==="W")G.wins++;else if(result==="D")G.draws++;else G.losses++;
-  G.gf+=gh; G.ga+=ga;
-  G.form.push(result); if(G.form.length>10)G.form.shift();
-  SQUAD.forEach(p=>{if(!p.injured){p.fitness=Math.max(48,p.fitness-Math.floor(Math.random()*12)-4);p.form.push(result);if(p.form.length>10)p.form.shift();}});
-
-  const myKey=Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name);
-  const myRow=leagueTable.find(t=>t.clubKey===myKey);
-  if(myRow){myRow.pts=G.pts;myRow.j=G.week;myRow.g=G.wins;myRow.n=G.draws;myRow.p=G.losses;myRow.bp=G.gf;myRow.bc=G.ga;}
-
-  const badge=result==="W"?'<span class="badge W">Victoire</span>':result==="D"?'<span class="badge D">Match nul</span>':'<span class="badge L">Défaite</span>';
+  G.form.push(result);if(G.form.length>10)G.form.shift();
+  SQUAD.forEach(p=>{if(!p.inj){p.ft=Math.max(48,p.ft-Math.floor(Math.random()*12)-4);p.form.push(result);if(p.form.length>10)p.form.shift();}});
+  // Update calendar
+  if(G.week-1<=CALENDAR.length){
+    const day=CALENDAR[G.week-2];
+    const fix=day?day.fixtures.find(f=>f.home===CL.name||f.away===CL.name):null;
+    if(fix){fix.score=matchGoals.slice();fix.played=true;}
+  }
+  // Update league
+  updateTable(G.venue==="home"?CL.name:opp,G.venue==="home"?opp:CL.name,G.venue==="home"?gh:ga,G.venue==="home"?ga:gh);
+  syncLeagueRow();
+  const badge=result==="W"?'<span class="b W">Victoire</span>':result==="D"?'<span class="b D">Match nul</span>':'<span class="b L">Défaite</span>';
   document.getElementById("match-summary").style.display="block";
   document.getElementById("match-summary").innerHTML=`
     <div class="card" style="border:1px solid ${result==="W"?"var(--green)":result==="D"?"var(--yellow)":"#cc0000"}">
-      <div style="text-align:center;margin-bottom:12px;">${badge}<span style="margin-left:8px;font-size:12px;color:var(--gray3)">+${pts} point${pts>1?"s":""}</span></div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:18px;">
-        <div style="text-align:center"><div style="font-size:11px;color:var(--gray3);margin-bottom:4px">${CL.name}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--primary-light)">${gh}</div></div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gray3)">:</div>
-        <div style="text-align:center"><div style="font-size:11px;color:var(--gray3);margin-bottom:4px">${opp}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--white)">${ga}</div></div>
+      <div style="text-align:center;margin-bottom:10px;">${badge}<span style="margin-left:8px;font-size:11px;color:var(--g3)">+${pts} point${pts>1?"s":""}</span></div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:16px;">
+        <div style="text-align:center"><div style="font-size:10px;color:var(--g3);margin-bottom:3px">${CL.name}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--pl)">${gh}</div></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--g3)">:</div>
+        <div style="text-align:center"><div style="font-size:10px;color:var(--g3);margin-bottom:3px">${opp}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:52px">${ga}</div></div>
       </div>
-      <div style="text-align:center;margin-top:10px;font-size:12px;color:var(--gray3)">${G.pts} pts · ${getPos()}e place</div>
+      <div style="text-align:center;margin-top:8px;font-size:11px;color:var(--g3)">${G.pts} pts · ${getPos()}e</div>
+      <div style="display:flex;justify-content:center;gap:8px;margin-top:10px;">
+        <button class="btn o" onclick="downloadResults()">⬇ Exporter ce résultat</button>
+      </div>
     </div>`;
-  renderHeader(); renderClassement(); renderDashboard();
-  showNotif(`Match terminé ! ${gh}:${ga} — +${pts} pt${pts>1?"s":""}${result==="W"?" 🎉":result==="L"?" 😔":""}`);
+  renderHeader();renderLeague();renderDashboard();renderCalendar();populateOppSelect();
+  showNotif(`${gh}:${ga} — +${pts} pt${pts>1?"s":""}${result==="W"?" 🎉":result==="L"?" 😔":""}`);
 }
 
-function renderPitchTokens(opp){
-  const container=document.getElementById("pitch-tokens");
-  container.innerHTML="";
-  const home_pos=[[50,88],[20,72],[37,72],[63,72],[80,72],[20,52],[37,52],[63,52],[80,52],[37,25],[63,25]];
-  const away_pos=[[50,12],[20,28],[37,28],[63,28],[80,28],[20,48],[37,48],[63,48],[80,48],[37,75],[63,75]];
-  SQUAD.filter(p=>!p.injured).slice(0,11).forEach((p,i)=>{
-    if(!home_pos[i])return;
-    const el=document.createElement("div");
-    el.className="pt home";el.style.left=home_pos[i][0]+"%";el.style.top=home_pos[i][1]+"%";
-    el.textContent=p.short.slice(0,4);el.title=`${p.name} (${p.note})`;container.appendChild(el);
+function simulateInstant(){
+  const opp=document.getElementById("opp-sel").value;
+  const os=TEAM_STRENGTH[opp]||68;
+  const lineup=SQUAD.filter(p=>!p.inj&&p.sel).slice(0,11);
+  const ss=Math.round(lineup.reduce((a,p)=>a+p.nt,0)/Math.max(1,lineup.length))+(G.venue==="home"?2:-2)+calcBMSilent();
+  const[gh,ga]=simScore(ss,os);
+  matchGoals=[gh,ga];
+  document.getElementById("m-h-score").textContent=gh;
+  document.getElementById("m-a-score").textContent=ga;
+  endMatch(opp);
+}
+
+// ==================== CANVAS ANIMATION ====================
+let canvasBall={x:0.5,y:0.5,vx:0.01,vy:0.005};
+let canvasPlayers=[];
+
+function resizeCanvas(){
+  const c=document.getElementById("match-canvas");
+  c.width=c.parentElement.clientWidth||800;
+  c.height=220;
+}
+
+function initCanvasPlayers(){
+  const lineup=SQUAD.filter(p=>!p.inj&&p.sel).slice(0,11);
+  canvasPlayers=[];
+  const w=canvas.width,h=canvas.height;
+  // Home team
+  lineup.forEach((p,i)=>{
+    const preset=FORMATIONS[G.formation]||FORMATIONS["4-4-2"];
+    const pos=preset[i]||{p:40,t:50};
+    canvasPlayers.push({x:pos.p/100*0.45+0.05,y:pos.t/100*0.8+0.1,vx:(Math.random()-.5)*.002,vy:(Math.random()-.5)*.002,nm:p.sh.slice(0,4),home:true});
   });
+  // Away team
   for(let i=0;i<11;i++){
-    if(!away_pos[i])return;
-    const el=document.createElement("div");
-    el.className="pt away";el.style.left=away_pos[i][0]+"%";el.style.top=away_pos[i][1]+"%";
-    el.textContent=opp.split(" ")[0].slice(0,3).toUpperCase();container.appendChild(el);
+    canvasPlayers.push({x:0.95-(Math.random()*.45),y:0.1+Math.random()*.8,vx:(Math.random()-.5)*.002,vy:(Math.random()-.5)*.002,nm:"",home:false});
   }
 }
 
-// ==================== CLASSEMENT ====================
-function renderClassement(){
-  const sorted=[...leagueTable].sort((a,b)=>b.pts-a.pts);
+function renderPitch(){
+  resizeCanvas();
+  initCanvasPlayers();
+  if(animFrame)cancelAnimationFrame(animFrame);
+  animateLoop();
+}
+
+function animateLoop(){
+  if(!matchRunning){drawPitch();return;}
+  drawPitch();
+  animFrame=requestAnimationFrame(animateLoop);
+}
+
+function drawPitch(){
+  const w=canvas.width,h=canvas.height;
+  ctx.fillStyle="#1a3d1a";ctx.fillRect(0,0,w,h);
+  // Lines
+  ctx.strokeStyle="rgba(255,255,255,0.12)";ctx.lineWidth=1.5;
+  // Center line
+  ctx.beginPath();ctx.moveTo(w/2,0);ctx.lineTo(w/2,h);ctx.stroke();
+  // Center circle
+  ctx.beginPath();ctx.arc(w/2,h/2,h*.18,0,Math.PI*2);ctx.stroke();
+  // Center dot
+  ctx.fillStyle="rgba(255,255,255,0.3)";ctx.beginPath();ctx.arc(w/2,h/2,4,0,Math.PI*2);ctx.fill();
+  // Left penalty box
+  ctx.strokeRect(0,h*.25,w*.16,h*.5);
+  // Right penalty box
+  ctx.strokeRect(w*.84,h*.25,w*.16,h*.5);
+  // Goals
+  ctx.strokeStyle="rgba(255,255,255,0.4)";
+  ctx.strokeRect(-4,h*.38,w*.04,h*.24);
+  ctx.strokeRect(w*.96,h*.38,w*.04,h*.24);
+
+  // Animate players
+  canvasPlayers.forEach(p=>{
+    p.x+=p.vx+(Math.random()-.5)*.003;
+    p.y+=p.vy+(Math.random()-.5)*.003;
+    p.x=Math.max(.04,Math.min(.96,p.x));
+    p.y=Math.max(.05,Math.min(.95,p.y));
+    if(Math.random()<.02){p.vx=(Math.random()-.5)*.004;p.vy=(Math.random()-.5)*.004;}
+    const px=p.x*w,py=p.y*h;
+    ctx.beginPath();ctx.arc(px,py,8,0,Math.PI*2);
+    ctx.fillStyle=p.home?"var(--p, #CC0000)":"#333333";
+    ctx.fill();ctx.strokeStyle="rgba(255,255,255,0.4)";ctx.lineWidth=1.5;ctx.stroke();
+    if(p.nm){ctx.fillStyle="#fff";ctx.font="bold 7px Inter";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(p.nm.slice(0,3),px,py);}
+  });
+
+  // Animate ball
+  canvasBall.x+=canvasBall.vx+(Math.random()-.5)*.005;
+  canvasBall.y+=canvasBall.vy+(Math.random()-.5)*.005;
+  if(canvasBall.x<.02||canvasBall.x>.98)canvasBall.vx*=-1;
+  if(canvasBall.y<.02||canvasBall.y>.98)canvasBall.vy*=-1;
+  canvasBall.x=Math.max(.01,Math.min(.99,canvasBall.x));
+  canvasBall.y=Math.max(.01,Math.min(.99,canvasBall.y));
+  const bx=canvasBall.x*w,by=canvasBall.y*h;
+  ctx.beginPath();ctx.arc(bx,by,6,0,Math.PI*2);
+  ctx.fillStyle="#fff";ctx.fill();ctx.strokeStyle="#ccc";ctx.lineWidth=1;ctx.stroke();
+  // Score overlay
+  ctx.fillStyle="rgba(0,0,0,0.8)";ctx.fillRect(w/2-45,6,90,28);
+  ctx.fillStyle="#fff";ctx.font="bold 16px 'Bebas Neue', sans-serif";ctx.textAlign="center";
+  ctx.fillText(`${matchGoals[0]}  :  ${matchGoals[1]}`,w/2,22);
+  ctx.font="10px Inter";ctx.fillStyle="#aaa";ctx.fillText(`${currentMin}'`,w/2,34);
+}
+
+function animatePitch(min){
+  if(animFrame)cancelAnimationFrame(animFrame);
+  if(matchRunning)animFrame=requestAnimationFrame(animateLoop);
+  else drawPitch();
+}
+
+// ==================== LEAGUE TABLE ====================
+function renderLeague(){
+  const sorted=[...leagueTable].sort((a,b)=>b.pts-a.pts||(b.bp-b.bc)-(a.bp-a.bc));
   const myKey=Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name);
-  document.getElementById("league-table").innerHTML=sorted.map((t,i)=>{
-    const isMe=t.clubKey===myKey;
+  document.getElementById("league-body").innerHTML=sorted.map((t,i)=>{
+    const isMe=t.k===myKey;
     const diff=t.bp-t.bc;
-    const pc=i<2?"cl":i<5?"eu":i>=9?"rel":"nor";
-    return `<tr class="${isMe?"highlight":""}">
-      <td><span class="pos-b ${pc}">${i+1}</span></td>
-      <td style="font-weight:${isMe?700:400};color:${isMe?"var(--primary-light)":"inherit"}">${isMe?CL.icon+" ":""}${t.club}</td>
-      <td>${t.j}</td><td>${t.g}</td><td>${t.n}</td><td>${t.p}</td>
+    const pc=i<6?"cl":i<8?"eu":i>=12?"rel":"nor";
+    return `<tr class="${isMe?"hl":""}">
+      <td><span class="pb ${pc}" style="${isMe?`border-color:var(--pl);color:var(--pl)`:""}">${i+1}</span></td>
+      <td style="font-weight:${isMe?700:400};color:${isMe?"var(--pl)":"inherit"}">${isMe?CL.icon+" ":""}${t.n}</td>
+      <td>${t.j}</td><td>${t.g}</td><td>${t.d}</td><td>${t.p}</td>
       <td>${t.bp}</td><td>${t.bc}</td>
-      <td style="color:${diff>0?"var(--green)":diff<0?"#cc0000":"inherit"}">${diff>0?"+":""}${diff}</td>
+      <td style="color:${diff>0?"var(--green)":diff<0?"#cc0000":"var(--g3)"}">${diff>0?"+":""}${diff}</td>
       <td style="font-weight:700">${t.pts}</td>
     </tr>`;
   }).join("");
-
-  const topScorers=[...SQUAD].sort((a,b)=>b.goals-a.goals).slice(0,5).map(p=>({name:p.name,club:CL.name,goals:p.goals}));
-  const extraScorers=[{name:"Vanaken",club:"Club Brugge KV",goals:15},{name:"Jutglà",club:"Club Brugge KV",goals:16},{name:"Orban",club:"Gent",goals:14},{name:"Boniface",club:"Union SG",goals:13},{name:"Denkey",club:"Cercle Brugge",goals:16}];
-  const allScorers=[...topScorers,...extraScorers].sort((a,b)=>b.goals-a.goals).slice(0,8);
-  document.getElementById("scorers-table").innerHTML=allScorers.map((s,i)=>`
-    <tr><td style="color:var(--gray3)">${i+1}</td><td style="font-weight:600">${s.name}</td><td style="color:var(--gray3)">${s.club}</td><td style="font-weight:700;color:var(--green)">${s.goals}</td></tr>`).join("");
-
-  document.getElementById("next-fixtures").innerHTML=sorted.slice(0,3).map(t=>`
-    <div style="padding:7px;border-bottom:1px solid var(--dark4);font-size:12px;display:flex;justify-content:space-between;">
-      <span style="color:${t.clubKey===myKey?"var(--primary-light)":"inherit"};font-weight:${t.clubKey===myKey?600:400}">${CL.name} vs ${t.club}</span>
-      <span style="color:var(--gray3)">J${G.week+1}</span>
-    </div>`).join("");
+  // Top scorers
+  const topFromSquad=[...SQUAD].sort((a,b)=>b.gls-a.gls).slice(0,5).map(p=>({nm:p.nm,club:CL.name,gls:p.gls}));
+  const extraScorers=[{nm:"Denkey",club:"Cercle Brugge",gls:17},{nm:"Jutglà",club:"Club Brugge",gls:18},{nm:"Orban",club:"KAA Gent",gls:15},{nm:"Boniface",club:"Union SG",gls:14},{nm:"Arokodare",club:"Genk",gls:14},{nm:"Vanaken",club:"Club Brugge",gls:12},...scorersList];
+  const all=[...topFromSquad,...extraScorers].sort((a,b)=>b.gls-a.gls).reduce((acc,s)=>{if(!acc.find(x=>x.nm===s.nm))acc.push(s);return acc;},[]).slice(0,10);
+  document.getElementById("scorers-body").innerHTML=all.map((s,i)=>`
+    <tr><td style="color:var(--g3)">${i+1}</td><td style="font-weight:600">${s.nm}</td><td style="color:var(--g3)">${s.club}</td><td style="font-weight:700;color:var(--green)">${s.gls}</td></tr>`).join("");
 }
 
 // ==================== TRANSFERS ====================
 function renderTransfers(filter="all"){
-  let list=transfers.filter(p=>!SQUAD.find(s=>s.name===p.name));
+  let list=transfers.filter(p=>!SQUAD.find(s=>s.nm===p.nm));
   if(filter==="cheap")list=list.filter(p=>p.price<=5);
   else if(filter==="free")list=list.filter(p=>p.price===0);
   else if(filter!=="all")list=list.filter(p=>p.pos===filter);
-  document.getElementById("transfer-list").innerHTML=list.map((p,i)=>`
-    <div class="tp">
-      <div class="avatar">${p.name.split(" ").map(w=>w[0]).join("").slice(0,2)}</div>
+  document.getElementById("transfer-list").innerHTML=list.map(p=>`
+    <div class="tc">
+      <div class="av">${p.nm.split(" ").map(w=>w[0]).join("").slice(0,2)}</div>
       <div style="flex:1">
-        <div style="font-weight:700;font-size:13px">${p.name} <span class="badge ${p.pos}">${p.pos}</span></div>
-        <div style="font-size:11px;color:var(--gray3);margin-top:2px">${p.nat||""} ${p.club} · ${p.age} ans</div>
+        <div style="font-weight:700;font-size:12px">${p.nm} <span class="b ${p.pos}">${p.pos}</span></div>
+        <div style="font-size:10px;color:var(--g3);margin-top:2px">${p.nat||""} ${p.club} · ${p.age} ans</div>
         <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
-          <span class="rc ${rcClass(p.note)}">${p.note}</span>
-          <span style="font-size:11px;color:var(--gray3)">€${p.wage}K/sem</span>
+          <span class="rc ${rcClass(p.nt)}">${p.nt}</span>
+          <span style="font-size:10px;color:var(--g3)">€${p.wg}K/sem</span>
         </div>
       </div>
       <div style="text-align:right;flex-shrink:0">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold)">${p.price===0?"LIBRE":"€"+p.price+"M"}</div>
-        <button class="btn ${p.price<=G.budget?"primary":""}" onclick="recruit('${p.name}')" ${p.price>G.budget?"disabled":""}>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--gold)">${p.price===0?"LIBRE":"€"+p.price+"M"}</div>
+        <button class="btn ${p.price<=G.budget?"p":""}" onclick="recruit('${p.nm}')" ${p.price>G.budget?"disabled":""} style="font-size:10px;padding:4px 10px;">
           ${p.price>G.budget?"Budget insuf.":"Recruter"}
         </button>
       </div>
     </div>`).join("");
 }
-
-function filterTransfers(f,btn){
-  document.querySelectorAll("#sec-mercato .btn").forEach(b=>b.classList.remove("primary"));
-  btn.classList.add("primary");
-  renderTransfers(f);
-}
-
-function recruit(name){
-  const p=transfers.find(t=>t.name===name);
-  if(!p||G.budget<p.price){showNotif("❌ Budget insuffisant !"); return;}
+function filterT(f,btn){document.querySelectorAll("#sec-mercato .btn").forEach(b=>b.classList.remove("p"));btn.classList.add("p");renderTransfers(f);}
+function recruit(nm){
+  const p=transfers.find(t=>t.nm===nm);if(!p||G.budget<p.price){showNotif("❌ Budget insuffisant !");return;}
   G.budget-=p.price;
-  SQUAD.push({n:99,name:p.name,short:p.name.split(" ").slice(-1)[0],pos:p.pos,age:p.age,nat:p.nat||"🌍",note:p.note,maxNote:p.note+2,val:p.price,wage:p.wage,contract:"2028",fitness:85,morale:4,goals:0,assists:0,injured:false,injuryWeeks:0,sessions:0,form:["W"]});
+  SQUAD.push({n:99,nm:p.nm,sh:p.nm.split(" ").slice(-1)[0].slice(0,8),pos:p.pos,role:"–",age:p.age,nat:p.nat||"🌍",nt:p.nt,pt:p.nt+2,val:p.price,wg:p.wg,ct:"2028",ft:85,mr:4,gls:0,ats:0,inj:false,sus:false,sel:true,cap:false,sess:0,form:[]});
   transfers.splice(transfers.indexOf(p),1);
-  showNotif(`✅ ${p.name} recruté ${p.price===0?"(libre)":"pour €"+p.price+"M"} !`);
-  renderHeader(); renderTransfers(); renderSquad(); renderLineup();
+  showNotif(`✅ ${p.nm} recruté ${p.price===0?"(libre)":"pour €"+p.price+"M"} !`);
+  renderHeader();renderTransfers();renderSquad();renderTacticsPitch();
 }
 
 // ==================== TRAINING ====================
+const TRAIN_DAYS=["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
+const TRAIN_OPTS=["Repos","Physique","Tactique","Tirs","Défense","Gardiens","Récupération"];
 function renderTraining(){
-  document.getElementById("training-week").innerHTML=trainingDays.map((d,i)=>`
-    <div class="tr-day ${trainingTypes[i]!=='Repos'?'active':''}" onclick="cycleTraining(${i},this)">
-      <div class="dname">${d}</div>
-      <div class="dtype">${trainingTypes[i]}</div>
+  document.getElementById("train-week").innerHTML=TRAIN_DAYS.map((d,i)=>`
+    <div style="background:${trainingTypes[i]!=="Repos"?"var(--bg4)":"var(--bg3)"};border:1px solid ${trainingTypes[i]!=="Repos"?"var(--p)":"var(--bg5)"};border-radius:5px;padding:6px;text-align:center;cursor:pointer;" onclick="cycleT(${i},this)">
+      <div style="font-size:9px;color:var(--g3);text-transform:uppercase;margin-bottom:3px">${d}</div>
+      <div style="font-size:10px;font-weight:600" id="ttype-${i}">${trainingTypes[i]}</div>
     </div>`).join("");
-
-  document.getElementById("training-effects").innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:6px;">
-      ${[["Note moyenne","+0.2","var(--green)"],["Fitness","+8%","var(--blue)"],["Moral équipe","+1","var(--gold)"],["Risque blessure","Faible","var(--gray3)"]].map(e=>`
-      <div style="display:flex;justify-content:space-between;padding:6px 10px;background:var(--dark4);border-radius:4px;">
-        <span style="font-size:12px;color:var(--gray3)">${e[0]}</span>
-        <span style="font-size:12px;font-weight:600;color:${e[2]}">${e[1]}</span>
-      </div>`).join("")}
-    </div>`;
-
-  document.getElementById("training-body").innerHTML=SQUAD.slice(0,12).map(p=>{
-    const prog=Math.round((p.note/p.maxNote)*100);
+  document.getElementById("train-fx").innerHTML=[
+    ["Note moyenne","+0.2","var(--green)"],["Fitness","+8%","var(--blue)"],
+    ["Moral","+1","var(--gold)"],["Risque blessure","Faible","var(--g3)"]
+  ].map(e=>`<div style="display:flex;justify-content:space-between;padding:5px 9px;background:var(--bg5);border-radius:4px;margin-bottom:5px;">
+    <span style="font-size:11px;color:var(--g3)">${e[0]}</span><span style="font-size:11px;font-weight:600;color:${e[2]}">${e[1]}</span>
+  </div>`).join("");
+  document.getElementById("train-body").innerHTML=SQUAD.slice(0,12).map(p=>{
+    const pg=Math.round((p.nt/p.pt)*100);
     return `<tr>
-      <td style="font-weight:600">${p.name}</td>
-      <td><span class="badge ${p.pos}">${p.pos}</span></td>
-      <td><span class="rc ${rcClass(p.note)}">${p.note}</span></td>
-      <td><span class="rc ${rcClass(p.maxNote)}">${p.maxNote}</span></td>
-      <td><div class="bar-wrap" style="width:80px;display:inline-block"><div class="bar-fill gold" style="width:${prog}%"></div></div> <span style="font-size:10px;color:var(--gray3)">${prog}%</span></td>
-      <td style="color:var(--gray3)">${p.sessions}</td>
+      <td style="font-weight:600">${p.nm}</td>
+      <td><span class="b ${p.pos}">${p.pos}</span></td>
+      <td><span class="rc ${rcClass(p.nt)}">${p.nt}</span></td>
+      <td><span class="rc ${rcClass(p.pt)}" style="opacity:.7">${p.pt}</span></td>
+      <td><div class="bar" style="width:80px;display:inline-block"><div class="bar-f" style="width:${pg}%;background:var(--gold)"></div></div> <span style="font-size:9px;color:var(--g3)">${pg}%</span></td>
+      <td style="color:var(--g3)">${p.sess}</td>
     </tr>`;
   }).join("");
 }
-
-function cycleTraining(i,el){
-  const cur=trainingOptions.indexOf(trainingTypes[i]);
-  trainingTypes[i]=trainingOptions[(cur+1)%trainingOptions.length];
-  el.querySelector(".dtype").textContent=trainingTypes[i];
-  el.classList.toggle("active",trainingTypes[i]!=="Repos");
-}
-
+function cycleT(i,el){const cur=TRAIN_OPTS.indexOf(trainingTypes[i]);trainingTypes[i]=TRAIN_OPTS[(cur+1)%TRAIN_OPTS.length];document.getElementById(`ttype-${i}`).textContent=trainingTypes[i];el.style.borderColor=trainingTypes[i]!=="Repos"?"var(--p)":"var(--bg5)";el.style.background=trainingTypes[i]!=="Repos"?"var(--bg4)":"var(--bg3)";}
 function applyTraining(){
-  SQUAD.forEach(p=>{
-    p.fitness=Math.min(100,p.fitness+8);
-    p.sessions++;
-    if(p.sessions%5===0&&p.note<p.maxNote){p.note++;showNotif(`📈 ${p.name} progresse → ${p.note}`);}
-    if(p.morale<5&&Math.random()>0.7)p.morale++;
-  });
-  renderTraining(); renderSquad(); renderLineup();
-  showNotif("✅ Semaine d'entraînement appliquée !");
+  SQUAD.forEach(p=>{p.ft=Math.min(100,p.ft+8);p.sess++;if(p.sess%5===0&&p.nt<p.pt){p.nt++;showNotif(`📈 ${p.nm} → ${p.nt}`);}if(p.mr<5&&Math.random()>.7)p.mr++;});
+  renderTraining();renderSquad();renderTacticsPitch();showNotif("✅ Entraînement appliqué !");
 }
 
 // ==================== FINANCES ====================
 function renderFinances(){
-  const sources=[["Droits TV",G.income*0.33],["Billetterie",G.income*0.24],["Sponsors",G.income*0.26],["Transferts",G.income*0.17]];
-  document.getElementById("income-breakdown").innerHTML=sources.map(s=>`
-    <div style="margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px;"><span>${s[0]}</span><span style="font-weight:600;color:var(--green)">€${s[1].toFixed(1)}M</span></div>
-      <div class="bar-wrap"><div class="bar-fill green" style="width:${Math.round(s[1]/G.income*100)}%"></div></div>
+  const sources=[["Droits TV",G.income*.33],["Billetterie",G.income*.24],["Sponsors",G.income*.26],["Transferts",G.income*.17]];
+  document.getElementById("fi-breakdown").innerHTML=sources.map(s=>`
+    <div style="margin-bottom:9px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:11px;"><span>${s[0]}</span><span style="font-weight:600;color:var(--green)">€${s[1].toFixed(1)}M</span></div>
+      <div class="bar"><div class="bar-f" style="width:${Math.round(s[1]/G.income*100)}%;background:var(--green)"></div></div>
     </div>`).join("");
-
-  document.getElementById("wages-body").innerHTML=[...SQUAD].sort((a,b)=>b.wage-a.wage).slice(0,12).map(p=>`
-    <tr><td style="font-weight:600">${p.name}</td><td><span class="badge ${p.pos}">${p.pos}</span></td><td style="color:var(--gold)">€${p.wage}K</td><td>${p.contract}</td></tr>`).join("");
+  document.getElementById("fi-wages").innerHTML=[...SQUAD].sort((a,b)=>b.wg-a.wg).slice(0,12).map(p=>`
+    <tr><td style="font-weight:600">${p.nm}</td><td><span class="b ${p.pos}">${p.pos}</span></td><td style="color:var(--gold)">€${p.wg}K</td><td>${p.ct}</td></tr>`).join("");
 }
 
-// ==================== NAV & NOTIF ====================
-function showSection(id){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
-  document.getElementById("sec-"+id).classList.add("active");
-  const idx=["dashboard","squad","tactics","match","classement","mercato","training","finances"].indexOf(id);
-  document.querySelectorAll(".nav-item")[idx]?.classList.add("active");
-  if(id==="match")renderPreMatch();
-  if(id==="classement")renderClassement();
+// ==================== SECTION NAV ====================
+function showSec(id){
+  document.querySelectorAll(".sec").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".ni").forEach(n=>n.classList.remove("active"));
+  const el=document.getElementById("sec-"+id);if(el)el.classList.add("active");
+  const idx=["dashboard","calendar","squad","tactics","match","league","mercato","training","finances"].indexOf(id);
+  if(idx>=0)document.querySelectorAll(".ni")[idx]?.classList.add("active");
+  if(id==="match"){renderPreMatch();resizeCanvas();drawPitch();}
+  if(id==="league")renderLeague();
   if(id==="training")renderTraining();
   if(id==="finances")renderFinances();
+  if(id==="tactics"){renderTacticsPitch();renderBonusMalus();}
+  if(id==="calendar")renderCalendar();
 }
 
+// ==================== SAVE / LOAD ====================
+function saveGame(){
+  const data={G,SQUAD:SQUAD.map(p=>({...p})),leagueTable:leagueTable.map(t=>({...t})),CALENDAR:JSON.parse(JSON.stringify(CALENDAR)),clubKey:Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name),positions,trainingTypes,scorersList,transfers};
+  localStorage.setItem("fm26_save",JSON.stringify(data));
+  showNotif("💾 Partie sauvegardée !");
+}
+function loadGame(){
+  const raw=localStorage.getItem("fm26_save");
+  if(!raw){showNotif("❌ Aucune sauvegarde trouvée.");return;}
+  const data=JSON.parse(raw);
+  CL=CLUBS[data.clubKey];if(!CL){showNotif("Erreur de sauvegarde.");return;}
+  G=data.G;SQUAD=data.SQUAD;leagueTable=data.leagueTable;CALENDAR=data.CALENDAR;
+  Object.assign(positions,data.positions||{});
+  if(data.trainingTypes)data.trainingTypes.forEach((t,i)=>trainingTypes[i]=t);
+  scorersList=data.scorersList||[];
+  if(data.transfers)transfers=data.transfers;
+  applyTheme();renderAll();renderTacticsPitch();
+  document.getElementById("sel").style.display="none";
+  document.getElementById("game").style.display="block";
+  showNotif("📂 Partie chargée !");
+}
+
+// ==================== DOWNLOAD ====================
+function downloadResults(){
+  const sorted=[...leagueTable].sort((a,b)=>b.pts-a.pts);
+  const myPos=sorted.findIndex(t=>t.k===Object.keys(CLUBS).find(k=>CLUBS[k].name===CL.name))+1;
+  const top=SQUAD.filter(p=>p.gls>0).sort((a,b)=>b.gls-a.gls).slice(0,5);
+  const content=`=== FM26 — ${CL.name} | by Nassaax ===
+Saison 2025/26 · Jupiler Pro League
+
+🏆 Classement: ${myPos}e place
+📊 Bilan: ${G.wins}V ${G.draws}N ${G.losses}D
+⚽ Buts: ${G.gf} pour / ${G.ga} contre
+🎯 Points: ${G.pts}
+💶 Budget restant: €${G.budget.toFixed(1)}M
+📅 Journée: ${G.week-1}/30
+
+🔝 Mes buteurs:
+${top.map((p,i)=>`  ${i+1}. ${p.nm}: ${p.gls} buts`).join("\n")||"  Aucun but cette saison"}
+
+📋 Top 8 classement:
+${sorted.slice(0,8).map((t,i)=>`  ${i+1}. ${t.n} — ${t.pts}pts (${t.g}V ${t.d}N ${t.p}D)`).join("\n")}
+
+Exporté depuis FM26 — by Nassaax`;
+  const blob=new Blob([content],{type:"text/plain"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;a.download=`FM26_${CL.abbr}_J${G.week-1}.txt`;a.click();
+  URL.revokeObjectURL(url);showNotif("⬇ Résultats exportés !");
+}
+
+// ==================== NOTIF ====================
 function showNotif(msg){
-  const el=document.getElementById("notif");
-  el.textContent=msg; el.style.display="block";
-  clearTimeout(el._t); el._t=setTimeout(()=>el.style.display="none",3500);
+  const el=document.getElementById("notif");el.textContent=msg;el.style.display="block";
+  clearTimeout(el._t);el._t=setTimeout(()=>el.style.display="none",3500);
+}
+
+// ==================== CLUB SELECTION RENDER ====================
+function renderClubSelection(){
+  document.getElementById("clubs-grid").innerHTML=Object.entries(CLUBS).map(([k,c])=>`
+    <div class="cc" style="--club-c:${c.p}" onclick="selectClub('${k}')">
+      <div class="badge" style="background:${c.p};color:${c.op}">${c.abbr}</div>
+      <div class="cn">${c.name}</div>
+      <div class="cs">JPL · ${c.stadium}</div>
+      <div class="cb">Budget: €${c.budget}M</div>
+      <div class="cs">Note moy.: ${Math.round(c.squad.reduce((a,p)=>a+p.nt,0)/c.squad.length)}</div>
+    </div>`).join("");
+  // Check for existing save
+  if(localStorage.getItem("fm26_save")){
+    const savedClub=JSON.parse(localStorage.getItem("fm26_save")).clubKey;
+    document.getElementById("clubs-grid").insertAdjacentHTML("afterbegin",`
+      <div class="cc" style="border-color:var(--gold);--club-c:var(--gold)" onclick="loadGame()">
+        <div class="badge" style="background:var(--gold);color:#1a1a00">💾</div>
+        <div class="cn" style="color:var(--gold)">Reprendre partie</div>
+        <div class="cs">Sauvegarde: ${CLUBS[savedClub]?.name||"–"}</div>
+        <div class="cs">Cliquez pour charger</div>
+      </div>`);
+  }
 }
 
 // ==================== INIT ====================
+window.addEventListener("resize",()=>{if(matchRunning||document.getElementById("sec-match").classList.contains("active")){resizeCanvas();drawPitch();}});
 renderClubSelection();
 </script>
 </body>
