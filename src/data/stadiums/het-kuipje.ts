@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -8,7 +8,11 @@ const stadium: Stadium = {
   name: "Het Kuipje",
   clubId: "kvc-westerlo",
   city: "Westerlo",
-  address: tbc<string>("Adresse exacte à confirmer auprès du club"),
+  address: v(
+    "De Merodedreef 189, 2260 Westerlo",
+    viaSearch("KVC Westerlo — contact", "https://kvcwesterlo.be/kvc-westerlo-enallemaalsamen/contact/"),
+    LAST_AUDIT,
+  ),
   latitude: 51.0888,
   longitude: 4.9195,
   capacity: v(8035, WIKI, LAST_AUDIT),
@@ -35,11 +39,22 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune principale", opposite: "Tribune latérale opposée", home: "Virage des supporters", away: "Secteur visiteurs" }),
   access: buildAccess({
-    train: "Il n'y a pas de gare à Westerlo : l'accès ferroviaire implique une correspondance en bus depuis une gare voisine.",
-    station: "Pas de gare à Westerlo — gare de rabattement et liaison bus à confirmer auprès de De Lijn",
-    car: "La voiture est ici le moyen de transport principal, ce qui est rare dans le championnat : abords dégagés et stationnement local.",
+    source: viaSearch("KVC Westerlo — questions fréquentes", "https://kvcwesterlo.be/frequentlyaskedquestions/"),
+    train:
+      "Aucune liaison ferroviaire directe : depuis la halte de Westerlo, il reste environ 3 kilomètres jusqu'au stade, à faire en bus ou en taxi.",
+    station: "Westerlo, à environ 3 km du stade",
+    transit:
+      "Le stade est sur la De Merodedreef, à environ 1,8 kilomètre à l'est du centre de Westerlo. Plusieurs arrêts de bus jalonnent l'axe, et la marche depuis le centre prend moins d'un quart d'heure.",
+    car: "La voiture est ici le moyen de transport principal, ce qui est rare dans le championnat. Mais le stade ne dispose que d'un seul parking sur site : la capacité est limitée.",
+    parking: [
+      "Parking 6 : 5 € les jours de match.",
+      "Capacité limitée sur site : prévoyez de vous rabattre sur le quartier résidentiel voisin et de finir à pied.",
+    ],
     bike: "La Campine est très cyclable et le vélo est un usage local courant.",
-    matchdayOnly: ["Sans voiture, vérifiez impérativement les horaires de bus de retour : ils sont rares en soirée."],
+    matchdayOnly: [
+      "Sans voiture, vérifiez impérativement les horaires de bus de retour : ils sont rares en soirée.",
+      "Le parking du stade se remplit vite : arriver tôt évite de chercher une place dans les rues voisines.",
+    ],
   }),
   ticketing: { ...defaultTicketing("https://www.kvcwesterlo.be") },
   rules: defaultRules(),
@@ -55,7 +70,13 @@ const stadium: Stadium = {
   services: ["Buvettes", "Boutique officielle (horaires à confirmer)", "Sanitaires"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.kvcwesterlo.be")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.kvcwesterlo.be"),
+    viaSearch("KVC Westerlo — questions fréquentes", "https://kvcwesterlo.be/frequentlyaskedquestions/"),
+  ],
 };
 
 export default stadium;

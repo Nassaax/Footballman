@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -9,10 +9,14 @@ const stadium: Stadium = {
   formerNames: ["Regenboogstadion"],
   clubId: "sv-zulte-waregem",
   city: "Waregem",
-  address: tbc<string>("Adresse exacte à confirmer auprès du club"),
+  address: v(
+    "Zuiderlaan 17, 8790 Waregem",
+    viaSearch("Ville de Waregem — Elindus Arena", "https://www.waregem.be/regenboogstadion-elindus-arena"),
+    LAST_AUDIT,
+  ),
   latitude: 50.8836,
   longitude: 3.4283,
-  capacity: v(12414, WIKI, LAST_AUDIT),
+  capacity: v(12414, WIKI, LAST_AUDIT, "Dont environ 9 700 places assises et 2 710 debout"),
   openingYear: tbc<number>("Site du Regenboogstadion, transformé par phases — dates à confirmer"),
   tagline: "Le stade de l'Arc-en-ciel : une petite ville flamande qui a gagné la Coupe de Belgique.",
   description:
@@ -37,11 +41,17 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune principale", opposite: "Tribune latérale opposée", home: "Virage des supporters", away: "Secteur visiteurs" }),
   access: buildAccess({
-    train: "Waregem est desservie sur l'axe Gand-Courtrai, avec une marche vers le stade.",
-    station: "Waregem — temps de marche vers le stade à confirmer",
-    transit: "Réseau De Lijn depuis la gare. Lignes exactes à confirmer.",
-    car: "Accès autoroutier direct (E17), abords dégagés : la voiture est une option confortable ici.",
-    bike: "Région plate et cyclable.",
+    source: viaSearch("SV Zulte Waregem — Elindus Arena", "https://www.essevee.be/nl/elindus-arena"),
+    train: "Waregem est desservie sur l'axe Gand-Courtrai, et la gare est à distance de marche du stade.",
+    station: "Waregem, à distance de marche",
+    transit: "L'arrêt de bus le plus proche est « Waregem Regenboogstadion », au pied du stade.",
+    car: "Accès autoroutier direct, abords dégagés : c'est l'un des stades les plus confortables du championnat en voiture.",
+    parking: [
+      "Parking Expo, juste avant le stade : 447 places, dont 11 réservées aux personnes à mobilité réduite, et 4 bornes de recharge. Stationnement entièrement gratuit.",
+      "Parking des équipes visiteuses au Centre de jeunes, au rond-point entre la Verbindingsweg et la Zuiderlaan.",
+    ],
+    bike:
+      "Région plate et cyclable : parking vélo couvert sous la tribune visiteurs (environ 145 places), complété par le centre sportif De Treffer et le parking Expo.",
   }),
   ticketing: { ...defaultTicketing("https://www.essevee.be") },
   rules: defaultRules(),
@@ -57,7 +67,14 @@ const stadium: Stadium = {
   services: ["Buvettes", "Boutique officielle (horaires à confirmer)", "Sanitaires"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.essevee.be")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.essevee.be"),
+    viaSearch("SV Zulte Waregem — Elindus Arena", "https://www.essevee.be/nl/elindus-arena"),
+    viaSearch("Ville de Waregem — Elindus Arena", "https://www.waregem.be/regenboogstadion-elindus-arena"),
+  ],
 };
 
 export default stadium;

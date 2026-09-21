@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -8,7 +8,11 @@ const stadium: Stadium = {
   name: "Freethielstadion",
   clubId: "sk-beveren",
   city: "Beveren",
-  address: tbc<string>("Adresse exacte à confirmer auprès du club"),
+  address: v(
+    "Stadionplein 1, 9120 Beveren-Waas",
+    viaSearch("SK Beveren — stationnement", "https://www.skbeveren.be/parkeren/"),
+    LAST_AUDIT,
+  ),
   latitude: 51.2088,
   longitude: 4.2589,
   capacity: v(8190, WIKI, LAST_AUDIT, "Capacité approximative à confirmer auprès du club"),
@@ -35,11 +39,22 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune principale", opposite: "Tribune latérale opposée", home: "Virage des supporters", away: "Secteur visiteurs" }),
   access: buildAccess({
-    train: "Beveren est sur l'axe Anvers-Gand : l'accès ferroviaire est simple, avec une marche ou un bus jusqu'au stade.",
-    station: "Beveren — temps de marche vers le stade à confirmer",
-    transit: "Réseau De Lijn depuis la gare. Lignes exactes à confirmer.",
-    car: "Accès autoroutier direct (E17), abords moins contraints que dans les grandes villes.",
-    bike: "Commune plate et cyclable : le vélo est un usage local courant.",
+    source: viaSearch("SK Beveren — stationnement", "https://www.skbeveren.be/parkeren/"),
+    train:
+      "Beveren est sur l'axe Anvers-Gand. La gare est à une dizaine de minutes à pied des abords du stade : c'est l'accès le plus simple.",
+    station: "Beveren, à environ 10 minutes à pied",
+    walk: "Environ 10 minutes depuis la gare de Beveren.",
+    car:
+      "Accès autoroutier direct, mais le stationnement du stade est payant et segmenté par zone, avec des tarifs qui varient fortement d'un parking à l'autre.",
+    parking: [
+      "Parking P1 : 50 € par match.",
+      "Parking Bosdam : 20 € par match, à 7 minutes à pied du stade.",
+      "Parking P5, au bout du Meerminnendam : 10 € par match.",
+    ],
+    bike: "Commune plate et cyclable : le club recommande explicitement de venir à pied ou à vélo quand c'est possible.",
+    matchdayOnly: [
+      "Les tarifs de parking varient du simple au quintuple selon la zone : vérifiez avant de vous garer.",
+    ],
   }),
   ticketing: { ...defaultTicketing("https://www.skbeveren.be") },
   rules: defaultRules(),
@@ -55,7 +70,14 @@ const stadium: Stadium = {
   services: ["Buvettes", "Sanitaires"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.skbeveren.be")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.skbeveren.be"),
+    viaSearch("SK Beveren — stationnement", "https://www.skbeveren.be/parkeren/"),
+    viaSearch("SK Beveren — plan de mobilité et parking vélo", "https://www.skbeveren.be/mobiliteit/mobiliteitsplan-fietsenparking/"),
+  ],
 };
 
 export default stadium;

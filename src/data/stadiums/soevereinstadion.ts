@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -8,7 +8,7 @@ const stadium: Stadium = {
   name: "Soevereinstadion",
   clubId: "lommel-sk",
   city: "Lommel",
-  address: tbc<string>("Adresse exacte à confirmer auprès du club"),
+  address: v("Sportveldenstraat 10, 3920 Lommel", viaSearch("Ville de Lommel — accessibilité du Soeverein", "https://www.lommel.be/bereikbaarheid-soeverein"), LAST_AUDIT),
   latitude: 51.2239,
   longitude: 5.3216,
   capacity: v(8000, WIKI, LAST_AUDIT, "Capacité approximative à confirmer auprès du club"),
@@ -35,11 +35,21 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune principale", opposite: "Tribune latérale opposée", home: "Virage des supporters", away: "Secteur visiteurs" }),
   access: buildAccess({
-    train: "Il n'y a pas de gare à Lommel : l'accès implique une correspondance en bus depuis une gare limbourgeoise.",
-    station: "Pas de gare à Lommel — gare de rabattement et liaison bus à confirmer auprès de De Lijn",
-    car: "La voiture est le moyen d'accès principal, avec des abords dégagés.",
-    bike: "Le Limbourg possède l'un des meilleurs réseaux cyclables d'Europe : le vélo est une option réaliste localement.",
-    matchdayOnly: ["Sans voiture, vérifiez les horaires de bus de retour avant de venir."],
+    source: viaSearch("Ville de Lommel — accessibilité du Soeverein", "https://www.lommel.be/bereikbaarheid-soeverein"),
+    train:
+      "La gare de Lommel est à environ 4 kilomètres du stade : il faut enchaîner avec le bus depuis l'arrêt « Lommel Station ».",
+    station: "Lommel, à environ 4 km du stade",
+    car: "La voiture est le moyen d'accès principal, avec des abords dégagés. Adresse à viser : Sportveldenstraat 10.",
+    parking: [
+      "Parking visiteurs aménagé sur l'ancien terrain B.",
+      "Parkings autour du complexe De Soeverein, côté supporters de Lommel.",
+    ],
+    bike:
+      "Le Limbourg possède l'un des meilleurs réseaux cyclables d'Europe : le club encourage explicitement la venue à pied ou à vélo, avec stationnement vélo sur l'aire gravillonnée.",
+    matchdayOnly: [
+      "Les cars de supporters visiteurs ne passent plus par la Gestelsedijk.",
+      "Sans voiture, vérifiez les horaires de bus de retour avant de venir : l'offre est rare en soirée.",
+    ],
   }),
   ticketing: { ...defaultTicketing("https://www.lommelsk.com") },
   rules: defaultRules(),
@@ -55,7 +65,14 @@ const stadium: Stadium = {
   services: ["Buvettes", "Sanitaires"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.lommelsk.com")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.lommelsk.com"),
+    viaSearch("Ville de Lommel — accessibilité du Soeverein", "https://www.lommel.be/bereikbaarheid-soeverein"),
+    viaSearch("De Soeverein — plan de stationnement", "https://desoeverein.be/info/parkeerplan/"),
+  ],
 };
 
 export default stadium;
