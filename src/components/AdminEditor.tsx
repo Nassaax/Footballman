@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Overrides } from "@/lib/overrides";
 import { PhotoModeration } from "./PhotoModeration";
 
@@ -52,6 +52,26 @@ export function AdminEditor({
   overrides: Overrides;
 }) {
   const [token, setToken] = useState("");
+
+  // Le jeton reste pour la durée de l'onglet : on ne le recolle pas à chaque
+  // rechargement, et il disparaît à la fermeture.
+  useEffect(() => {
+    try {
+      const saved = window.sessionStorage.getItem("stadia.admin.token");
+      if (saved) setToken(saved);
+    } catch {
+      /* stockage indisponible : le jeton reste à saisir */
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      if (token) window.sessionStorage.setItem("stadia.admin.token", token);
+      else window.sessionStorage.removeItem("stadia.admin.token");
+    } catch {
+      /* stockage indisponible */
+    }
+  }, [token]);
   const [stadiumId, setStadiumId] = useState(stadiums[0]?.id ?? "");
   const [draft, setDraft] = useState<Overrides>(overrides);
   const [status, setStatus] = useState<string | null>(null);
@@ -109,18 +129,20 @@ export function AdminEditor({
     <div style={{ display: "grid", gap: "1.5rem" }}>
       <div className="card" style={{ padding: "1.25rem", display: "grid", gap: "0.75rem" }}>
         <label style={{ display: "grid", gap: "0.375rem" }}>
-          <span className="eyebrow">Jeton d'administration (ADMIN_TOKEN)</span>
+          <span className="eyebrow">Connexion — collez votre jeton ici</span>
           <input
             type="password"
             value={token}
-            onChange={(e) => setToken(e.target.value)}
-            placeholder="Nécessaire pour enregistrer"
+            onChange={(e) => setToken(e.target.value.trim())}
+            placeholder="Jeton d'administration"
+            autoComplete="off"
             style={inputStyle}
           />
         </label>
         <p style={{ fontSize: "0.75rem", color: "var(--color-muted)" }}>
-          Sans jeton configuré côté serveur, l'écriture est refusée : il n'existe aucun point d'entrée
-          ouvert. {clubs.length} clubs et {stadiums.length} stades sont éditables.
+          Le jeton ne se met pas dans l'adresse du site : il se colle dans ce champ. Il reste en
+          mémoire jusqu'à la fermeture de l'onglet. {clubs.length} clubs et {stadiums.length} stades
+          sont éditables.
         </p>
       </div>
 

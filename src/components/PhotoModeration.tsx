@@ -3,18 +3,23 @@
 import { useCallback, useEffect, useState } from "react";
 import { PHOTO_LICENSES, type PendingPhoto } from "@/lib/photos-shared";
 
+type Auth = "empty" | "checking" | "ok" | "rejected" | "unreachable";
+
 /** File de modération : rien n'est publié tant qu'une photo n'est pas validée ici. */
 export function PhotoModeration({ token }: { token: string }) {
   const [photos, setPhotos] = useState<PendingPhoto[] | null>(null);
+  const [auth, setAuth] = useState<Auth>("empty");
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     if (!token) {
       setPhotos(null);
-      setStatus("Saisissez le jeton d'administration pour voir les contributions.");
+      setAuth("empty");
+      setStatus(null);
       return;
     }
+    setAuth("checking");
     setStatus(null);
     try {
       const response = await fetch("/api/admin/photos", {
@@ -23,18 +28,26 @@ export function PhotoModeration({ token }: { token: string }) {
       const data = (await response.json()) as { photos?: PendingPhoto[]; error?: string };
       if (!response.ok) {
         setPhotos(null);
-        setStatus(data.error ?? "Lecture impossible.");
+        setAuth("rejected");
         return;
       }
       setPhotos(data.photos ?? []);
+      setAuth("ok");
     } catch {
-      setStatus("Le serveur n'a pas répondu.");
+      setAuth("unreachable");
     }
   }, [token]);
 
+  // Le jeton est collé d'un coup ou tapé : on attend une pause avant d'interroger
+  // le serveur, sinon chaque caractère déclenche une requête et un refus.
   useEffect(() => {
-    void load();
-  }, [load]);
+    if (!token) {
+      void load();
+      return;
+    }
+    const timer = window.setTimeout(() => void load(), 400);
+    return () => window.clearTimeout(timer);
+  }, [token, load]);
 
   const act = async (photo: PendingPhoto, action: "approve" | "reject") => {
     setBusy(photo.id);
@@ -70,7 +83,9 @@ export function PhotoModeration({ token }: { token: string }) {
         {status ? <span style={{ fontSize: "0.875rem", color: "var(--color-muted)" }}>{status}</span> : null}
       </div>
 
-      {photos === null ? null : photos.length === 0 ? (
+      <AuthBadge auth={auth} count={photos?.length ?? 0} />
+
+      {auth !== "ok" ? null : photos === null ? null : photos.length === 0 ? (
         <p style={{ marginTop: "1rem", color: "var(--color-muted)", fontSize: "0.9375rem" }}>
           Aucune contribution en attente.
         </p>
@@ -146,5 +161,42 @@ export function PhotoModeration({ token }: { token: string }) {
         avec le crédit de son auteur.
       </p>
     </div>
+  );
+}
+
+/**
+ * Retour de connexion explicite.
+ *
+ * Sans ce signal, un jeton valide et un jeton refusé produisent le même écran
+ * tant qu'aucune photo n'est en attente : impossible de savoir si l'on est
+ * connecté.
+ */
+function AuthBadge({ auth, count }: { auth: Auth; count: number }) {
+  const messages: Record<Auth, { text: string; color: string }> = {
+    empty: {
+      text: "Collez votre jeton dans le champ ci-dessus pour voir les contributions.",
+      color: "var(--color-muted)",
+    },
+    checking: { text: "Vérification du jeton…", color: "var(--color-muted)" },
+    ok: {
+      text:
+        count === 0
+          ? "Jeton accepté — aucune photo en attente pour le moment."
+          : `Jeton accepté — ${count} photo${count > 1 ? "s" : ""} en attente.`,
+      color: "var(--color-ok)",
+    },
+    rejected: {
+      text: "Jeton refusé. Vérifiez qu'il est collé en entier, sans espace avant ou après.",
+      color: "var(--color-accent)",
+    },
+    unreachable: { text: "Le serveur n'a pas répondu. Réessayez.", color: "var(--color-accent)" },
+  };
+
+  const { text, color } = messages[auth];
+
+  return (
+    <p style={{ marginTop: "0.875rem", fontSize: "0.875rem", color, fontWeight: auth === "ok" ? 600 : 400 }}>
+      {text}
+    </p>
   );
 }
