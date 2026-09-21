@@ -34,5 +34,15 @@ export function operator(label: string, url: string): Source {
   return { label, url, tier: 4 };
 }
 
+/**
+ * Information relevée par recherche web, pointant vers la page officielle
+ * indiquée sans que celle-ci ait été lue directement. Le niveau de confiance
+ * est volontairement dégradé : la mention « à revalider » est affichée au
+ * lecteur tant qu'un contrôle sur la source primaire n'a pas eu lieu.
+ */
+export function viaSearch(label: string, url?: string): Source {
+  return { label: `${label} — relevé par recherche, à revalider`, url, tier: 3 };
+}
+
 /** Date de la dernière campagne de vérification documentaire. */
 export const LAST_AUDIT = "2026-09-21";

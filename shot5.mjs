@@ -1,0 +1,12 @@
+import { chromium } from "playwright";
+const out = process.argv[2];
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1200, height: 1000 }, colorScheme: "light" });
+const p = await ctx.newPage();
+await p.route("**/api/photos**", (r) => r.fulfill({ json: { photos: [], storageReady: true } }));
+await p.goto("http://127.0.0.1:3100/stades/stade-maurice-dufrasne", { waitUntil: "domcontentloaded" });
+await p.waitForTimeout(800);
+await p.evaluate(() => document.getElementById("venir")?.scrollIntoView({ behavior: "instant", block: "start" }));
+await p.waitForTimeout(400);
+await p.screenshot({ path: `${out}/40-acces-sclessin.png` });
+await b.close();

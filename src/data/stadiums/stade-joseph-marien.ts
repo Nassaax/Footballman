@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, defaultMatchday, defaultRules, defaultTicketing, sections } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -46,13 +46,24 @@ const stadium: Stadium = {
     { id: "visiteurs", name: "Secteur visiteurs", side: "south", description: "Parcage visiteurs, de capacité réduite compte tenu du gabarit du stade.", atmosphere: "Variable selon la rencontre.", audience: "Supporters visiteurs.", visibility: "Derrière le but.", notes: "Capacité très limitée : les clubs visiteurs reçoivent peu de places." },
   ]),
   access: buildAccess({
-    train: "Bruxelles-Midi est la porte d'entrée, avec une correspondance courte vers Forest.",
-    station: "Bruxelles-Midi, puis tram/bus — halte locale à confirmer",
-    transit: "Le stade est desservi par le réseau STIB-MIVB (tram et bus) depuis le sud de Bruxelles. Lignes exactes à confirmer auprès de la STIB.",
-    car: "Fortement déconseillée : quartier dense, stationnement réglementé, rues étroites autour du parc.",
-    bike: "Accès vélo courant depuis le centre de Bruxelles. Stationnement au stade à confirmer.",
+    source: viaSearch("Union Saint-Gilloise — visiter le stade Marien", "https://rusg.brussels/en/marien-stadium/visit-marien-stadium"),
+    train: "Bruxelles-Midi est la porte d'entrée, avec une correspondance courte en tram vers Forest.",
+    station: "Bruxelles-Midi, puis tram 82 jusqu'à l'arrêt Union",
+    transit:
+      "Le tram 82 dessert les arrêts « Châtaignes » et « Union », à deux minutes du stade : c'est la liaison la plus directe depuis Bruxelles-Midi et le nord-ouest. Depuis le centre et le nord, les trams 3 et 4 s'arrêtent à Albert, d'où l'on termine à pied. Depuis Uccle et la chaussée d'Alsemberg, le tram 51 s'arrête à Altitude 100.",
+    car:
+      "Fortement déconseillée : le stationnement aux abords est très limité les jours de match, dans un quartier dense aux rues étroites. La solution recommandée est de se garer plus loin et de finir en tram 82 jusqu'à l'arrêt Union.",
+    parking: [
+      "Aucun parking public dédié au stade : stationnement de quartier très contraint les jours de match.",
+      "Quelques emplacements réservés aux personnes à mobilité réduite rue Edith Cavell.",
+    ],
+    bike: "Accès vélo courant depuis le centre de Bruxelles.",
     foot: "L'approche par le parc Duden, en montée, est l'une des plus belles arrivées de stade du pays.",
-    matchdayOnly: ["Certaines rencontres européennes peuvent être délocalisées dans une autre enceinte : vérifier le lieu avant de partir.", "Le nombre de places est très faible : ne comptez pas acheter un billet sur place."],
+    matchdayOnly: [
+      "Certaines rencontres européennes peuvent être délocalisées dans une autre enceinte : vérifiez le lieu avant de partir.",
+      "Le nombre de places est très faible : ne comptez pas acheter un billet sur place.",
+      "Se garer loin et finir en tram 82 reste la stratégie la plus fiable.",
+    ],
   }),
   ticketing: { ...defaultTicketing("https://www.rusg.brussels"), conditions: tbc<string[]>("Stade de très faible capacité : la demande dépasse régulièrement l'offre. Modalités à confirmer sur la billetterie officielle.") },
   rules: defaultRules(),
@@ -77,7 +88,13 @@ const stadium: Stadium = {
   services: ["Buvettes (capacité limitée)", "Boutique officielle (horaires à confirmer)", "Sanitaires"],
   accessibility: tbc<string[]>("Stade ancien : accessibilité PMR à confirmer impérativement auprès du club avant de vous déplacer"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.rusg.brussels")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.rusg.brussels"),
+    viaSearch("Union Saint-Gilloise — visiter le stade Marien", "https://rusg.brussels/en/marien-stadium/visit-marien-stadium"),
+  ],
 };
 
 export default stadium;

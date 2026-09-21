@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -47,12 +47,22 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune 1 (latérale principale)", opposite: "Tribune 2 (latérale)", home: "Tribune 3 (virage)", away: "Tribune 4 (virage)" }),
   access: buildAccess({
-    train: "Bruxelles-Midi puis métro : c'est l'itinéraire le plus fiable pour venir de province.",
-    station: "Bruxelles-Midi (correspondance métro) — halte locale à confirmer",
-    transit: "Le stade est desservi par le métro bruxellois, à l'ouest de la ligne. C'est le point fort du Lotto Park : on y vient sans voiture.",
-    car: "Déconseillée. Le stade est enclavé dans un tissu résidentiel dense, avec stationnement très contraint et circulation filtrée les jours de match.",
+    source: viaSearch("RSC Anderlecht — informations jour de match", "https://www.rsca.be/en/faqs/matchday-info"),
+    train: "Bruxelles-Midi puis métro ligne 5 : c'est l'itinéraire le plus fiable pour venir de province.",
+    station: "Bruxelles-Midi, puis métro ligne 5 jusqu'à Saint-Guidon",
+    transit:
+      "Métro ligne 5, station Saint-Guidon (Sint-Guido) : environ 5 minutes à pied du stade. Les bus 46, 116, 118 et 810 desservent également le quartier. C'est le point fort du Lotto Park : on y vient sans voiture.",
+    car: "Déconseillée en approche directe. Le stade est enclavé dans un tissu résidentiel dense. La solution recommandée est le parking relais Ceria-Coovi (avenue Josse Leemans 110), puis le métro jusqu'à Saint-Guidon.",
+    parking: [
+      "P+R Ceria-Coovi, avenue Josse Leemans 110 : tarif relevé à 3 €, puis métro direct vers le stade.",
+      "Parking Decathlon : métro à l'arrêt Eddy Merckx (5 minutes à pied) jusqu'à Saint-Guidon.",
+    ],
     foot: "Depuis la station de métro, l'approche se fait à pied par le parc et les rues du quartier : quelques minutes, dans un flux de supporters.",
-    matchdayOnly: ["Stationnement riverain fortement contraint : le quartier est en zone réglementée.", "Les flux piétons sont canalisés vers des portes précises selon la tribune."],
+    matchdayOnly: [
+      "Stationnement riverain fortement contraint : le quartier est en zone réglementée.",
+      "Les flux piétons sont canalisés vers des portes précises selon la tribune.",
+      "Les tarifs et la disponibilité des parkings relais changent : vérifiez la page jour de match du club.",
+    ],
   }),
   ticketing: { ...defaultTicketing("https://www.rsca.be") },
   rules: defaultRules(),
@@ -77,7 +87,13 @@ const stadium: Stadium = {
   services: ["Buvettes en tribunes", "Boutique officielle (horaires à confirmer)", "Sanitaires par tribune"],
   accessibility: tbc<string[]>("Places PMR et services associés : à confirmer auprès du service supporters"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.rsca.be")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.rsca.be"),
+    viaSearch("RSC Anderlecht — informations jour de match", "https://www.rsca.be/en/faqs/matchday-info"),
+  ],
 };
 
 export default stadium;

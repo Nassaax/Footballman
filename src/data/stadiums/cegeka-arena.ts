@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -41,13 +41,23 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune principale", opposite: "Tribune latérale opposée", home: "Virage des supporters", away: "Virage opposé" }),
   access: buildAccess({
-    train: "Genk est relié au réseau ferré, mais la gare n'est pas adjacente au stade : une liaison bus ou un trajet à pied prolongé est nécessaire.",
-    station: "Genk — liaison bus vers le stade à confirmer auprès de De Lijn",
-    transit: "Réseau De Lijn depuis la gare de Genk. Lignes et renforts les jours de match : à confirmer.",
-    car: "C'est un stade conçu pour la voiture : abords dégagés, accès autoroutier limbourgeois, stationnement organisé sur le complexe sportif.",
-    parking: ["Parkings du complexe sportif autour du stade (capacité et tarifs à confirmer)"],
-    bike: "Le Limbourg est très équipé en infrastructures cyclables. Stationnement vélo au stade à confirmer.",
-    matchdayOnly: ["Les parkings du complexe se remplissent tôt pour les grandes affiches."],
+    source: viaSearch("KRC Genk — accessibilité", "https://www.krcgenk.be/nl/faq/bereikbaarheid"),
+    train: "Genk est relié au réseau ferré, mais la gare n'est pas adjacente au stade : une liaison bus est nécessaire.",
+    station: "Genk, puis bus De Lijn ligne 3",
+    transit:
+      "Le bus De Lijn ligne 3 dessert le stade, avec un arrêt à une centaine de mètres de l'entrée.",
+    car:
+      "C'est un stade conçu pour la voiture — mais avec une nuance de taille : les places des parkings du stade sont réservées aux membres Blauw-Wit abonnés, pas au public. Sans abonnement parking, il faut se rabattre sur le Thor Park ou le stationnement libre autorisé dans le quartier.",
+    parking: [
+      "Parkings du stade : environ 500 places, réservées aux membres Blauw-Wit avec abonnement parking.",
+      "Thor Park : zone de stationnement gratuite, à 5 minutes à pied du stade.",
+      "Stationnement libre aux emplacements autorisés aux abords du stade.",
+    ],
+    bike: "Le Limbourg est très équipé en infrastructures cyclables ; un parking vélo couvert se trouve à l'arrière du stade.",
+    matchdayOnly: [
+      "Sans abonnement parking, ne comptez pas entrer sur les parkings du stade : visez le Thor Park.",
+      "Les zones gratuites se remplissent tôt pour les grandes affiches.",
+    ],
   }),
   ticketing: { ...defaultTicketing("https://www.krcgenk.be") },
   rules: defaultRules(),
@@ -72,7 +82,14 @@ const stadium: Stadium = {
   services: ["Buvettes en tribunes", "Boutique officielle (horaires à confirmer)", "Parkings sur site", "Sanitaires par tribune"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.krcgenk.be")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.krcgenk.be"),
+    viaSearch("KRC Genk — accessibilité", "https://www.krcgenk.be/nl/faq/bereikbaarheid"),
+    viaSearch("KRC Genk — stationnement autour de la Cegeka Arena", "https://www.krcgenk.be/nl/club/cegeka-arena/parkeren-rondom-cegeka-arena"),
+  ],
 };
 
 export default stadium;

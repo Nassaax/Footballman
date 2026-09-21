@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -40,12 +40,19 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune principale (latérale)", opposite: "Tribune latérale opposée", home: "Virage nord", away: "Virage sud" }),
   access: buildAccess({
+    source: viaSearch("KAA Gent — navettes et parkings", "https://www.kaagent.be/nl/stadion/pendelbussen"),
     train: "Gand-Saint-Pierre est l'une des gares les mieux reliées du pays ; le stade se trouve au sud, hors du centre.",
-    station: "Gand-Saint-Pierre (Gent-Sint-Pieters) — liaison tram/bus vers le stade à confirmer",
-    transit: "Le quartier est desservi par le réseau De Lijn depuis Gand-Saint-Pierre. Lignes exactes et renforts les jours de match : à confirmer.",
-    car: "C'est l'un des stades belges les plus simples d'accès en voiture : il est implanté à proximité immédiate du ring de Gand (R4/E17).",
-    bike: "Gand est une ville très cyclable et l'accès à vélo est un usage courant. Capacité de stationnement vélo à confirmer.",
-    matchdayOnly: ["Les sorties du ring saturent dans l'heure qui précède le coup d'envoi."],
+    station: "Gand-Saint-Pierre (Gent-Sint-Pieters), puis bus 65 ou 67",
+    transit:
+      "Les lignes 65 et 67 relient Gand-Saint-Pierre au stade, avec un arrêt devant l'enceinte ; la ligne 8 dessert également le secteur, et l'arrêt de tram Gent UZ est à une dizaine de minutes à pied. Attention : depuis la refonte des horaires De Lijn début 2024, l'offre régulière ne suffit plus les jours de match — le club affrète ses propres navettes.",
+    car: "C'est l'un des stades belges les plus simples d'accès en voiture : il est implanté à proximité immédiate du ring de Gand, via E17 et E40, avec du stationnement payant à proximité.",
+    bike:
+      "Gand est une ville très cyclable et l'accès à vélo est un usage courant : environ 3 500 places vélo gratuites devant le stade, sur le site Brico, et 500 mètres plus loin sur l'Ottergemsesteenweg Zuid.",
+    matchdayOnly: [
+      "Navettes du club entre Gent-Zuid et le stade, en continu à partir de 2 heures avant le coup d'envoi.",
+      "Dernier départ de la navette depuis Gent-Zuid : 30 minutes avant le coup d'envoi.",
+      "Les sorties du ring saturent dans l'heure qui précède le coup d'envoi.",
+    ],
   }),
   ticketing: { ...defaultTicketing("https://www.kaagent.be") },
   rules: defaultRules(),
@@ -70,7 +77,14 @@ const stadium: Stadium = {
   services: ["Buvettes en tribunes", "Boutique officielle (horaires à confirmer)", "Espaces business", "Sanitaires par tribune"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club (stade récent, équipements a priori aux normes)"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.kaagent.be")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.kaagent.be"),
+    viaSearch("KAA Gent — navettes jour de match", "https://www.kaagent.be/nl/stadion/pendelbussen"),
+    viaSearch("KAA Gent — parkings et covoiturage", "https://www.kaagent.be/nl/stadion/parkings-carpool"),
+  ],
 };
 
 export default stadium;

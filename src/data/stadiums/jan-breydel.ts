@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -43,12 +43,25 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Hoofdtribune (latérale principale)", opposite: "Tribune latérale opposée", home: "Noordtribune (virage)", away: "Zuidtribune (virage)" }),
   access: buildAccess({
-    train: "Bruges est très bien reliée par le rail ; le stade se trouve en périphérie ouest, à distance du centre historique.",
-    station: "Bruges (Brugge) — liaison bus vers le stade à confirmer",
-    transit: "Des lignes De Lijn relient la gare et le centre au quartier du stade. Numéros de lignes et renforts les jours de match : à confirmer auprès de De Lijn.",
-    car: "Le stade est en périphérie, avec un accès routier plus simple que la plupart des enceintes belges. Le stationnement organisé reste à confirmer auprès des clubs.",
-    bike: "Bruges est une ville cyclable et l'approche à vélo est courante. Capacité des parkings vélo à confirmer.",
-    matchdayOnly: ["La configuration des virages diffère selon que le match est organisé par le Club ou par le Cercle.", "Les renforts de bus ne sont pas systématiques : vérifier avant de partir."],
+    source: viaSearch("Club Brugge — en route vers le Jan Breydel", "https://www.clubbrugge.be/en/onderweg-jan-breydel"),
+    train:
+      "Bruges est très bien reliée par le rail. Le stade se trouve en périphérie ouest, à environ 4 kilomètres de la gare : comptez une correspondance en bus, ou un vélo partagé loué directement à la gare.",
+    station: "Bruges (Brugge), puis bus 30 ou 3 — environ 4 km du stade",
+    transit:
+      "Le bus 30 relie la gare et le centre à l'arrêt « Sint-Andries Kerk », à moins de 5 minutes à pied du stade : toutes les 10 minutes en semaine et le samedi, tous les quarts d'heure le dimanche. Les supporters visiteurs empruntent plutôt le bus 3 depuis la gare jusqu'à « Sint-Michiels Vogelzang », à une dizaine de minutes à pied.",
+    car:
+      "Le stade est en périphérie, avec un accès routier plus simple que la plupart des enceintes belges. Mais les parkings qui entourent l'enceinte (nord, est, ouest, sud) sont réservés aux détenteurs d'un laissez-passer du club, et la Gistelsesteenweg sature les jours de match. Les transports en commun sont souvent plus rapides que la voiture.",
+    parking: [
+      "Parkings nord, est, ouest et sud : accessibles uniquement avec un laissez-passer valide du club.",
+      "Le P+R Jan Breydel de l'Olympialaan (100 places) ne fonctionne pas en Park & Ride les jours de match du Club ou du Cercle.",
+    ],
+    bike:
+      "Bruges est une ville cyclable et l'approche à vélo est courante. Des vélos partagés se louent à la gare, à environ 4 kilomètres du stade.",
+    matchdayOnly: [
+      "La configuration des virages diffère selon que le match est organisé par le Club ou par le Cercle.",
+      "Les parkings du stade ne sont pas ouverts au public : sans laissez-passer, privilégiez le bus.",
+      "La Gistelsesteenweg est régulièrement saturée avant le coup d'envoi.",
+    ],
   }),
   ticketing: { ...defaultTicketing("https://www.clubbrugge.be"), conditions: tbc<string[]>("Attention : la billetterie dépend du club organisateur (Club Brugge ou Cercle Brugge), pas du stade.") },
   rules: defaultRules(),
@@ -73,7 +86,15 @@ const stadium: Stadium = {
   services: ["Buvettes en tribunes", "Boutiques des deux clubs (horaires à confirmer)", "Sanitaires par tribune"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club organisateur"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.clubbrugge.be"), clubSite("https://www.cerclebrugge.be")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.clubbrugge.be"),
+    clubSite("https://www.cerclebrugge.be"),
+    viaSearch("Club Brugge — en route vers le Jan Breydel", "https://www.clubbrugge.be/en/onderweg-jan-breydel"),
+    viaSearch("Cercle Brugge — accessibilité du Jan Breydel", "https://cerclebrugge.be/stadium/Routes-accessibility/bereikbaarheidjanbreydel"),
+  ],
 };
 
 export default stadium;

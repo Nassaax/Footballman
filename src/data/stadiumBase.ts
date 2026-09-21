@@ -161,6 +161,12 @@ export const EDITO: Source = {
 };
 
 export interface AccessSpec {
+  /**
+   * Source des informations fournies. Par défaut il s'agit d'une appréciation
+   * éditoriale ; dès qu'une donnée vient d'une source identifiée, elle doit
+   * être passée ici pour ne pas être attribuée à tort à notre rédaction.
+   */
+  source?: Source;
   train?: string;
   station?: string;
   walk?: string;
@@ -176,8 +182,9 @@ export interface AccessSpec {
 /** Construit un bloc accès : ce qui est fourni est daté et sourcé, le reste reste à confirmer. */
 export function buildAccess(spec: AccessSpec): Access {
   const a = defaultAccess();
+  const origin = spec.source ?? EDITO;
   const set = <T>(value: T | undefined, note?: string) =>
-    value === undefined ? tbc<T>(note) : v(value, EDITO, LAST_AUDIT, note);
+    value === undefined ? tbc<T>(note) : v(value, origin, LAST_AUDIT, note);
 
   a.train.summary = set(spec.train);
   a.train.nearestStation = spec.station
@@ -187,7 +194,7 @@ export function buildAccess(spec: AccessSpec): Access {
   a.publicTransport.summary = set(spec.transit, spec.transit ? undefined : "Lignes et arrêts : à confirmer auprès de l'opérateur (De Lijn / TEC / STIB-MIVB)");
   a.car.summary = set(spec.car);
   a.car.parking = spec.parking
-    ? v(spec.parking, EDITO, LAST_AUDIT, "Capacités et tarifs à confirmer auprès du club")
+    ? v(spec.parking, origin, LAST_AUDIT, "Capacités et tarifs à confirmer auprès du club")
     : tbc<string[]>("Parkings officiels : à confirmer auprès du club");
   a.car.restrictions = set(spec.restrictions, spec.restrictions ? undefined : "Restrictions de circulation les jours de match : à confirmer auprès de la commune");
   a.bike.summary = set(spec.bike, spec.bike ? undefined : "Stationnement vélo : à confirmer auprès du club");

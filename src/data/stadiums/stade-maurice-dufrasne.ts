@@ -1,30 +1,62 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { defaultAccess, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const access = defaultAccess();
-access.train.nearestStation = v(
-  "Liège-Guillemins, puis une courte liaison vers Sclessin",
-  WIKI,
-  LAST_AUDIT,
-  "Certaines rencontres bénéficient de dessertes renforcées : vérifier le jour du match",
-);
-access.train.walk = tbc<string>("Temps de marche exact depuis la halte de Sclessin : à confirmer");
+
+const MOBILITY = viaSearch("Standard de Liège — page mobilité", "https://standard.be/fr/mobility");
+const TEC = viaSearch("TEC — P+R de Sclessin", "https://www.letec.be/View/PR_in_Luik_-_Standard/4587");
+
 access.train.summary = v(
-  "Le train est le moyen le plus simple d'arriver à Sclessin : le stade est installé le long de la Meuse, au sud de Liège, dans un couloir ferroviaire dense.",
-  WIKI,
+  "Le train reste le moyen le plus simple d'arriver dans le secteur, mais attention : la halte de Sclessin n'est pas desservie tous les jours. Pour un match du week-end, il faut passer par Liège-Guillemins puis le tram.",
+  MOBILITY,
   LAST_AUDIT,
 );
-access.publicTransport.summary = tbc<string>(
-  "Lignes de bus TEC desservant le quartier de Sclessin les jours de match : à confirmer auprès du TEC",
+access.train.nearestStation = v(
+  "Halte de Sclessin, à environ 15 minutes à pied du stade. Elle n'est desservie qu'en semaine : ce train ne circule pas le week-end.",
+  MOBILITY,
+  LAST_AUDIT,
+  "Vérifiez systématiquement les horaires SNCB du jour de votre match",
 );
+access.train.walk = v("Environ 15 minutes depuis la halte de Sclessin.", MOBILITY, LAST_AUDIT);
+
+access.publicTransport.summary = v(
+  "Depuis Liège-Guillemins, le tram dessert Sclessin et dépose à quelques minutes à pied du stade. Point essentiel : la station Standard n'est plus desservie dans l'heure et demie qui précède le coup d'envoi, pour la gestion des flux de supporters.",
+  MOBILITY,
+  LAST_AUDIT,
+);
+access.publicTransport.details = v(
+  [
+    "Tram depuis Liège-Guillemins en direction de Sclessin.",
+    "La station Standard ferme 1 h 30 avant le coup d'envoi : descendez à la station précédente et terminez à pied.",
+    "Après la rencontre, le TEC affrète des bus au départ du pont d'Ougrée vers Ougrée-Haut, les quais, le pont de Fragnée, la place Général Leman, Guillemins et le centre-ville.",
+  ],
+  MOBILITY,
+  LAST_AUDIT,
+  "Tarif des navettes retour relevé à 2,60 € — à reconfirmer auprès du TEC",
+);
+
 access.car.summary = v(
-  "Sclessin est enclavé entre la Meuse, la voie ferrée et un tissu industriel : la voiture est possible mais la circulation sature vite dans les deux heures qui précèdent le coup d'envoi.",
-  WIKI,
+  "Sclessin est enclavé entre la Meuse, la voie ferrée et un tissu industriel : la circulation sature dans les deux heures qui précèdent le coup d'envoi. Les parkings relais connectés au tram sont la meilleure option — mais ils sont réservés aux abonnés du club les jours de match.",
+  MOBILITY,
   LAST_AUDIT,
 );
-access.car.parking = tbc<string[]>("Parkings officiels et capacités : à confirmer auprès du club");
-access.car.restrictions = tbc<string>("Périmètre de sécurité et rues fermées les jours de match : à confirmer auprès de la Ville de Liège");
+access.car.parking = v(
+  [
+    "P+R de Sclessin (N63) : 665 places, dont 14 réservées aux personnes à mobilité réduite, connecté au tram.",
+    "P+R de Bressoux (E25) : 771 places, dont 15 réservées aux personnes à mobilité réduite, connecté au tram.",
+  ],
+  TEC,
+  LAST_AUDIT,
+  "Les jours de match, ces P+R sont réservés aux abonnés du Standard",
+);
+access.car.restrictions = v(
+  "Périmètre filtré autour du stade avant et après la rencontre, et accès aux P+R restreint aux abonnés les jours de match.",
+  MOBILITY,
+  LAST_AUDIT,
+  "Détail des rues fermées : à confirmer auprès de la Ville de Liège",
+);
+
 access.bike.summary = tbc<string>("Stationnement vélo sécurisé : à confirmer auprès du club");
 access.foot.summary = v(
   "Depuis le centre de Liège, l'approche se fait par les quais de Meuse. Le stade apparaît tard : il est encastré dans le quartier, pas posé dessus.",
@@ -32,8 +64,10 @@ access.foot.summary = v(
   LAST_AUDIT,
 );
 access.matchdayOnly = [
+  "La halte SNCB de Sclessin n'est pas desservie le week-end : passez par Liège-Guillemins et le tram.",
+  "La station de tram Standard ferme 1 h 30 avant le coup d'envoi.",
+  "Les parkings relais sont réservés aux abonnés du club les jours de match.",
   "Le périmètre autour du stade est filtré avant et après la rencontre.",
-  "Les navettes et dessertes renforcées ne fonctionnent pas tous les jours de match.",
 ];
 
 const stadium: Stadium = {
@@ -232,7 +266,7 @@ const stadium: Stadium = {
   ],
   accessibility: tbc<string[]>("Places PMR, accompagnateur, audiodescription : à confirmer auprès du service supporters du club"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.standard.be")],
+  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.standard.be"), MOBILITY, TEC],
 };
 
 export default stadium;

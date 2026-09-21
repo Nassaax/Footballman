@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -40,12 +40,24 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune principale", opposite: "Tribune latérale opposée", home: "Tribune 2 (virage)", away: "Tribune 4 (virage)" }),
   access: buildAccess({
-    train: "Anvers-Central est le point d'entrée logique ; le stade se trouve à Deurne, hors du centre, avec une correspondance nécessaire.",
-    station: "Anvers-Central (Antwerpen-Centraal) — correspondance tram/bus à confirmer",
-    transit: "Le réseau De Lijn (tram et bus) dessert Deurne depuis le centre d'Anvers. Lignes exactes à confirmer.",
-    car: "Déconseillée : le stade est dans un quartier résidentiel dense, avec un stationnement très contraint.",
-    bike: "Anvers est très cyclable et le vélo est un usage courant pour rejoindre le Bosuil. Stationnement à confirmer.",
-    matchdayOnly: ["Le quartier est en stationnement réglementé : la voiture est rarement une bonne idée.", "Les trams vers le centre sont saturés après le coup de sifflet final."],
+    source: viaSearch("Royal Antwerp FC — Bosuilstadion", "https://www.royalantwerpfc.be/club/bosuilstadion"),
+    train: "Anvers-Central est le point d'entrée logique ; le stade se trouve à Deurne, hors du centre, avec une correspondance en tram.",
+    station: "Anvers-Central (Antwerpen-Centraal), puis tram 5",
+    transit:
+      "Le tram 5 est la liaison de référence : arrêts « Deurne - Antwerp Stadion » et « Deurne - Hermans », et 20 minutes jusqu'au centre-ville. Le bus 19 s'arrête à « Deurne - Bosuilplein ». En replis : tram 10 à Venneborgplein (10 min à pied), tram 8 à Wim Saerensplein (12 à 15 min), tram 15 à Bischoppenhoflaan (15 min), bus 40 à Venneborgplein.",
+    car:
+      "Déconseillée en approche directe : le stade est dans un quartier résidentiel dense et sa capacité de stationnement est très limitée. Sur site, le parking est réservé aux abonnés qui ont pris l'option.",
+    parking: [
+      "Parking du stade : réservé aux abonnés ayant souscrit une place.",
+      "Parking Gosselin (entrée par la Belcrownlaan) : places supplémentaires du club, à distance de marche.",
+      "P+R Bosuil (angle Alfons Schneiderlaan / Vic Meesstraat) : 123 places, à 200 mètres de l'arrêt de tram « Deurne Antwerp Stadion ». Réservé aux supporters les jours de match.",
+    ],
+    bike: "Anvers est très cyclable et le vélo est un usage courant pour rejoindre le Bosuil.",
+    matchdayOnly: [
+      "Le P+R Bosuil bascule en usage réservé aux supporters les jours de match.",
+      "Le quartier est en stationnement réglementé : la voiture est rarement une bonne idée.",
+      "Les trams vers le centre sont saturés après le coup de sifflet final.",
+    ],
   }),
   ticketing: { ...defaultTicketing("https://www.royalantwerpfootballclub.be") },
   rules: defaultRules(),
@@ -70,7 +82,14 @@ const stadium: Stadium = {
   services: ["Buvettes en tribunes", "Boutique officielle (horaires à confirmer)", "Sanitaires par tribune"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.royalantwerpfootballclub.be")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.royalantwerpfootballclub.be"),
+    viaSearch("Royal Antwerp FC — Bosuilstadion", "https://www.royalantwerpfc.be/club/bosuilstadion"),
+    viaSearch("Ville d'Anvers — P+R Bosuil", "https://www.antwerpen.be/info/5772532a4b1798c272282cac/p-r-bosuil"),
+  ],
 };
 
 export default stadium;
