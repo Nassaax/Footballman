@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -8,7 +8,11 @@ const stadium: Stadium = {
   name: "Guldensporenstadion",
   clubId: "kv-kortrijk",
   city: "Courtrai",
-  address: v("Burgemeester Felix de Bethunelaan, 8500 Courtrai", WIKI, LAST_AUDIT, "Adresse à revalider auprès du club"),
+  address: v(
+    "Entrée principale : Moorseelsestraat 111b, 8500 Courtrai",
+    viaSearch("KV Kortrijk — Guldensporenstadion", "https://www.kvk.be/guldensporenstadion/"),
+    LAST_AUDIT,
+  ),
   latitude: 50.8088,
   longitude: 3.2547,
   capacity: v(9399, WIKI, LAST_AUDIT),
@@ -38,13 +42,29 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune principale", opposite: "Tribune latérale opposée", home: "Virage des supporters", away: "Virage visiteurs" }),
   access: buildAccess({
-    train: "Courtrai est un nœud ferroviaire de Flandre occidentale, bien relié à Gand, Bruges et Lille.",
-    station: "Courtrai (Kortrijk) — temps de marche vers le stade à confirmer",
-    transit: "Réseau De Lijn depuis la gare. Lignes exactes à confirmer.",
-    car: "Accès autoroutier simple (E17 / E403) et abords moins saturés que dans les grandes villes.",
-    bike: "Ville cyclable, trajets courts. Stationnement vélo à confirmer.",
+    source: viaSearch("KV Kortrijk — mobilité", "https://www.kvk.be/mobiliteit/"),
+    train:
+      "Courtrai est un nœud ferroviaire de Flandre occidentale, bien relié à Gand, Bruges et Lille. Le stade est au nord-ouest du centre, à environ 15 minutes à pied de la gare.",
+    station: "Courtrai (Kortrijk), à environ 15 minutes à pied",
+    walk: "Environ 15 minutes depuis la gare de Courtrai.",
+    transit:
+      "Bus 4 (direction Heule), 40 (Menen) ou 61 (Ardooie) : descendez à « Kortrijk Stadion » avec la ligne 4, ou à « Kortrijk Meensepoort » avec les lignes 40 et 61. Le trajet ne prend que 5 à 8 minutes, et la ligne 4 est la meilleure option les jours de match.",
+    car: "Accès autoroutier simple et abords moins saturés que dans les grandes villes.",
+    parking: [
+      "Meensesteenweg : parking des supporters visiteurs, cars et voitures.",
+      "Parking Wembley, face à l'entrée du stade : réservé aux invités business et à la presse.",
+    ],
+    bike: "Ville cyclable, trajets courts depuis le centre.",
   }),
-  ticketing: { ...defaultTicketing("https://www.kvk.be") },
+  ticketing: {
+    ...defaultTicketing("https://www.kvk.be"),
+    boxOffice: v(
+      "Pour la plupart des rencontres, des guichets restent ouverts à côté de l'entrée principale (les maisonnettes blanches).",
+      viaSearch("KV Kortrijk — Guldensporenstadion", "https://www.kvk.be/guldensporenstadion/"),
+      LAST_AUDIT,
+      "Ne comptez pas dessus pour une affiche à forte demande",
+    ),
+  },
   rules: defaultRules(),
   beforeMatch: { intro: "Courtrai a un centre-ville agréable et compact : l'avant-match s'y organise facilement avant de rejoindre le stade.", places: [], timing: v("1 h avant le coup d'envoi suffit dans un stade de cette taille.", { label: "Observation éditoriale Stadia Belgica", tier: 4 }, LAST_AUDIT) },
   afterMatch: { intro: "Sortie rapide : c'est l'un des avantages des petites enceintes.", tips: ["Retour vers la gare sans difficulté particulière.", "Le centre reste ouvert en soirée.", "Vérifier les liaisons vers Lille si vous venez de France."], exits: tbc<string[]>() },
@@ -58,7 +78,13 @@ const stadium: Stadium = {
   services: ["Buvettes en tribunes", "Boutique officielle (horaires à confirmer)", "Sanitaires par tribune"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.kvk.be")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.kvk.be"),
+    viaSearch("KV Kortrijk — mobilité", "https://www.kvk.be/mobiliteit/"),
+  ],
 };
 
 export default stadium;

@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -8,7 +8,11 @@ const stadium: Stadium = {
   name: "Stayen",
   clubId: "stvv",
   city: "Saint-Trond",
-  address: tbc<string>("Adresse exacte à confirmer auprès du club"),
+  address: v(
+    "Tiensesteenweg 168, 3800 Saint-Trond",
+    viaSearch("STVV — accessibilité", "https://www.stvv.com/en/stadium/accessibility"),
+    LAST_AUDIT,
+  ),
   latitude: 50.8078,
   longitude: 5.1747,
   capacity: v(14600, WIKI, LAST_AUDIT, "Capacité approximative à confirmer auprès du club"),
@@ -36,11 +40,23 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune principale", opposite: "Tribune latérale opposée", home: "Virage des supporters", away: "Secteur visiteurs" }),
   access: buildAccess({
-    train: "Saint-Trond est sur la ligne Bruxelles-Liège via Landen : l'accès ferroviaire est réaliste.",
-    station: "Saint-Trond (Sint-Truiden) — temps de marche vers le stade à confirmer",
-    transit: "Réseau De Lijn depuis la gare. Lignes exactes à confirmer.",
-    car: "Accès autoroutier limbourgeois, avec un stationnement facilité par le complexe. Capacités et tarifs à confirmer.",
-    bike: "Région fruitière plate et très cyclable.",
+    source: viaSearch("STVV — accessibilité", "https://www.stvv.com/en/stadium/accessibility"),
+    train:
+      "C'est l'un des meilleurs accès ferroviaires du championnat : la gare de Saint-Trond est à environ 5 minutes à pied du stade, avec au moins un train par heure depuis Bruxelles et Gand.",
+    station: "Saint-Trond (Sint-Truiden), à environ 5 minutes à pied",
+    walk: "Environ 5 minutes depuis la gare de Saint-Trond.",
+    car:
+      "Accès autoroutier limbourgeois, mais attention : la Tiensesteenweg est fermée à la circulation de deux heures avant le match jusqu'à une heure après.",
+    parking: [
+      "Zone gratuite le long de la Zoutleeuwsesteenweg, en sens unique à partir de 2 heures avant le coup d'envoi.",
+      "Parking payant Gazo : environ 1 € de l'heure, à quelque 500 mètres du stade.",
+      "Parking de la gare SNCB, à proximité immédiate.",
+    ],
+    bike: "Région fruitière plate et très cyclable ; un vaste parking vélo souterrain est aménagé sous Stayen.",
+    matchdayOnly: [
+      "La Tiensesteenweg est fermée de 2 heures avant à 1 heure après la rencontre.",
+      "Les affluences record de ces dernières saisons saturent les abords : arrivez tôt ou venez en train.",
+    ],
   }),
   ticketing: { ...defaultTicketing("https://www.stvv.com") },
   rules: defaultRules(),
@@ -57,7 +73,13 @@ const stadium: Stadium = {
   services: ["Buvettes en tribunes", "Hôtel intégré au complexe", "Commerces et bureaux", "Boutique officielle (horaires à confirmer)"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.stvv.com")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.stvv.com"),
+    viaSearch("STVV — accessibilité", "https://www.stvv.com/en/stadium/accessibility"),
+  ],
 };
 
 export default stadium;

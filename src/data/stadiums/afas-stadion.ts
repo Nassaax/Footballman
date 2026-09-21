@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -9,7 +9,11 @@ const stadium: Stadium = {
   formerNames: ["Achter de Kazerne"],
   clubId: "kv-mechelen",
   city: "Malines",
-  address: tbc<string>("Adresse exacte à confirmer auprès du club"),
+  address: v(
+    "Kleine Nieuwedijkstraat 53, 2800 Malines",
+    viaSearch("KV Mechelen — stade", "https://kvmechelen.be/club/stadion/"),
+    LAST_AUDIT,
+  ),
   latitude: 51.0233,
   longitude: 4.4849,
   capacity: v(16672, WIKI, LAST_AUDIT),
@@ -40,12 +44,24 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune principale", opposite: "Tribune latérale opposée", home: "Virage des supporters", away: "Virage opposé" }),
   access: buildAccess({
-    train: "Malines est sur l'axe Bruxelles-Anvers, l'un des mieux desservis du pays, et le stade est proche du centre.",
-    station: "Malines (Mechelen) — temps de marche vers le stade à confirmer",
-    transit: "Réseau De Lijn depuis la gare et le centre. Lignes exactes à confirmer.",
-    car: "Accès autoroutier simple (E19), mais stationnement de centre-ville contraint.",
+    source: viaSearch("KV Mechelen — accès au stade", "https://kvmechelen.be/club/stadion/auto/"),
+    train:
+      "Malines est sur l'axe Bruxelles-Anvers, l'un des mieux desservis du pays. Descendez de préférence à Mechelen-Nekkerspoel : le stade est à environ un kilomètre à pied, contre une dizaine de minutes à vélo depuis la gare principale.",
+    station: "Mechelen-Nekkerspoel (environ 1 km à pied) ou Malines centre",
+    transit: "Réseau De Lijn depuis la gare et le centre. Lignes exactes à confirmer auprès de De Lijn.",
+    car:
+      "Accès autoroutier simple, mais le quartier se ferme avant la rencontre : le Kerkhoflei et la Kleine Nieuwedijkstraat côté Caputsteenweg sont barrés dès 1 h 30 avant le coup d'envoi. Le club organise du stationnement gratuit avec navettes.",
+    parking: [
+      "Stationnement gratuit avec navettes gratuites vers le stade, de 1 h 30 avant à 1 h 30 après la rencontre.",
+      "Kerkhoflei et Kleine Nieuwedijkstraat (côté Caputsteenweg) fermés dès 1 h 30 avant le match.",
+    ],
     foot: "Le stade est accessible à pied depuis le centre historique : c'est l'un des rares du championnat dans ce cas.",
-    bike: "Malines est compacte et très cyclable : le vélo est l'option la plus efficace pour les habitants.",
+    bike:
+      "Malines est compacte et très cyclable : abris vélo gratuits et gardés au Lyceum et dans la Malinwastraat, environ 3 000 places au total.",
+    matchdayOnly: [
+      "Rues fermées autour du stade à partir de 1 h 30 avant le coup d'envoi.",
+      "Les navettes depuis les parkings gratuits fonctionnent jusqu'à 1 h 30 après la rencontre.",
+    ],
   }),
   ticketing: { ...defaultTicketing("https://www.kvmechelen.be") },
   rules: defaultRules(),
@@ -62,7 +78,14 @@ const stadium: Stadium = {
   services: ["Buvettes en tribunes", "Boutique officielle (horaires à confirmer)", "Espaces business", "Sanitaires par tribune"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.kvmechelen.be")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.kvmechelen.be"),
+    viaSearch("KV Mechelen — accès en voiture", "https://kvmechelen.be/club/stadion/auto/"),
+    viaSearch("KV Mechelen — accès à vélo", "https://kvmechelen.be/club/stadion/fiets/"),
+  ],
 };
 
 export default stadium;

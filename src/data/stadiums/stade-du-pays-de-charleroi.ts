@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -41,12 +41,20 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune principale", opposite: "Tribune latérale opposée", home: "Tribune populaire (virage)", away: "Virage opposé" }),
   access: buildAccess({
+    source: viaSearch("Sporting Charleroi — informations jour de match", "https://www.sporting-charleroi.be/faq/matchday-info/"),
     train: "Charleroi-Central est proche du stade : c'est l'un des accès ferroviaires les plus pratiques du championnat.",
-    station: "Charleroi-Central — distance exacte et temps de marche à confirmer",
-    transit: "Le réseau TEC et le métro léger de Charleroi desservent le centre et les abords. Lignes exactes à confirmer auprès du TEC.",
-    car: "Accès autoroutier direct (R9 / ring de Charleroi), mais stationnement urbain contraint aux abords immédiats.",
+    station: "Charleroi-Central, puis métro ligne 4 direction Gilly",
+    transit:
+      "Depuis Charleroi-Central, prenez le métro léger ligne 4 en direction de Gilly et descendez à Waterloo : les stations Casernes et Waterloo sont les plus proches du stade. En bus TEC : lignes 18, 43, 50, 710, VILLE, E83 ou S63. Attention, l'arrêt Janson est fermé les jours de match.",
+    car: "Accès autoroutier direct par le ring de Charleroi, mais stationnement urbain contraint aux abords immédiats.",
+    parking: [
+      "Parking QPark, boulevard Zoé Drion : entrée sur la gauche en venant du rond-point Marsupilami.",
+    ],
     foot: "Depuis la gare et le centre-ville, l'approche à pied est réaliste et fait partie de l'expérience.",
-    matchdayOnly: ["Le centre-ville est le point de rendez-vous naturel avant le match."],
+    matchdayOnly: [
+      "L'arrêt de bus Janson est fermé les jours de match : descendez plus tôt ou passez par le métro.",
+      "Le centre-ville est le point de rendez-vous naturel avant le match.",
+    ],
   }),
   ticketing: { ...defaultTicketing("https://www.sporting-charleroi.be") },
   rules: defaultRules(),
@@ -71,7 +79,13 @@ const stadium: Stadium = {
   services: ["Buvettes en tribunes", "Boutique officielle (horaires à confirmer)", "Sanitaires par tribune"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.sporting-charleroi.be")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.sporting-charleroi.be"),
+    viaSearch("Sporting Charleroi — informations jour de match", "https://www.sporting-charleroi.be/faq/matchday-info/"),
+  ],
 };
 
 export default stadium;

@@ -1,5 +1,5 @@
 import { type Stadium, tbc, v } from "../types";
-import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite } from "../sources";
+import { LAST_AUDIT, PRO_LEAGUE, STADIUMDB, WIKI, clubSite, viaSearch } from "../sources";
 import { buildAccess, classicSections, defaultMatchday, defaultRules, defaultTicketing } from "../stadiumBase";
 
 const stadium: Stadium = {
@@ -8,7 +8,11 @@ const stadium: Stadium = {
   name: "Den Dreef",
   clubId: "oh-leuven",
   city: "Louvain",
-  address: tbc<string>("Adresse exacte à confirmer auprès du club (site situé à Heverlee)"),
+  address: v(
+    "Kardinaal Mercierlaan 46, 3001 Louvain (Heverlee)",
+    viaSearch("OH Leuven — mobilité", "https://ohleuven.com/mobiliteit/"),
+    LAST_AUDIT,
+  ),
   latitude: 50.8636,
   longitude: 4.6864,
   capacity: v(10000, WIKI, LAST_AUDIT, "Capacité approximative à confirmer auprès du club"),
@@ -35,11 +39,21 @@ const stadium: Stadium = {
   },
   sections: classicSections({ main: "Tribune principale", opposite: "Tribune latérale opposée", home: "Virage des supporters", away: "Secteur visiteurs" }),
   access: buildAccess({
-    train: "Louvain est à une vingtaine de minutes de Bruxelles en train, sur un axe très fréquenté.",
-    station: "Louvain (Leuven) — liaison bus ou marche prolongée vers Heverlee à confirmer",
-    transit: "Réseau De Lijn depuis la gare de Louvain vers Heverlee. Lignes exactes à confirmer.",
-    car: "Accès autoroutier simple (E40 / E314), stationnement à confirmer aux abords.",
-    bike: "Louvain est une ville de vélos : c'est l'option la plus rapide depuis le centre.",
+    source: viaSearch("OH Leuven — mobilité", "https://ohleuven.com/mobiliteit/"),
+    train:
+      "Louvain est à une vingtaine de minutes de Bruxelles en train. Le plus efficace reste de descendre à la halte de Heverlee, à 6 minutes à pied du stade, plutôt qu'à la gare principale.",
+    station: "Heverlee, à 6 minutes à pied — ou Louvain centre, à 10 minutes de bus",
+    walk: "6 minutes depuis la halte de Heverlee.",
+    transit:
+      "Depuis la gare de Louvain, comptez une dizaine de minutes de bus. Les arrêts De Lijn les plus proches sont « Leuven Naamsepoort » et « Leuven Redingenhof ».",
+    car:
+      "Accès autoroutier simple, mais le parking du Kardinaal Mercierlaan est réservé aux invités business du club. Deux solutions de report existent, à 10 à 15 minutes de marche.",
+    parking: [
+      "Parking Imec / Kapeldreef (tour Arenberg III) : gratuit, 750 places, à 15 minutes à pied.",
+      "Parking Philipssite : payant, 1 150 places, à 10 minutes à pied.",
+      "Parking du Kardinaal Mercierlaan : réservé aux clients business du club.",
+    ],
+    bike: "Louvain est une ville de vélos : stationnement vélo abondant au pied du stade, Kardinaal Mercierlaan 46.",
   }),
   ticketing: { ...defaultTicketing("https://www.ohl.be") },
   rules: defaultRules(),
@@ -55,7 +69,14 @@ const stadium: Stadium = {
   services: ["Buvettes", "Boutique officielle (horaires à confirmer)", "Sanitaires"],
   accessibility: tbc<string[]>("Places PMR : à confirmer auprès du club"),
   lastVerified: LAST_AUDIT,
-  sources: [PRO_LEAGUE, STADIUMDB, WIKI, clubSite("https://www.ohl.be")],
+  sources: [
+    PRO_LEAGUE,
+    STADIUMDB,
+    WIKI,
+    clubSite("https://www.ohl.be"),
+    viaSearch("OH Leuven — mobilité", "https://ohleuven.com/mobiliteit/"),
+    viaSearch("OH Leuven — informations jour de match", "https://ohleuven.com/faq-matchday-info/"),
+  ],
 };
 
 export default stadium;
