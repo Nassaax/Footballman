@@ -45,7 +45,25 @@ JavaScript partagé, 48 pages prérendues.
 
 ---
 
-## 3. Démarrer
+## 3. Déploiement
+
+En production : **https://footballman.vercel.app** (projet Vercel `footballman`, branche
+`main`, framework Next.js, Node 22).
+
+Chaque push sur `main` déclenche un déploiement de production ; les autres branches produisent
+des previews protégées par Vercel Authentication.
+
+Variables déjà configurées sur le projet : `NEXT_PUBLIC_SITE_URL`. Le jour où un domaine propre
+est branché, il suffit de changer cette variable — canoniques, sitemap et images Open Graph
+suivent automatiquement.
+
+Deux points à connaître sur ce projet Vercel, hérités de l'ancien site statique :
+`Output Directory` et le framework ont dû être remis aux valeurs par défaut, sinon seul le dossier
+`public/` était servi (404 sur toutes les pages).
+
+---
+
+## 4. Démarrer
 
 ```bash
 npm install
@@ -64,7 +82,7 @@ Variables d'environnement (toutes optionnelles) :
 
 ---
 
-## 4. Modèle de données
+## 5. Modèle de données
 
 Tout part de `src/data/` :
 
@@ -92,7 +110,7 @@ composant ne code un club en dur.
 
 ---
 
-## 5. Administration
+## 6. Administration
 
 `/admin` édite le contenu sans toucher au code. Les corrections sont écrites dans
 `content/overrides.json` et fusionnées par-dessus les données du dépôt (`src/lib/overrides.ts`).
@@ -104,7 +122,7 @@ Sur un hébergement au système de fichiers éphémère (Vercel), brancher un st
 
 ---
 
-## 6. Monétisation
+## 7. Monétisation
 
 Câblée dès l'architecture, désactivée par défaut (`src/lib/monetization.ts`) :
 
@@ -118,7 +136,7 @@ Câblée dès l'architecture, désactivée par défaut (`src/lib/monetization.ts
 
 ---
 
-## 7. Charte de fiabilité
+## 8. Charte de fiabilité
 
 1. Priorité aux sites officiels des clubs, puis Pro League, autorités locales, opérateurs de transport.
 2. Aucune information inventée pour compléter une fiche : « Information à confirmer ».
@@ -131,7 +149,7 @@ La page `/a-propos` expose cette charte aux lecteurs.
 
 ---
 
-## 8. État de la V1 et suite
+## 9. État de la V1 et suite
 
 Fait : design system, homepage, 17 fiches stades complètes, carte, recherche globale, favoris,
 partage + images Open Graph générées, planificateur jour de match, admin léger, SEO technique,
