@@ -25,6 +25,9 @@ export type TrackedEvent =
   | "search"
   | "map_marker_click"
   | "matchday_build"
+  | "photo_form_open"
+  | "photo_submitted"
+  | "support_click"
   | "premium_interest";
 
 export function track(event: TrackedEvent, props?: Props) {

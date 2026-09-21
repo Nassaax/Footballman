@@ -78,7 +78,9 @@ Variables d'environnement (toutes optionnelles) :
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | URL canonique (sitemap, Open Graph) |
 | `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | active les analytics (aucun script chargé sans elle) |
-| `ADMIN_TOKEN` | autorise l'écriture depuis `/admin` ; sans elle, l'écriture est refusée |
+| `ADMIN_TOKEN` | autorise l'écriture et la modération depuis `/admin` ; sans elle, tout est refusé |
+| `BLOB_READ_WRITE_TOKEN` | injecté par Vercel ; sans lui, l'envoi de photos est désactivé |
+| `NEXT_PUBLIC_SUPPORT_URL` | lien de soutien volontaire ; sans lui, le bloc ne s'affiche pas |
 
 ---
 
@@ -110,7 +112,38 @@ composant ne code un club en dur.
 
 ---
 
-## 6. Administration
+## 6. Photos des supporters
+
+Aucune photographie de stade n'est publiée sans droits vérifiés. Le site n'en héberge donc pas
+par défaut : la galerie de chaque fiche est alimentée par les visiteurs.
+
+**Parcours.** Sur chaque page stade, section « La galerie des supporters » : le visiteur choisit
+une image, elle est redimensionnée dans son navigateur (`src/lib/image-client.ts`, 2200 px max,
+JPEG qualité 0,82) puis envoyée. Il déclare être l'auteur et choisit sa licence. Rien n'est publié
+avant validation.
+
+**Modération.** File d'attente dans `/admin` (composant `PhotoModeration`). Publier ajoute la photo
+à l'index du stade ; refuser supprime définitivement l'image du stockage.
+
+**Stockage.** Vercel Blob, sans base de données :
+
+```
+photos/<stadiumId>/<id>.jpg     l'image
+meta/pending/<stadiumId>/*.json une contribution en attente
+index/<stadiumId>.json          la liste publiée, lue par la galerie
+```
+
+L'index par stade permet à la page publique de ne faire qu'une lecture réseau. La galerie et le
+hero sont chargés côté client : les pages restent statiques, et une photo validée apparaît sans
+redéploiement. Le hero d'une fiche bascule en fondu sur la première photo publiée, avec son crédit.
+
+**Développement local.** `BLOB_READ_WRITE_TOKEN` n'existe pas hors de Vercel : l'API répond alors
+`storageReady: false` et le formulaire est masqué. Récupérer les variables avec `vercel env pull`
+pour tester le parcours complet.
+
+---
+
+## 7. Administration
 
 `/admin` édite le contenu sans toucher au code. Les corrections sont écrites dans
 `content/overrides.json` et fusionnées par-dessus les données du dépôt (`src/lib/overrides.ts`).
@@ -122,7 +155,7 @@ Sur un hébergement au système de fichiers éphémère (Vercel), brancher un st
 
 ---
 
-## 7. Monétisation
+## 8. Monétisation
 
 Câblée dès l'architecture, désactivée par défaut (`src/lib/monetization.ts`) :
 
@@ -130,13 +163,18 @@ Câblée dès l'architecture, désactivée par défaut (`src/lib/monetization.ts
   n'est configuré. Pas de cadre vide.
 - **Sponsoring de section** — formulation « Expérience présentée par … ».
 - **Affiliation** — `<AffiliateLink>` ajoute toujours la mention « lien affilié ».
+- **Soutien volontaire** — `<SupportBlock>` en pied de fiche stade et sur `/partenaires`. Aucun
+  paywall. Invisible tant que `NEXT_PUBLIC_SUPPORT_URL` n'est pas défini (lien de paiement Stripe,
+  Ko-fi, Liberapay…) : le site ne montre jamais un appel au don sans destination.
+- **Média-kit** — la page `/partenaires` sert de support de démarchage : formats, audience et règles
+  non négociables.
 - **Stadium Pass** — offre préparée (4,99 €/mois, 29,99 €/an), non commercialisée, prête à recevoir
   Stripe.
 - **Offre B2B clubs** — page `/clubs`, sans back-office B2B en V1.
 
 ---
 
-## 8. Charte de fiabilité
+## 9. Charte de fiabilité
 
 1. Priorité aux sites officiels des clubs, puis Pro League, autorités locales, opérateurs de transport.
 2. Aucune information inventée pour compléter une fiche : « Information à confirmer ».
@@ -149,7 +187,7 @@ La page `/a-propos` expose cette charte aux lecteurs.
 
 ---
 
-## 9. État de la V1 et suite
+## 10. État de la V1 et suite
 
 Fait : design system, homepage, 17 fiches stades complètes, carte, recherche globale, favoris,
 partage + images Open Graph générées, planificateur jour de match, admin léger, SEO technique,

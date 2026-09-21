@@ -16,7 +16,10 @@ import { FavoriteButton } from "@/components/FavoriteButton";
 import { ShareBar } from "@/components/ShareBar";
 import { FactList, FactValue } from "@/components/FactValue";
 import { PartnerSlot } from "@/components/PartnerSlot";
+import { SupportBlock } from "@/components/SupportBlock";
 import { StadiumSubNav } from "@/components/StadiumSubNav";
+import { StadiumPhotos } from "@/components/StadiumPhotos";
+import { StadiumHeroMedia } from "@/components/StadiumHeroMedia";
 import { breadcrumbJsonLd, canonical, stadiumJsonLd, stadiumMetadata } from "@/lib/seo";
 import { formatDate, formatNumber } from "@/lib/format";
 
@@ -38,6 +41,7 @@ export async function generateMetadata({
 const anchors = [
   { id: "histoire", label: "Histoire" },
   { id: "ferveur", label: "Ferveur" },
+  { id: "photos", label: "Photos" },
   { id: "tribunes", label: "Tribunes" },
   { id: "venir", label: "Comment venir" },
   { id: "billetterie", label: "Billetterie" },
@@ -80,9 +84,9 @@ export default async function StadiumPage({
 
       {/* ------------------------------------------------------------- HERO */}
       <section style={{ position: "relative", minHeight: "min(82svh, 720px)", display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0 }}>
+        <StadiumHeroMedia stadiumId={stadium.id} stadiumName={stadium.name}>
           <StadiumImage stadium={stadium} club={club} variant="hero" className="stadium-visual" />
-        </div>
+        </StadiumHeroMedia>
 
         <div className="shell rise" style={{ position: "relative", paddingBottom: "3rem", paddingTop: "6rem" }}>
           <p className="eyebrow" style={{ color: "rgba(255,255,255,.78)" }}>
@@ -206,6 +210,19 @@ export default async function StadiumPage({
         <div className="shell">
           <SectionHeading eyebrow="Vivez le stade" title="En vidéo, à la verticale." lede="Format mobile, pensé pour être regardé comme on regarde tout le reste : debout, une main." />
           <VideoStrip videos={stadium.videos} stadiumName={stadium.name} />
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------- PHOTOS */}
+      <section className="section hairline">
+        <div className="shell">
+          <SectionHeading
+            id="photos"
+            eyebrow="La galerie des supporters"
+            title={`Le ${stadium.name} vu par ceux qui y vont`}
+            lede="Nous ne republions aucune photo dont nous n'avons pas les droits. Cette galerie est construite par les supporters : ajoutez la vôtre, elle est relue puis publiée avec votre crédit."
+          />
+          <StadiumPhotos stadiumId={stadium.id} stadiumName={stadium.name} />
         </div>
       </section>
 
@@ -353,6 +370,10 @@ export default async function StadiumPage({
       <section className="section hairline">
         <div className="shell">
           <ShareBar url={url} title={`${stadium.name} — ${club.name}`} />
+
+          <div style={{ marginTop: "2.5rem" }}>
+            <SupportBlock context={`stade:${stadium.slug}`} />
+          </div>
 
           <div className="card" style={{ marginTop: "2.5rem", padding: "1.5rem" }}>
             <p className="eyebrow">Sources et vérification</p>

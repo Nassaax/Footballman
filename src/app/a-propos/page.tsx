@@ -68,6 +68,12 @@ export default function AboutPage() {
             une composition graphique originale générée à partir des couleurs du club. Notre base de
             données stocke pour chaque média sa source, sa licence, son copyright et son crédit.
           </p>
+          <p style={{ color: "var(--color-muted)", marginTop: "0.875rem" }}>
+            Les photographies du site viennent donc des supporters eux-mêmes. Chaque contributeur
+            confirme être l'auteur de son image et choisit la licence sous laquelle il la partage ;
+            son crédit est affiché sous la photo. Chaque envoi est relu avant publication, et tout
+            contributeur peut demander le retrait de sa photo à tout moment.
+          </p>
         </div>
 
         <div>

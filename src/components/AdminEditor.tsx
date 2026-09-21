@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Overrides } from "@/lib/overrides";
+import { PhotoModeration } from "./PhotoModeration";
 
 type Ref = { id: string; name: string; slug?: string };
 
@@ -122,6 +123,8 @@ export function AdminEditor({
           ouvert. {clubs.length} clubs et {stadiums.length} stades sont éditables.
         </p>
       </div>
+
+      <PhotoModeration token={token} />
 
       <div style={{ display: "flex", gap: "0.5rem" }}>
         {(["form", "json"] as const).map((m) => (

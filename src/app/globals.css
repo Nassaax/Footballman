@@ -447,3 +447,82 @@ body {
 a:hover > div > .stadium-visual {
   transform: scale(1.035);
 }
+
+/* ------------------------------------------------- galerie de supporters */
+
+.photo-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .photo-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.photo-grid-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--color-surface-2);
+}
+
+/* Voile de lisibilité quand une vraie photo remplace la plaque graphique. */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(0, 0, 0, 0.12) 45%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+}
+
+.hero-credit {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.5rem;
+  font-size: 0.625rem;
+  color: rgba(255, 255, 255, 0.72);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Sélecteur de fichier : le contrôle natif détonne avec le reste. */
+.file-field {
+  width: 100%;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  border: 1px dashed var(--color-line);
+  border-radius: var(--radius-sm);
+  padding: 0.875rem;
+  background: var(--color-bg);
+  cursor: pointer;
+}
+
+.file-field::file-selector-button {
+  min-height: 38px;
+  padding: 0 1rem;
+  margin-right: 0.875rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.file-field:hover {
+  border-color: var(--color-text);
+}

@@ -79,3 +79,22 @@ export const clubOffer = {
     "Les clubs peuvent corriger les informations de leur fiche, fournir des contenus officiels et mettre en avant leurs visites et leurs offres.",
   contactPath: "/clubs",
 } as const;
+
+/**
+ * Soutien volontaire.
+ *
+ * Aucun paywall, aucune contrainte : un bouton discret en pied de fiche. Le
+ * lien pointe vers un prestataire externe (lien de paiement Stripe, Ko-fi,
+ * Liberapay…). Tant que NEXT_PUBLIC_SUPPORT_URL n'est pas défini, rien ne
+ * s'affiche — le site ne montre jamais un appel au don sans destination.
+ */
+export const support = {
+  url: process.env.NEXT_PUBLIC_SUPPORT_URL ?? "",
+  label: "Soutenir le projet",
+  pitch:
+    "Stadia Belgica est indépendant et gratuit. Si ces fiches vous ont servi avant un déplacement, vous pouvez soutenir le travail de vérification.",
+} as const;
+
+export function supportEnabled(): boolean {
+  return support.url.length > 0;
+}
