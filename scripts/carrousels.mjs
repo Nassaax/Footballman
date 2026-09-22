@@ -269,6 +269,135 @@ add(
   ),
 );
 
+/* ===== Carrousel 5 — le vide belge ===================================== */
+
+add(
+  "c5-1",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Avant de se lancer</p>
+      <h1 class="xs">On a cherché<br>un guide des<br>stades belges.</h1>
+      <p class="kicker">Sérieusement cherché.</p>
+    </div>`,
+    { background: "bg-stades", blur: 5 },
+  ),
+);
+
+add(
+  "c5-2",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Voilà ce qu'on a trouvé</p>
+      <h1 class="xs">Pas grand-<br>chose.</h1>
+      <div class="list">
+        <div class="row"><i>↳</i><span>Des tableaux de capacités.</span></div>
+        <div class="row"><i>↳</i><span>Des fiches sur des sites <b>français</b>.</span></div>
+        <div class="row"><i>↳</i><span>Le plus complet ? Sur un <b>site de paris</b>.</span></div>
+      </div>
+      <p class="kicker">Pour nos propres stades.</p>
+    </div>`,
+    { background: "bg-acces", blur: 5 },
+  ),
+);
+
+add(
+  "c5-3",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Donc on s'en est chargés</p>
+      <h1 class="sm">Belge.<br>Indépendant.<br><span class="accent">Sans paris.</span></h1>
+      <p class="lede" style="margin-top:34px">STADIA BELGICA</p>
+    </div>`,
+    { background: "bg-home", blur: 4, swipe: false, mark: false },
+  ),
+);
+
+/* ===== Carrousel 6 — la comparaison qui fait mal ======================= */
+
+add(
+  "c6-1",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">En Angleterre</p>
+      <h1 class="xs">Chaque stade<br>a son guide.<br>Depuis 20 ans.</h1>
+      <p class="lede">Quelle tribune, quel pub, quel train. Tout y est.</p>
+    </div>`,
+    { background: "bg-tribunes", blur: 5 },
+  ),
+);
+
+add(
+  "c6-2",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">En Belgique</p>
+      <h1 class="sm">Essaie de<br>trouver le<br>parking<br>de Genk.</h1>
+      <p class="kicker">On attend.</p>
+    </div>`,
+    { background: "bg-acces", blur: 5 },
+  ),
+);
+
+add(
+  "c6-3",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Spoiler</p>
+      <h1 class="xs">Il est réservé<br>aux abonnés.</h1>
+      <p class="lede">Tu l'aurais su. Sur Stadia Belgica.</p>
+      <p class="lede" style="margin-top:22px">Les 17 stades. Un par un.</p>
+    </div>`,
+    { background: "bg-fiche", blur: 5, swipe: false, mark: false },
+  ),
+);
+
+/* ===== Carrousel 7 — un truc belge ===================================== */
+
+add(
+  "c7-1",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Soyons honnêtes</p>
+      <h1 class="xs">Le foot, c'est<br>un des rares<br>trucs qui<br>nous réunit.</h1>
+      <p class="kicker">Alors autant bien le faire.</p>
+    </div>`,
+    { background: "bg-home", blur: 4 },
+  ),
+);
+
+add(
+  "c7-2",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Flandre · Bruxelles · Wallonie</p>
+      <h1 class="sm">17 stades.<br>Même<br>traitement.</h1>
+      <p class="lede">Le Kuipje a droit aux mêmes pages que le Jan Breydel. C'était la règle dès le départ.</p>
+    </div>`,
+    { background: "bg-stades", blur: 3 },
+  ),
+);
+
+add(
+  "c7-3",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Fait ici, pour ici</p>
+      <p class="sig" style="margin-top:20px">STADIA<br><span class="b">BELGICA</span></p>
+      <p class="lede" style="margin-top:36px">Le stade, c'est pas que les 90 minutes.</p>
+    </div>`,
+    { background: "bg-photos", blur: 4, swipe: false, mark: false },
+  ),
+);
+
 /* ----------------------------------------------------------------- rendu */
 
 const browser = await chromium.launch();
