@@ -43,6 +43,12 @@ const shots = [
   { file: "bg-acces", path: "/stades/cegeka-arena", anchor: "venir", theme: "light" },
   { file: "bg-photos", path: "/stades/stade-maurice-dufrasne", anchor: "photos", theme: "dark" },
   { file: "bg-jour", path: "/stades/lotto-park", anchor: "jour-de-match", theme: "light" },
+  // Fonds assortis aux clubs cités dans les carrousels « derbys ».
+  { file: "bg-breydel", path: "/stades/jan-breydel", scroll: null, theme: "dark" },
+  { file: "bg-breydel-tribunes", path: "/stades/jan-breydel", anchor: "tribunes", theme: "light" },
+  { file: "bg-breydel-acces", path: "/stades/jan-breydel", anchor: "venir", theme: "light" },
+  { file: "bg-sclessin-acces", path: "/stades/stade-maurice-dufrasne", anchor: "venir", theme: "light" },
+  { file: "bg-marien", path: "/stades/stade-joseph-marien", scroll: null, theme: "dark" },
 ];
 
 const browser = await chromium.launch();

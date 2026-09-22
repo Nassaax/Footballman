@@ -575,6 +575,147 @@ add(
   ),
 );
 
+/* ===== Carrousel 12 — le derby de Bruges ================================ */
+
+add(
+  "c12-1",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Derby de Bruges · Brugse derby</p>
+      <h1 class="sm">Le seul derby<br>où personne<br><span class="accent">ne se déplace.</span></h1>
+      <p class="lede">Club et Cercle jouent au Jan Breydel. Les deux. Tout le temps.</p>
+    </div>`,
+    { background: "bg-breydel", blur: 5 },
+  ),
+);
+
+add(
+  "c12-2",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">29 042 places · le plus grand du pays</p>
+      <h1 class="xs">Même stade.<br>Même buvette.<br>Même parking plein.</h1>
+      <div class="list">
+        <div class="row"><i>→</i><span>Pas de car, pas d'autoroute, pas de retard</span></div>
+        <div class="row"><i>→</i><span>Tu changes de vestiaire et de virage</span></div>
+        <div class="row"><i>→</i><span>Et les deux équipes jouent « à domicile »</span></div>
+      </div>
+      <p class="kicker">Unique en Belgique.</p>
+    </div>`,
+    { background: "bg-breydel-tribunes", blur: 5 },
+  ),
+);
+
+add(
+  "c12-3",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Olympialaan 74, Sint-Andries</p>
+      <h1 class="sm">Bleu ou vert,<br>c'est la même<br>adresse.</h1>
+      <p class="lede">On ne choisit pas ton camp. On t'explique juste comment arriver.</p>
+    </div>`,
+    { background: "bg-breydel-acces", blur: 4, swipe: false },
+  ),
+);
+
+/* ===== Carrousel 13 — le Clasico ======================================== */
+
+add(
+  "c13-1",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Clasico belge</p>
+      <h1 class="sm">Sclessin, 1909.<br>Le parc Astrid,<br>1917.</h1>
+      <p class="lede">Du football sur ces deux sites depuis plus d'un siècle. La rivalité a eu le temps de mûrir.</p>
+    </div>`,
+    { background: "bg-fiche", blur: 5 },
+  ),
+);
+
+add(
+  "c13-2",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Ce que personne ne te dit</p>
+      <h1 class="xs">27 670 places.<br>Et un arrêt de train<br>fermé le week-end.</h1>
+      <div class="list">
+        <div class="row"><i>→</i><span>L'arrêt SNCB de Sclessin n'est pas desservi le week-end</span></div>
+        <div class="row"><i>→</i><span>La station de tram ferme 1 h 30 avant le coup d'envoi</span></div>
+        <div class="row"><i>→</i><span>Les parkings du stade : abonnés uniquement</span></div>
+      </div>
+      <p class="kicker">On te le dit avant. Pas après.</p>
+    </div>`,
+    { background: "bg-sclessin-acces", blur: 5 },
+  ),
+);
+
+add(
+  "c13-3",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Métro 5 · Saint-Guidon · P+R Ceria 3 €</p>
+      <h1 class="sm">On ne choisit<br>pas ton camp.<br><span class="accent">On choisit ton parking.</span></h1>
+      <p class="lede">Les deux fiches sont en ligne. Avec la même rigueur, promis.</p>
+    </div>`,
+    { background: "bg-jour", blur: 4, swipe: false },
+  ),
+);
+
+/* ===== Carrousel 14 — les autres derbys ================================= */
+
+add(
+  "c14-1",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Jupiler Pro League</p>
+      <h1 class="sm">Tout le monde<br>parle du Clasico.</h1>
+      <p class="lede">Il y en a cinq autres. Et ils font autant de bruit.</p>
+    </div>`,
+    { background: "bg-stades", blur: 4 },
+  ),
+);
+
+add(
+  "c14-2",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Les affiches qui structurent une saison</p>
+      <h1 class="xs">Les cinq autres.</h1>
+      <div class="list">
+        <div class="row"><i>01</i><span>Limbourgeois — Genk · STVV</span></div>
+        <div class="row"><i>02</i><span>Wallon — Standard · Charleroi</span></div>
+        <div class="row"><i>03</i><span>Bruxellois — Anderlecht · Union</span></div>
+        <div class="row"><i>04</i><span>Flandre occidentale — Courtrai · Zulte Waregem</span></div>
+        <div class="row"><i>05</i><span>Flandrien — Club Brugge · La Gantoise</span></div>
+      </div>
+      <p class="kicker">Anvers, on t'attend. Avec le Beerschot.</p>
+    </div>`,
+    { background: "bg-tribunes", blur: 5 },
+  ),
+);
+
+add(
+  "c14-3",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Derby bruxellois · stade Joseph Marien</p>
+      <h1 class="xs">9 400 places.<br>Pour toute<br>une ville.</h1>
+      <p class="lede">Le parcage visiteurs du Marien est minuscule. Le billet aussi, du coup.</p>
+      <p class="kicker">Les 17 stades sont documentés. Même les petits.</p>
+    </div>`,
+    { background: "bg-marien", blur: 4, swipe: false },
+  ),
+);
+
 /* ----------------------------------------------------------------- rendu */
 
 const browser = await chromium.launch();
