@@ -716,6 +716,62 @@ add(
   ),
 );
 
+/** Colonne de chiffres alignée à droite : sans largeur fixe, les décimales dansent. */
+const KM = "min-width:152px;text-align:right;font-size:36px";
+
+/* ===== Carrousel 15 — le plus long déplacement ==========================
+ * Les distances sont calculées par haversine sur les coordonnées des fiches
+ * (scratchpad/dist.mjs) : ce sont nos propres données, pas une estimation.
+ * D'où la mention « à vol d'oiseau » sur le visuel — un trajet routier ou
+ * ferroviaire serait plus long, et nous ne l'avons pas vérifié.
+ */
+
+add(
+  "c15-1",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Le plus long déplacement du championnat</p>
+      <h1>178 km.</h1>
+      <p class="lede">Bruges → Sclessin. À vol d'oiseau, entre les deux stades les plus éloignés des 18 clubs.</p>
+      <p class="kicker">Et c'est la version optimiste : l'oiseau ne prend pas l'E40.</p>
+    </div>`,
+    { background: "bg-fiche", blur: 5 },
+  ),
+);
+
+add(
+  "c15-2",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Et le plus court ? Zéro.</p>
+      <h1 class="xs">Le même<br>championnat.</h1>
+      <div class="list">
+        <div class="row"><i style="${KM}">178,0</i><span>km — Bruges · Sclessin</span></div>
+        <div class="row"><i style="${KM}">14,8</i><span>km — Courtrai · Zulte Waregem</span></div>
+        <div class="row"><i style="${KM}">3,6</i><span>km — Union · Anderlecht</span></div>
+        <div class="row"><i style="${KM}">0,0</i><span>km — Club Brugge · Cercle Brugge</span></div>
+      </div>
+      <p class="kicker">Les Brugeois ne sortent même pas du parking.</p>
+    </div>`,
+    { background: "bg-breydel", blur: 5 },
+  ),
+);
+
+add(
+  "c15-3",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">18 clubs · 17 stades · un seul pays</p>
+      <h1 class="sm">Du plat pays<br>au bord de<br>la Meuse.</h1>
+      <p class="lede">178 km d'écart entre les deux extrêmes. On a documenté les deux bouts. Et les quinze autres aussi.</p>
+    </div>`,
+    { background: "bg-stades", blur: 4, swipe: false },
+  ),
+);
+
 /* ----------------------------------------------------------------- rendu */
 
 const browser = await chromium.launch();
