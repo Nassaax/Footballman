@@ -398,6 +398,183 @@ add(
   ),
 );
 
+/* ===== Carrousel 8 — la météo, évidemment ============================== */
+
+add(
+  "c8-1",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Prévisions pour samedi</p>
+      <h1 class="sm">Pluie.</h1>
+      <p class="kicker">On sait. On est en Belgique.</p>
+    </div>`,
+    { background: "bg-fiche", blur: 5 },
+  ),
+);
+
+add(
+  "c8-2",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Le conseil qui sert</p>
+      <h1 class="xs">Prends une<br>veste, pas un<br>parapluie.</h1>
+      <p class="lede">Plusieurs stades les refusent à l'entrée. Tu le découvriras au tourniquet, sous la pluie, avec 400 personnes derrière toi.</p>
+    </div>`,
+    { background: "bg-acces", blur: 5 },
+  ),
+);
+
+add(
+  "c8-3",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Sur chaque fiche stade</p>
+      <h1 class="sm">Sacs. Photos.<br>Drapeaux.<br><span class="accent">Parapluies.</span></h1>
+      <p class="lede" style="margin-top:32px">Ce qui passe et ce qui passe pas. Stade par stade.</p>
+      <p class="lede" style="margin-top:20px">STADIA BELGICA</p>
+    </div>`,
+    { background: "bg-tribunes", blur: 4, swipe: false, mark: false },
+  ),
+);
+
+/* ===== Carrousel 9 — les noms de stades ================================= */
+
+add(
+  "c9-1",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Question piège</p>
+      <h1 class="sm">Il s'appelle<br>comment,<br>le stade<br>de Genk ?</h1>
+      <p class="kicker">Réfléchis bien.</p>
+    </div>`,
+    { background: "bg-stades", blur: 5 },
+  ),
+);
+
+add(
+  "c9-2",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Réponse</p>
+      <h1 class="xs">Ça dépend<br>de l'année.</h1>
+      <div class="list">
+        <div class="row"><i>↳</i><span>Fenixstadion, puis Luminus Arena, puis <b>Cegeka Arena</b>.</span></div>
+        <div class="row"><i>↳</i><span>Ghelamco Arena → <b>Planet Group Arena</b>.</span></div>
+        <div class="row"><i>↳</i><span>Vanden Stock → <b>Lotto Park</b>.</span></div>
+      </div>
+      <p class="kicker">Même pelouse, nouveau logo.</p>
+    </div>`,
+    { background: "bg-acces", blur: 5 },
+  ),
+);
+
+add(
+  "c9-3",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Donc on note les deux</p>
+      <h1 class="xs">Le nouveau<br>nom. Et celui<br>de ton oncle.</h1>
+      <p class="lede">Parce qu'il dira « le Fenix » jusqu'à la fin des temps. Et il n'a pas tort.</p>
+    </div>`,
+    { background: "bg-home", blur: 4, swipe: false, mark: false },
+  ),
+);
+
+/* ===== Carrousel 10 — se garer, sport national ========================= */
+
+add(
+  "c10-1",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Discipline olympique</p>
+      <h1 class="sm">Se garer<br>en Belgique.</h1>
+      <p class="kicker">Niveau : expert.</p>
+    </div>`,
+    { background: "bg-acces", blur: 5 },
+  ),
+);
+
+add(
+  "c10-2",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Tour de Belgique du parking</p>
+      <h1 class="xs">Le palmarès.</h1>
+      <div class="list">
+        <div class="row"><i>↳</i><span><b>Genk</b> : abonnés uniquement.</span></div>
+        <div class="row"><i>↳</i><span><b>Bruges</b> : abonnés uniquement.</span></div>
+        <div class="row"><i>↳</i><span><b>Anvers</b> : abonnés uniquement.</span></div>
+        <div class="row"><i>↳</i><span><b>Beveren</b> : 50 € la place.</span></div>
+      </div>
+      <p class="kicker">Allez, bonne chance.</p>
+    </div>`,
+    { background: "bg-stades", blur: 4 },
+  ),
+);
+
+add(
+  "c10-3",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">La bonne nouvelle</p>
+      <h1 class="xs">Les solutions<br>de repli sont<br>notées aussi.</h1>
+      <p class="lede">Thor Park à Genk, Bosdam à Beveren, le P+R à Anvers. Avant de partir, pas en tournant depuis vingt minutes.</p>
+      <p class="lede" style="margin-top:20px">STADIA BELGICA</p>
+    </div>`,
+    { background: "bg-jour", blur: 4, swipe: false, mark: false },
+  ),
+);
+
+/* ===== Carrousel 11 — l'avant-match ==================================== */
+
+add(
+  "c11-1",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">L'avant-match belge</p>
+      <h1 class="sm">Une frite.<br>Une Jupiler.<br>Un pote qui<br>refait la<br>compo.</h1>
+    </div>`,
+    { background: "bg-photos", blur: 4 },
+  ),
+);
+
+add(
+  "c11-2",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Ce qu'on peut faire pour toi</p>
+      <h1 class="xs">Deux sur trois.</h1>
+      <p class="lede">Où aller, quand arriver, combien de temps il te reste avant le coup d'envoi. Stade par stade.</p>
+      <p class="kicker">Pour le pote, on ne peut rien.</p>
+    </div>`,
+    { background: "bg-jour", blur: 4 },
+  ),
+);
+
+add(
+  "c11-3",
+  page(
+    `<div class="wrap">
+      <div class="bar"></div>
+      <p class="eyebrow">Ton virage · ta frite · ton samedi</p>
+      <p class="sig" style="margin-top:20px">STADIA<br><span class="b">BELGICA</span></p>
+      <p class="lede" style="margin-top:36px">Le stade, c'est pas que les 90 minutes.</p>
+    </div>`,
+    { background: "bg-home", blur: 4, swipe: false, mark: false },
+  ),
+);
+
 /* ----------------------------------------------------------------- rendu */
 
 const browser = await chromium.launch();
